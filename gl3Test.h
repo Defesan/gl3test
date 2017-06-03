@@ -2,9 +2,7 @@
 #define __GL3TEST_H__
 
 #include "headers.h"
-#include "stRect.h"
-#include "stCircle.h"
-#include "stSphere.h"
+
 
 //Working in OpenGL 3, things are... a little different.
 const int SCREEN_WIDTH = 640;
@@ -16,7 +14,9 @@ const GLfloat PROJECTION_DEPTH = 100.0f;
 const int MIN_WIDTH = 50;
 const int MIN_HEIGHT = 50;
 
-
+void resize(int w, int h);
+void setup();
+void render();
 
 
 #endif //__GL3TEST_H__

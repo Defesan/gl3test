@@ -3,7 +3,10 @@
 STShaderManager::STShaderManager()
 {
 	//Initialize the shader manager
-	//no need to set the entries in the table to 0, since it's a vector. But we will be loading the stock shaders in here...once we have some stock shaders.
+	//no need to set the entries in the table to 0, since it's a vector. But we will be loading the stock shaders in here.
+	
+	//Let's start with a basic identity shader. This should just take a vertex(, and pass it on through.
+	//W
 }
 
 STShaderManager::~STShaderManager()
@@ -250,7 +253,7 @@ GLuint STShaderManager::loadShaderPairSrcWithAttributes(std::string vertexShader
 	
 	std::string argName;	//Each argument is paired with a name.
 	int argCount = va_arg(argumentList, int);	
-	for(int i = 0; i < argCount; i++)			//I mentioned not liking to code so much without a compile here. I put a comma instead of a semicolon after argCount.
+	for(int i = 0; i < argCount; i++)			
 	{
 		int index = va_arg(argumentList, int);
 		argName = va_arg(argumentList, std::string);
