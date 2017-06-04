@@ -5,8 +5,20 @@ STShaderManager::STShaderManager()
 	//Initialize the shader manager
 	//no need to set the entries in the table to 0, since it's a vector. But we will be loading the stock shaders in here.
 	
-	//Let's start with a basic identity shader. This should just take a vertex(, and pass it on through.
-	//W
+	//Let's start with a basic identity shader. This should just take a color to render, and pass it through to the fragment shader.
+	
+	std::string vertexShader = "attribute vec4 vVertex;"	//I have to admit, this format is useful for writing code in strings inside a program...
+							   "void main()"
+							   "{"
+							   "	gl_Position = vVertex;"//But where does vVertex come from?
+							   "}";
+	
+	std::string fragShader = "uniform vec4 vColor;"
+							 "void main()"
+							 "{"
+							 "    gl_FragColor = vColor;"
+							 "}";
+	this->loadShaderPairSrcWithAttributes(vertexShader, fragShader, 1, ST_ATTRIBUTE_VERTEX, "vVertex");
 }
 
 STShaderManager::~STShaderManager()
