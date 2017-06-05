@@ -18,7 +18,7 @@ STShaderManager::STShaderManager()
 							 "{"
 							 "    gl_FragColor = vColor;"
 							 "}";
-	activeShaderPointers.push_back(this->loadShaderPairSrcWithAttributes(vertexShader, fragShader));
+	activeShaderPointers.push_back(this->loadShaderPairSrcWithAttributes(vertexShader, fragShader, 1, ST_ATTRIBUTE_VERTEX, "vVertex"));
 	
 }
 
@@ -226,7 +226,7 @@ GLuint STShaderManager::loadShaderPairSrcWithAttributes(std::string vertexShader
 	
 	//Create the shaders' handles
 	vertShaderHandle = glCreateShader(GL_VERTEX_SHADER);
-/*	fragShaderHandle = glCreateShader(GL_FRAGMENT_SHADER);
+	fragShaderHandle = glCreateShader(GL_FRAGMENT_SHADER);
 	
 	if(!this->loadShaderSrc(vertexShaderSrc, vertShaderHandle) || !this->loadShaderSrc(fragShaderSrc, fragShaderHandle))
 	{
@@ -287,6 +287,6 @@ GLuint STShaderManager::loadShaderPairSrcWithAttributes(std::string vertexShader
 		return SHADER_ERROR;
 	}
 	this->activeShaderPointers.push_back(programHandle);
-	*/
+
 	return programHandle;
 }

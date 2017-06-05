@@ -8,7 +8,7 @@ COMPILER_FLAGS = $(CXXFLAGS) -Wall -g $(INCDIRS)
 LINKER_FLAGS = -lX11 -lGL -lGLU -lglut -lm
 
 
-MAIN = playground
+MAIN = gl3Test
 
 prog : $(MAIN)
 
