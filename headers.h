@@ -1,6 +1,8 @@
 #ifndef __HEADERS_H__
 #define __HEADERS_H__
 
+#define GLEW_STATIC
+#include <GL/glew.h>
 #include <GL/freeglut.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
