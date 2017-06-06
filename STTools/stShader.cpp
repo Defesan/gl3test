@@ -18,7 +18,9 @@ STShaderManager::STShaderManager()
 							 "{"
 							 "    gl_FragColor = vColor;"
 							 "}";
-	activeShaderPointers.push_back(this->loadShaderPairSrcWithAttributes(vertexShader, fragShader, 1, ST_ATTRIBUTE_VERTEX, "vVertex"));
+							 
+	GLuint shaderHandle = this->loadShaderPairSrcWithAttributes(vertexShader, fragShader, 1, ST_ATTRIBUTE_VERTEX, "vVertex");
+	this->activeShaderPointers.push_back(shaderHandle);
 	
 }
 
@@ -31,24 +33,17 @@ STShaderManager::~STShaderManager()
 	}
 }
 
-void STShaderManager::runShader(GLuint shaderIndex, std::vector<STUniform*> uniforms)
+void STShaderManager::runShader(GLuint shaderHandle, std::vector<STUniform*> uniforms)
 {
-	//first, make sure we *have* this particular shader.
-	if(shaderIndex >= this->activeShaderPointers.size())
-	{
-		std::cerr << "Invalid Shader ID" << std::endl;
-		return;
-	}
-	
-	//Next, bind the shader. No need for a vararg, btw.
-	glUseProgram(this->activeShaderPointers[shaderIndex]);
+
+	glUseProgram(shaderHandle);
 	
 	//Now, we have to load the uniforms.
 	std::vector<STUniform*>::iterator iter = uniforms.begin();
 	for(;iter != uniforms.end(); iter++)
 	{
 		//First, we need a handle for the uniform. This comes from the compiled shader that's been loaded by glUseProgram, and is identified by name.
-		GLint location = glGetUniformLocation(this->activeShaderPointers[shaderIndex], (*iter)->getName().c_str());
+		GLint location = glGetUniformLocation(shaderHandle, (*iter)->getName().c_str());
 		//Then we use the location to apply the uniform.
 		(*iter)->apply(location);
 	}
@@ -211,7 +206,7 @@ GLuint STShaderManager::loadShaderPairWithAttributes(std::string vertexShaderFil
 		glDeleteProgram(programHandle);
 		return SHADER_ERROR;	
 	}
-	this->activeShaderPointers.push_back(programHandle);
+	//this->activeShaderPointers.push_back(programHandle);
 	return programHandle;
 }
 
@@ -223,6 +218,8 @@ GLuint STShaderManager::loadShaderPairSrcWithAttributes(std::string vertexShader
 	GLint fragTest = 0;
 	GLint vertTest = 0;
 	GLint progTest = 0;
+	
+	
 	
 	//Create the shaders' handles
 	vertShaderHandle = glCreateShader(GL_VERTEX_SHADER);
@@ -264,13 +261,14 @@ GLuint STShaderManager::loadShaderPairSrcWithAttributes(std::string vertexShader
 	//Now we start it, passing the list we just created and the point to start from.
 	va_start(argumentList, fragShaderSrc);
 	
-	std::string argName;	//Each argument is paired with a name.
+	char* argName;	//Each argument is paired with a name.
 	int argCount = va_arg(argumentList, int);	
+
 	for(int i = 0; i < argCount; i++)			
 	{
 		int index = va_arg(argumentList, int);
-		argName = va_arg(argumentList, std::string);
-		glBindAttribLocation(programHandle, index, argName.c_str());
+		argName = va_arg(argumentList, char*);
+		glBindAttribLocation(programHandle, index, argName);
 	}
 	va_end(argumentList);	//There...not too painful.
 
@@ -286,7 +284,6 @@ GLuint STShaderManager::loadShaderPairSrcWithAttributes(std::string vertexShader
 		glDeleteProgram(programHandle);
 		return SHADER_ERROR;
 	}
-	this->activeShaderPointers.push_back(programHandle);
-
+	//this->activeShaderPointers.push_back(programHandle);
 	return programHandle;
 }

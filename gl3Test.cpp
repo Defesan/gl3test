@@ -15,9 +15,11 @@ int main(int argc, char* argv[])
 		std::cerr << "GLEW Error: " << glewGetErrorString(error) << std::endl;
 		return 1;
 	}
+	
 	STPrimitiveBatch* batch = new STPrimitiveBatch(0);
 	geometry.push_back(batch);
 	sMan = new STShaderManager();
+	
 	setup();
 
 	glutMainLoop();
