@@ -34,7 +34,7 @@ void resize(int w, int h)
 
 void setup()
 {
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
 	//Stock shader(s) are initialized already...
 	
 	//Now to create a triangle... I feel considerably more confident in my triangle batch class than my primitive batch right now, so let's go with that. It's...a bit more complex to set up, though...

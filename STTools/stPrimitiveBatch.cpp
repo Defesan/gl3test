@@ -113,14 +113,23 @@ void STPrimitiveBatch::copyVertexData(std::vector<STVec3f*> verts)
 	std::vector<STVec3f*>::iterator iterV = verts.begin();
 	std::vector<GLfloat>::iterator iterD = this->vertData.end();	//We're appending any incoming vertices.
 	
-	for(; iterV != verts.end(); iterV++)
+	for(int i = 0; iterV != verts.end(); iterV++, i++)
 	{
-		this->vertData.insert(iterD, (*iterV)->getData().begin(), (*iterV)->getData().end());
+		this->vertData.push_back((*iterV)->getX());
+		this->vertData.push_back((*iterV)->getY());
+		this->vertData.push_back((*iterV)->getZ());
 		iterD = this->vertData.end();
 	}
 	//That...should work. Sadly, it IS basically extra work, which means it WILL be slower, but it's probably the best the setup I made can offer.
 	//Okay, maybe not probably. I'm sure there's an optimization SOMEWHERE.
 	
+	iterD = this->vertData.begin();
+	std::cout << "Vert data dump: ";
+	for(; iterD != vertData.end(); iterD++)
+	{
+		std::cout << *iterD << " ";
+	}
+	std::cout << std::endl;
 	if(this->vertID == 0)
 	{
 		//We've never bound a buffer before. So, we need a new Buffer ID.
