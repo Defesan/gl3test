@@ -34,7 +34,7 @@ void resize(int w, int h)
 
 void setup()
 {
-	glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	//Stock shader(s) are initialized already...
 	
 	//Now to create a triangle... I feel considerably more confident in my triangle batch class than my primitive batch right now, so let's go with that. It's...a bit more complex to set up, though...
@@ -57,9 +57,9 @@ void render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	
-	STVec4f* shaderColor = new STVec4f(1.0f, 0.0f, 0.0f, 1.0f);
+	STVec4f* shaderColor = new STVec4f(1.0f, 1.0f, 1.0f, 1.0f);
 	std::vector<STUniform*> uniforms;
-	STUniform* colorUniform = new STUniform("vColor", 4, shaderColor);//Using the ST toolkit, you have to know the details of the shader you're using. I might be able to fix that for the stock shaders.
+	STUniform* colorUniform = new STUniform("vColor", 1, shaderColor);//Using the ST toolkit, you have to know the details of the shader you're using. I might be able to fix that for the stock shaders.
 	uniforms.push_back(colorUniform);
 	
 	//Finally we get to the part where we use the shader! I might want to streamline this...
