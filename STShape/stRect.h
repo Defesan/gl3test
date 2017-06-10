@@ -11,6 +11,7 @@ private:
 	
 	void genVerts() override;
 	void genIndices() override;
+	void genNormals() override;
 	void genColors() override;
 	
 public:
@@ -19,33 +20,32 @@ public:
 	Rect(GLfloat originX, GLfloat originY, GLfloat edge) : Rect(originX, originY, 0.0f, edge, edge) {};
 	~Rect() override;
 	
-	GLfloat* getVerts() override {return this->verts.data();};
-	GLubyte* getColors() override {return this->colors.data();};
-	GLushort* getIndices() override {return this->indices.data();};
+	bool setColors(std::vector<GLfloat> colorArray) override;
+	
+	void setColorToGLColor() override;
+	
+	void setOrigin(STVec3f* origin) override;
+	
+	STVec3f* getOrigin() override {return this->origin;};
 	
 	GLfloat getOriginX() override {return this->origin->getX();};
 	GLfloat getOriginY() override {return this->origin->getY();};
 	GLfloat getOriginZ() override {return this->origin->getZ();};
 	
+	STVec3f* getVelocity() override {return this->velocity;};
+	
 	GLfloat getVelX() override {return this->velocity->getX();};
 	GLfloat getVelY() override {return this->velocity->getY();};
 	GLfloat getVelZ() override {return this->velocity->getZ();};
 	
-	GLfloat getWidth() {return this->width;};
-	GLfloat getHeight() {return this->height;};
+	STVec3f* getAcceleration() override {return this->acceleration;};
 	
-	
-	bool setColors(GLubyte** colors) override;
-	void setColorToGLColor() override;
-	
-	void setBounds(GLfloat xPos, GLfloat xNeg, GLfloat yPos, GLfloat yNeg, GLfloat zPos, GLfloat zNeg) override;
+	GLfloat getAccX() override {return this->acceleration->getX();};
+	GLfloat getAccY() override {return this->acceleration->getY();};
+	GLfloat getAccZ() override {return this->acceleration->getZ();};
 	
 	void render() override;
 	void update() override;
-	
-	void setVelocity(GLfloat velX, GLfloat velY, GLfloat velZ) override;
-	void accelerate(GLfloat accX, GLfloat accY, GLfloat accZ) override;
-	void translate(GLfloat x, GLfloat y, GLfloat z) override;
 };
 
 
