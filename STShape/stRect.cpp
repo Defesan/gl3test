@@ -3,17 +3,22 @@
 Rect::Rect(GLfloat originX, GLfloat originY, GLfloat originZ, GLfloat width, GLfloat height)
 {	
 	this->origin = new STVec3f();
+	this->velocity = new STVec3f();
+	this->acceleration = new STVec3f();
+	
 	this->width = width;
 	this->height = height;
 	
-	this->velocity = new STVec3f();
+	this->batch = new STPrimitiveBatch(0);
 	
-	this->boundPos = new STVec3f(100.0f, 100.0f, 100.0f);
-	this->boundNeg = new STVec3f(-100.0f, -100.0f, -100.0f);
+	//That should be all the members initialized. Now the really hard part.
 	
 	this->genVerts();
 	this->genIndices();
+	this->genNormals();
 	this->genColors();
+	
+	//Okay, that wasn't hard *here*, but it'll be a bit more difficult later...
 	
 	this->translate(originX, originY, originZ);
 }
@@ -26,19 +31,22 @@ Rect::~Rect()
 void Rect::genVerts()
 {
 	GLfloat offsetX = this->width / 2;
-	GLfloat offsetY = this->height / 2; 
-	this->verts.push_back(-offsetX);
-	this->verts.push_back(offsetY);
-	this->verts.push_back(0.0f);
-	this->verts.push_back(offsetX);
-	this->verts.push_back(offsetY);
-	this->verts.push_back(0.0f);
-	this->verts.push_back(-offsetX);
-	this->verts.push_back(-offsetY);
-	this->verts.push_back(0.0f);
-	this->verts.push_back(offsetX);
-	this->verts.push_back(-offsetY);
-	this->verts.push_back(0.0f);
+	GLfloat offsetY = this->height / 2;
+	
+	std::vector<GLfloat> verts;
+	
+	verts.push_back(-offsetX);
+	verts.push_back(offsetY);
+	verts.push_back(0.0f);
+	verts.push_back(offsetX);
+	verts.push_back(offsetY);
+	verts.push_back(0.0f);
+	verts.push_back(-offsetX);
+	verts.push_back(-offsetY);
+	verts.push_back(0.0f);
+	verts.push_back(offsetX);
+	verts.push_back(-offsetY);
+	verts.push_back(0.0f);
 
 }
 

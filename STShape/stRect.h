@@ -24,7 +24,9 @@ public:
 	
 	void setColorToGLColor() override;
 	
-	void setOrigin(STVec3f* origin) override;
+	void setOrigin(STVec3f* origin) override {this->origin = origin;};
+	void setAcceleration(STVec3f* accel) override {this->acceleration = accel;};
+	void setVelocity(STVec3f* velocity) override {this->velocity = velocity;};
 	
 	STVec3f* getOrigin() override {return this->origin;};
 	

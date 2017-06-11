@@ -39,6 +39,8 @@ public:
 	virtual void setColorToGLColor() = 0;
 	
 	virtual void setOrigin(STVec3f* origin) = 0;
+	virtual void setVelocity(STVec3f* velocity) = 0;
+	virtual void setAcceleration(STVec3f* accel) = 0;
 	
 	virtual STVec3f* getOrigin() = 0;
 	
@@ -63,7 +65,6 @@ public:
 	virtual void update() = 0;
 	
 	//...but these might be a bit harder. Or maybe not, I dunno.
-	virtual void setVelocity(GLfloat velX, GLfloat velY, GLfloat velZ) = 0;
 	virtual void accelerate(GLfloat accX, GLfloat accY, GLfloat accZ) = 0;
 	virtual void translate(GLfloat x, GLfloat y, GLfloat z) = 0;
 	
