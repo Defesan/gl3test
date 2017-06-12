@@ -48,6 +48,7 @@ void Rect::genVerts()
 	verts.push_back(-offsetY);
 	verts.push_back(0.0f);
 
+	this->batch.copyVertexData(verts);
 }
 
 void Rect::genIndices()

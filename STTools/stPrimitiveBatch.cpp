@@ -111,25 +111,43 @@ void STPrimitiveBatch::copyVertexData(std::vector<STVec3f*> verts)
 	//Also, hopefully, minimum memory thrashing.
 	
 	std::vector<STVec3f*>::iterator iterV = verts.begin();
-	std::vector<GLfloat>::iterator iterD = this->vertData.end();	//We're appending any incoming vertices.
 	
-	for(int i = 0; iterV != verts.end(); iterV++, i++)
+	for(; iterV != verts.end(); iterV++)
 	{
 		this->vertData.push_back((*iterV)->getX());
 		this->vertData.push_back((*iterV)->getY());
 		this->vertData.push_back((*iterV)->getZ());
-		iterD = this->vertData.end();
 	}
 	//That...should work. Sadly, it IS basically extra work, which means it WILL be slower, but it's probably the best the setup I made can offer.
 	//Okay, maybe not probably. I'm sure there's an optimization SOMEWHERE.
 	
-	iterD = this->vertData.begin();
-	std::cout << "Vert data dump: ";
-	for(; iterD != vertData.end(); iterD++)
+	if(this->vertID == 0)
 	{
-		std::cout << *iterD << " ";
+		//We've never bound a buffer before. So, we need a new Buffer ID.
+		glGenBuffers(1, &(this->vertID));
+		glBindBuffer(GL_ARRAY_BUFFER, this->vertID);
+		//Oh, Hey-o, guess what I get to do that GLTools couldn't? Vectors can report their size! That's why I started using them in the first place!
+		glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * this->vertData.size(), this->vertData.data(), GL_DYNAMIC_DRAW);
 	}
-	std::cout << std::endl;
+	else
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, this->vertID);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat) * this->vertData.size(), this->vertData.data());
+	}
+}
+
+void STPrimitiveBatch::copyVertexData(std::vector<GLfloat> verts)
+{
+	//Turns out it's sometimes easier to do this.
+	//Okay, probably most of the time. Also, that optimization? This is it.
+	
+	std::vector<GLfloat>::iterator iterV = verts.begin();
+	
+	for(; iterV != verts.end(); iterV++)
+	{
+		this->vertData.push_back(*iterD);
+	}
+	
 	if(this->vertID == 0)
 	{
 		//We've never bound a buffer before. So, we need a new Buffer ID.
