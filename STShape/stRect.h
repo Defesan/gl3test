@@ -9,10 +9,16 @@ private:
 	GLfloat width;
 	GLfloat height;
 	
+	//Seems I need these after all...
+	std::vector<GLfloat> verts;
+	std::vector<GLfloat> norms;
+	std::vector<GLfloat> colors;
+	
 	void genVerts() override;
-	void genIndices() override;
 	void genNormals() override;
 	void genColors() override;
+	
+	void genBatch();
 	
 public:
 	Rect(GLfloat originX, GLfloat originY, GLfloat originZ, GLfloat width, GLfloat height);

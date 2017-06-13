@@ -145,7 +145,7 @@ void STPrimitiveBatch::copyVertexData(std::vector<GLfloat> verts)
 	
 	for(; iterV != verts.end(); iterV++)
 	{
-		this->vertData.push_back(*iterD);
+		this->vertData.push_back(*iterV);
 	}
 	
 	if(this->vertID == 0)
@@ -188,6 +188,28 @@ void STPrimitiveBatch::copyNormalData(std::vector<STVec3f*> norms)
 	
 }
 
+void STPrimitiveBatch::copyNormalData(std::vector<GLfloat> norms)
+{
+	std::vector<GLfloat>::iterator iterN = norms.begin();
+	
+	for(; iterN != norms.end(); iterN++)
+	{
+		this->normData.push_back(*iterN);
+	}
+	
+	if(this->normID == 0)
+	{
+		glGenBuffers(1, &(this->normID));
+		glBindBuffer(GL_ARRAY_BUFFER, this->normID);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * this->normData.size(), this->normData.data(), GL_DYNAMIC_DRAW);	
+	}	
+	else
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, this->normID);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat) * this->normData.size(), this->normData.data());
+	}
+}
+
 void STPrimitiveBatch::copyColorData(std::vector<STVec4f*> colors)
 {
 	std::vector<STVec4f*>::iterator iterC = colors.begin();
@@ -197,6 +219,28 @@ void STPrimitiveBatch::copyColorData(std::vector<STVec4f*> colors)
 	{
 		this->colorData.insert(iterD, (*iterC)->getData().begin(), (*iterC)->getData().end());
 		iterD = this->colorData.end();
+	}
+	
+	if(this->colorID == 0)
+	{	
+		glGenBuffers(1, &(this->colorID));
+		glBindBuffer(GL_ARRAY_BUFFER, this->colorID);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * this->colorData.size(), this->colorData.data(), GL_DYNAMIC_DRAW);
+	}
+	else
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, this->colorID);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat) * this->colorData.size(), this->colorData.data());
+	}
+}
+
+void STPrimitiveBatch::copyColorData(std::vector<GLfloat> colors)
+{
+	std::vector<GLfloat>::iterator iterC = colors.begin();
+	
+	for(; iterC != colors.end(); iterC++)
+	{
+		this->colorData.push_back(*iterC);
 	}
 	
 	if(this->colorID == 0)
