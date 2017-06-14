@@ -20,7 +20,7 @@ Rect::Rect(GLfloat originX, GLfloat originY, GLfloat originZ, GLfloat width, GLf
 	
 	//Okay, that wasn't hard *here*, but it'll be a bit more difficult later...
 	
-	this->translate(originX, originY, originZ);
+	//this->translate(originX, originY, originZ);
 }
 
 Rect::~Rect()
@@ -158,18 +158,15 @@ void Rect::genBatch()
 	this->batch->copyColorData(rawColors); 	//Completely coincidental that all three have the same length.
 }
 
-bool Rect::setColors(GLubyte** colors)
+bool Rect::setColors(std::vector<GLfloat> colorArray)
 {
-	if(colors)
+	if(!colorArray.empty())
 	{
 		this->colors.clear();
-		//Yes, I know. Not good code. I need to pull in both the number of vertices and the size of the color array, but for now...
-		for(int i = 0; i < 4; i++)
+		std::vector<GLfloat>::iterator iter = colorArray.begin();
+		for(; iter != colorArray.end(); iter++)
 		{
-			for(int j = 0; j < 4; j++)
-			{
-				this->colors.push_back(colors[i][j]);
-			}
+			this->colors.push_back(*iter);			
 		}
 		return true;
 	}
@@ -208,20 +205,6 @@ void Rect::update()
 
 }
 
-void Rect::setVelocity(GLfloat velX, GLfloat velY, GLfloat velZ)
-{
-	this->velocity->setX(velX);
-	this->velocity->setY(velY);
-	this->velocity->setZ(velZ);
-}
-
-void Rect::accelerate(GLfloat accX, GLfloat accY, GLfloat accZ)
-{
-	this->velocity->addX(accX);
-	this->velocity->addY(accY);
-	this->velocity->addZ(accZ);
-}
-
 
 void Rect::translate(GLfloat x, GLfloat y, GLfloat z)
 {
@@ -242,4 +225,10 @@ void Rect::translate(GLfloat x, GLfloat y, GLfloat z)
 		*iter += z;
 	}
 	
+}
+
+void Rect::accelerate(GLfloat accX, GLfloat accY, GLfloat accZ)
+{
+
+
 }

@@ -54,6 +54,8 @@ public:
 	
 	void render() override;
 	void update() override;
+	void translate(GLfloat x, GLfloat y, GLfloat z) override;
+	void accelerate(GLfloat accX, GLfloat accY, GLfloat accZ) override;
 };
 
 

@@ -5,7 +5,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../STLinear/stVec3f.h"
+#include "../STLinear/stVector.h"
 #include "../STTools/stPrimitiveBatch.h"
 
 #include <GL/freeglut.h>

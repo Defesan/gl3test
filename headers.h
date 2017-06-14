@@ -27,4 +27,6 @@
 #include "STTools/stUniform.h"
 #include "STTools/stUtil.h"
 
+#include "STShape/stRect.h"
+
 #endif //__HEADERS_H__
