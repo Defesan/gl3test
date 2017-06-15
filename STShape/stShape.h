@@ -28,7 +28,7 @@ protected:
 	STVec3f* acceleration;
 		
 	virtual void genVerts() = 0;
-	virtual void genIndices() = 0;
+	//virtual void genIndices() = 0;
 	virtual void genNormals() = 0;	//Now this should be fun: generative normal mapping?
 	virtual void genColors() = 0;
 	

@@ -152,10 +152,11 @@ void Rect::genBatch()
 	
 	//Must find better way... That said, when I thought that about rects BEFORE(with the ugly sequential vertex positioning), I looked at the GLTools version...
 	//And it did the same damn thing. AND for rectangular solids.
-
+	this->batch->begin();
 	this->batch->copyVertexData(rawVerts);
-	this->batch->copyNormalData(rawNorms);
-	this->batch->copyColorData(rawColors); 	//Completely coincidental that all three have the same length.
+	//this->batch->copyNormalData(rawNorms);
+	//this->batch->copyColorData(rawColors); 	//Completely coincidental that all three have the same length.
+	this->batch->finalize();
 }
 
 bool Rect::setColors(std::vector<GLfloat> colorArray)

@@ -17,6 +17,7 @@ const int MIN_HEIGHT = 50;
 //UGH!!! Globals!
 STShaderManager* sMan;
 std::vector<STPrimitiveBatch*> geometry;
+Rect* rect;
 
 void resize(int w, int h);
 void setup();
