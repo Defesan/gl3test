@@ -15,9 +15,7 @@ int main(int argc, char* argv[])
 		std::cerr << "GLEW Error: " << glewGetErrorString(error) << std::endl;
 		return 1;
 	}
-	
-	STPrimitiveBatch* batch = new STPrimitiveBatch(0);
-	geometry.push_back(batch);
+
 	sMan = new STShaderManager();
 	
 	setup();
@@ -35,27 +33,9 @@ void resize(int w, int h)
 void setup()
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	/*
-	std::vector<STVec3f*> verts;
-	STVec3f* v1 = new STVec3f(-0.2f, 0.2f, 0.0f);
-	STVec3f* v2 = new STVec3f(-0.2f, -0.2f, 0.0f);
-	STVec3f* v3 = new STVec3f(0.2f, -0.2f, 0.0f);
-	STVec3f* v4 = new STVec3f(0.2f, 0.2f, 0.0f);
 	
-	verts.push_back(v1);
-	verts.push_back(v2);
-	verts.push_back(v3);
-	verts.push_back(v1);
-	verts.push_back(v4);
-	verts.push_back(v3);
-	
-	geometry[0]->begin();		//Might actually want to call this 'setup' to be more in line with its counterpart.
-	geometry[0]->copyVertexData(verts);
-	geometry[0]->finalize();
-	*/
-	
-	//Now, let's try it with a rect.
-	rect = new Rect(0.0f, 0.0f, 0.0f, 0.4f, 0.4f);
+	rect = new Rect(0.5f, 0.5f, 0.0f, 0.4f, 0.4f);
+	rect->setVelocity(new STVec3f(-0.005f, -0.005f, 0.0f));
 	rect->render();
 }
 
@@ -71,6 +51,8 @@ void render()
 	//Finally we get to the part where we use the shader! I might want to streamline this...
 	sMan->runShader(sMan->getStockShader(ST_IDENTITY), uniforms);
 	//geometry[0]->draw();
-	rect->render();
+	
+	rect->update();
 	glutSwapBuffers();
+	glutPostRedisplay();
 }

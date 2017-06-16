@@ -14,6 +14,8 @@ private:
 	std::vector<GLfloat> norms;
 	std::vector<GLfloat> colors;
 	
+	bool batchStarted;
+	
 	void genVerts() override;
 	void genNormals() override;
 	void genColors() override;
@@ -55,6 +57,7 @@ public:
 	void render() override;
 	void update() override;
 	void translate(GLfloat x, GLfloat y, GLfloat z) override;
+	void translate(STVec3f* direction) { this->translate(direction->getX(), direction->getY(), direction->getZ()); }; 
 	void accelerate(GLfloat accX, GLfloat accY, GLfloat accZ) override;
 };
 

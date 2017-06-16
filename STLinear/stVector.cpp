@@ -180,6 +180,12 @@ bool STVec3f::closeEnough(float x, float y, float z, float delta)
 	return false;
 }
 
+void STVec3f::print()
+{
+	std::cout << "X = " << this->getX() << " Y = " << this->getY() << " Z = " << this->getZ() << std::endl;
+
+}
+
 /*
 	STVec4f
 	4 element vector with floats	

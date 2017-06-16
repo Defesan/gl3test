@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include <vector>
+#include <iostream>
 /*
 	Apparently I can occasionally use a 2D vector?
  */
@@ -90,6 +91,7 @@ public:
 	float distance(STVec3f* v2);
 	bool closeEnough(STVec3f* v2, float delta);
 	bool closeEnough(float x, float y, float z, float delta);
+	void print();
 };
 
 class STVec4f

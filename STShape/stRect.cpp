@@ -2,15 +2,15 @@
 
 Rect::Rect(GLfloat originX, GLfloat originY, GLfloat originZ, GLfloat width, GLfloat height)
 {	
-	this->origin = new STVec3f();
-	this->velocity = new STVec3f();
-	this->acceleration = new STVec3f();
+	this->origin = new STVec3f(originX, originY, originZ);
+	this->velocity = new STVec3f(0.0f, 0.0f, 0.0f);
+	this->acceleration = new STVec3f(0.0f, 0.0f, 0.0f);
 	
 	this->width = width;
 	this->height = height;
 	
 	this->batch = new STPrimitiveBatch(0);
-	
+	this->batchStarted = false;
 	//That should be all the members initialized. Now the really hard part.
 	
 	this->genVerts();
@@ -32,19 +32,19 @@ void Rect::genVerts()
 {
 	GLfloat offsetX = this->width / 2;
 	GLfloat offsetY = this->height / 2;
-	
-	this->verts.push_back(-offsetX);
-	this->verts.push_back(offsetY);
-	this->verts.push_back(0.0f);
-	this->verts.push_back(offsetX);
-	this->verts.push_back(offsetY);
-	this->verts.push_back(0.0f);
-	this->verts.push_back(-offsetX);
-	this->verts.push_back(-offsetY);
-	this->verts.push_back(0.0f);
-	this->verts.push_back(offsetX);
-	this->verts.push_back(-offsetY);
-	this->verts.push_back(0.0f);
+	this->verts.clear();
+	this->verts.push_back(this->origin->getX() - offsetX);
+	this->verts.push_back(this->origin->getY() + offsetY);
+	this->verts.push_back(this->origin->getZ());
+	this->verts.push_back(this->origin->getX() + offsetX);
+	this->verts.push_back(this->origin->getY() + offsetY);
+	this->verts.push_back(this->origin->getZ());
+	this->verts.push_back(this->origin->getX() - offsetX);
+	this->verts.push_back(this->origin->getY() - offsetY);
+	this->verts.push_back(this->origin->getZ());
+	this->verts.push_back(this->origin->getX() + offsetX);
+	this->verts.push_back(this->origin->getY() - offsetY);
+	this->verts.push_back(this->origin->getZ());
 }
 
 void Rect::genColors()
@@ -79,6 +79,13 @@ void Rect::genNormals()
 
 void Rect::genBatch()
 {
+	if(this->batchStarted)
+	{
+		delete this->batch;
+		this->batch = new STPrimitiveBatch(0);
+		this->batchStarted = false;	
+	}
+	
 	std::vector<GLfloat> rawVerts;
 	std::vector<GLfloat> rawNorms;
 	std::vector<GLfloat> rawColors;
@@ -154,9 +161,10 @@ void Rect::genBatch()
 	//And it did the same damn thing. AND for rectangular solids.
 	this->batch->begin();
 	this->batch->copyVertexData(rawVerts);
-	//this->batch->copyNormalData(rawNorms);
-	//this->batch->copyColorData(rawColors); 	//Completely coincidental that all three have the same length.
+	this->batch->copyNormalData(rawNorms);
+	this->batch->copyColorData(rawColors); 	//Completely coincidental that all three have the same length.
 	this->batch->finalize();
+	this->batchStarted = true;
 }
 
 bool Rect::setColors(std::vector<GLfloat> colorArray)
@@ -202,6 +210,8 @@ void Rect::render()
 void Rect::update()
 {
 	//Have to figure out what to do here...
+	this->velocity->addVec3f(this->acceleration);
+	this->translate(this->velocity);
 	this->render();
 
 }
@@ -217,19 +227,13 @@ void Rect::translate(GLfloat x, GLfloat y, GLfloat z)
 	this->origin->addZ(z);
 	
 	//...and the verts
-	for(iter = this->verts.begin(); iter != this->verts.end(); iter++)
-	{
-		*iter += x;
-		iter++;
-		*iter += y;
-		iter++;
-		*iter += z;
-	}
-	
+	this->genVerts();
+	this->genBatch();	//Okay, got to be a better way...
 }
 
 void Rect::accelerate(GLfloat accX, GLfloat accY, GLfloat accZ)
 {
-
-
+	this->acceleration->setX(accX);
+	this->acceleration->setY(accY);
+	this->acceleration->setZ(accZ);
 }
