@@ -35,7 +35,8 @@ void setup()
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	
 	rect = new Rect(0.5f, 0.5f, 0.0f, 0.4f, 0.4f);
-	rect->setVelocity(new STVec3f(-0.005f, -0.005f, 0.0f));
+	rect->setVelocity(new STVec3f(-0.0005f, -0.0005f, 0.0f));
+	rect->setAcceleration(new STVec3f(0.000001f, 0.000001f, 0.0f));
 	rect->render();
 }
 

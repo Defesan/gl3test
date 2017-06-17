@@ -13,14 +13,14 @@ Rect::Rect(GLfloat originX, GLfloat originY, GLfloat originZ, GLfloat width, GLf
 	this->batchStarted = false;
 	//That should be all the members initialized. Now the really hard part.
 	
+	this->batch->begin();
+	
 	this->genVerts();
 	this->genNormals();
 	this->genColors();
-	this->genBatch();
 	
-	//Okay, that wasn't hard *here*, but it'll be a bit more difficult later...
+	this->batch->finalize();
 	
-	//this->translate(originX, originY, originZ);
 }
 
 Rect::~Rect()
@@ -32,31 +32,47 @@ void Rect::genVerts()
 {
 	GLfloat offsetX = this->width / 2;
 	GLfloat offsetY = this->height / 2;
+
 	this->verts.clear();
 	this->verts.push_back(this->origin->getX() - offsetX);
 	this->verts.push_back(this->origin->getY() + offsetY);
 	this->verts.push_back(this->origin->getZ());
+	
 	this->verts.push_back(this->origin->getX() + offsetX);
 	this->verts.push_back(this->origin->getY() + offsetY);
 	this->verts.push_back(this->origin->getZ());
+	
 	this->verts.push_back(this->origin->getX() - offsetX);
 	this->verts.push_back(this->origin->getY() - offsetY);
 	this->verts.push_back(this->origin->getZ());
+	
+	this->verts.push_back(this->origin->getX() - offsetX);
+	this->verts.push_back(this->origin->getY() - offsetY);
+	this->verts.push_back(this->origin->getZ());
+	
+	this->verts.push_back(this->origin->getX() + offsetX);
+	this->verts.push_back(this->origin->getY() + offsetY);
+	this->verts.push_back(this->origin->getZ());
+	
 	this->verts.push_back(this->origin->getX() + offsetX);
 	this->verts.push_back(this->origin->getY() - offsetY);
 	this->verts.push_back(this->origin->getZ());
+	
+	this->batch->copyVertexData(this->verts);
+	
 }
 
 void Rect::genColors()
 {
-	for(int i = 0; i < 4; i++)
+	for(int i = 0; i < 6; i++)
 	{
 		this->colors.push_back(0.05f * i);
 		this->colors.push_back(0.07f * i);
 		this->colors.push_back(0.1f * i);
 		this->colors.push_back(1.0f);
 	}
-	
+	this->batch->copyColorData(this->colors);
+
 }
 
 void Rect::genNormals()
@@ -74,97 +90,14 @@ void Rect::genNormals()
 	this->norms.push_back(0.0f);
 	this->norms.push_back(0.0f);
 	this->norms.push_back(1.0f);
+	this->norms.push_back(0.0f);
+	this->norms.push_back(0.0f);
+	this->norms.push_back(1.0f);
+	this->norms.push_back(0.0f);
+	this->norms.push_back(0.0f);
+	this->norms.push_back(1.0f);
 
-}
-
-void Rect::genBatch()
-{
-	if(this->batchStarted)
-	{
-		delete this->batch;
-		this->batch = new STPrimitiveBatch(0);
-		this->batchStarted = false;	
-	}
-	
-	std::vector<GLfloat> rawVerts;
-	std::vector<GLfloat> rawNorms;
-	std::vector<GLfloat> rawColors;
-	
-	//create the raw verts array
-	rawVerts.push_back(this->verts[0]);
-	rawVerts.push_back(this->verts[1]);
-	rawVerts.push_back(this->verts[2]);
-	rawVerts.push_back(this->verts[3]);
-	rawVerts.push_back(this->verts[4]);
-	rawVerts.push_back(this->verts[5]);
-	rawVerts.push_back(this->verts[6]);
-	rawVerts.push_back(this->verts[7]);
-	rawVerts.push_back(this->verts[8]);
-	rawVerts.push_back(this->verts[6]);
-	rawVerts.push_back(this->verts[7]);
-	rawVerts.push_back(this->verts[8]);
-	rawVerts.push_back(this->verts[3]);
-	rawVerts.push_back(this->verts[4]);
-	rawVerts.push_back(this->verts[5]);
-	rawVerts.push_back(this->verts[9]);
-	rawVerts.push_back(this->verts[10]);
-	rawVerts.push_back(this->verts[11]);
-	
-	//Ugh. There IS a better way of doing this. I think I'd rather create the verts, norms, and colors as vectors of Vec3fs and Vec4fs, then...
-	//Write basically all the same lines, but in a more pleasing manner, like rawVerts.push_back(this->verts[0].getX();
-	
-	rawNorms.push_back(this->norms[0]);
-	rawNorms.push_back(this->norms[1]);
-	rawNorms.push_back(this->norms[2]);
-	rawNorms.push_back(this->norms[3]);
-	rawNorms.push_back(this->norms[4]);
-	rawNorms.push_back(this->norms[5]);
-	rawNorms.push_back(this->norms[6]);
-	rawNorms.push_back(this->norms[7]);
-	rawNorms.push_back(this->norms[8]);
-	rawNorms.push_back(this->norms[6]);
-	rawNorms.push_back(this->norms[7]);
-	rawNorms.push_back(this->norms[8]);
-	rawNorms.push_back(this->norms[3]);
-	rawNorms.push_back(this->norms[4]);
-	rawNorms.push_back(this->norms[5]);
-	rawNorms.push_back(this->norms[9]);
-	rawNorms.push_back(this->norms[10]);
-	rawNorms.push_back(this->norms[11]);
-	
-	rawColors.push_back(this->colors[0]);
-	rawColors.push_back(this->colors[1]);
-	rawColors.push_back(this->colors[2]);
-	rawColors.push_back(this->colors[3]);
-	rawColors.push_back(this->colors[4]);
-	rawColors.push_back(this->colors[5]);
-	rawColors.push_back(this->colors[6]);
-	rawColors.push_back(this->colors[7]);
-	rawColors.push_back(this->colors[8]);
-	rawColors.push_back(this->colors[9]);
-	rawColors.push_back(this->colors[10]);
-	rawColors.push_back(this->colors[11]);
-	rawColors.push_back(this->colors[8]);
-	rawColors.push_back(this->colors[9]);
-	rawColors.push_back(this->colors[10]);
-	rawColors.push_back(this->colors[11]);
-	rawColors.push_back(this->colors[4]);
-	rawColors.push_back(this->colors[5]);
-	rawColors.push_back(this->colors[6]);
-	rawColors.push_back(this->colors[7]);
-	rawColors.push_back(this->colors[12]);
-	rawColors.push_back(this->colors[13]);
-	rawColors.push_back(this->colors[14]);
-	rawColors.push_back(this->colors[15]);
-	
-	//Must find better way... That said, when I thought that about rects BEFORE(with the ugly sequential vertex positioning), I looked at the GLTools version...
-	//And it did the same damn thing. AND for rectangular solids.
-	this->batch->begin();
-	this->batch->copyVertexData(rawVerts);
-	this->batch->copyNormalData(rawNorms);
-	this->batch->copyColorData(rawColors); 	//Completely coincidental that all three have the same length.
-	this->batch->finalize();
-	this->batchStarted = true;
+	this->batch->copyNormalData(this->norms);
 }
 
 bool Rect::setColors(std::vector<GLfloat> colorArray)
@@ -184,20 +117,12 @@ bool Rect::setColors(std::vector<GLfloat> colorArray)
 
 void Rect::setColorToGLColor()
 {
-	//These colors are typically floats, which presents a problem....
 	GLfloat colors[4] = {0.0f, 0.0f, 0.0f, 0.0f};
-	GLubyte ubColors[4] = {0, 0, 0, 0};
 	glGetFloatv(GL_CURRENT_COLOR, colors);
 	
-	//Convert from float to ubyte
-	for(int i = 0; i < 4; i++)
-	{
-		ubColors[i] = (GLubyte)(colors[i] * 255);		//should work?
-	}
-	this->colors.clear();
 	for(int i = 0; i < 16; i++)
 	{
-		this->colors.push_back(ubColors[i % 4]);
+		this->colors.push_back(colors[i % 4]);
 	}
 }
 
@@ -228,7 +153,6 @@ void Rect::translate(GLfloat x, GLfloat y, GLfloat z)
 	
 	//...and the verts
 	this->genVerts();
-	this->genBatch();	//Okay, got to be a better way...
 }
 
 void Rect::accelerate(GLfloat accX, GLfloat accY, GLfloat accZ)

@@ -16,11 +16,16 @@ private:
 	
 	bool batchStarted;
 	
+	/*
+		I have two options:
+		1) Figure out how to use indices with the Primitive batch function(actually shouldn't be that hard...)
+		2) Change Rect so that it generates the full lists of vertices, normals, and colors, as they're supposed to be displayed...
+		Going for 2, first.
+	*/
+	
 	void genVerts() override;
 	void genNormals() override;
 	void genColors() override;
-	
-	void genBatch();
 	
 public:
 	Rect(GLfloat originX, GLfloat originY, GLfloat originZ, GLfloat width, GLfloat height);

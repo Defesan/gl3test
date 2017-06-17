@@ -142,7 +142,10 @@ void STPrimitiveBatch::copyVertexData(std::vector<GLfloat> verts)
 	//Okay, probably most of the time. Also, that optimization? This is it.
 	
 	std::vector<GLfloat>::iterator iterV = verts.begin();
-	
+	if(!this->vertData.empty())
+	{
+		this->vertData.clear();
+	}
 	for(; iterV != verts.end(); iterV++)
 	{
 		this->vertData.push_back(*iterV);
@@ -153,7 +156,6 @@ void STPrimitiveBatch::copyVertexData(std::vector<GLfloat> verts)
 		//We've never bound a buffer before. So, we need a new Buffer ID.
 		glGenBuffers(1, &(this->vertID));
 		glBindBuffer(GL_ARRAY_BUFFER, this->vertID);
-		//Oh, Hey-o, guess what I get to do that GLTools couldn't? Vectors can report their size! That's why I started using them in the first place!
 		glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * this->vertData.size(), this->vertData.data(), GL_DYNAMIC_DRAW);
 	}
 	else
