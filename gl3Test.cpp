@@ -34,10 +34,40 @@ void setup()
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	
-	rect = new Rect(0.5f, 0.5f, 0.0f, 0.4f, 0.4f);
-	rect->setVelocity(new STVec3f(-0.0005f, -0.0005f, 0.0f));
-	rect->setAcceleration(new STVec3f(0.000001f, 0.000001f, 0.0f));
+	rect = new Rect(0.0f, 0.0f, 0.0f, 0.05f, 0.05f);
+	rect->setVelocity(new STVec3f(0.05f, 0.03f, 0.0f));
+	
 	rect->render();
+}
+
+void bounce()
+{
+	bool dirty = false;
+	GLfloat lXPos = rect->getOriginX() - (rect->getWidth() / 2);
+	GLfloat rXPos = rect->getOriginX() + (rect->getWidth() / 2);
+	GLfloat tYPos = rect->getOriginY() + (rect->getHeight() / 2);
+	GLfloat bYPos = rect->getOriginY() - (rect->getHeight() / 2);
+	
+	GLfloat velX = rect->getVelX();
+	GLfloat velY = rect->getVelY();
+	
+	
+	if(lXPos < -1.0f || rXPos > 1.0f)
+	{
+		velX = -velX;
+		dirty = true;
+	}
+	if(bYPos < -1.0f || tYPos > 1.0f)
+	{
+		velY = -velY;
+		dirty = true;
+	}
+	
+	if(dirty)
+	{
+		STVec3f* velocity = new STVec3f(velX, velY, 0.0f);
+		rect->setVelocity(velocity);
+	}
 }
 
 void render()
@@ -51,8 +81,7 @@ void render()
 	
 	//Finally we get to the part where we use the shader! I might want to streamline this...
 	sMan->runShader(sMan->getStockShader(ST_IDENTITY), uniforms);
-	//geometry[0]->draw();
-	
+	bounce();
 	rect->update();
 	glutSwapBuffers();
 	glutPostRedisplay();

@@ -59,6 +59,13 @@ public:
 	GLfloat getAccY() override {return this->acceleration->getY();};
 	GLfloat getAccZ() override {return this->acceleration->getZ();};
 	
+	//Shoulda remembered that if you have an attribute, it's best to have at least a getter for it.
+	GLfloat getWidth() {return this->width;};
+	GLfloat getHeight() {return this->height;};
+	
+	void setWidth(GLfloat newWidth) {this->width = newWidth;};
+	void setHeight(GLfloat newHeight) {this->height = newHeight;};
+	
 	void render() override;
 	void update() override;
 	void translate(GLfloat x, GLfloat y, GLfloat z) override;

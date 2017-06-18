@@ -13,12 +13,15 @@ const GLfloat PROJECTION_WIDTH = 100.0f;
 const GLfloat PROJECTION_DEPTH = 100.0f;
 const int MIN_WIDTH = 50;
 const int MIN_HEIGHT = 50;
+const GLfloat WINDOW_WIDTH = 1.0f;
+const GLfloat WINDOW_HEIGHT = 1.0f;
 
 //UGH!!! Globals!
 STShaderManager* sMan;
 std::vector<STPrimitiveBatch*> geometry;
 Rect* rect;
 
+void bounce();
 void resize(int w, int h);
 void setup();
 void render();
