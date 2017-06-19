@@ -1,6 +1,6 @@
 #include "stTimer.h"
 
-int Timer::getElapsedMicroseconds()
+int STTimer::getElapsedMicroseconds()
 {
 	timeval tvNow;
 	gettimeofday(&tvNow, nullptr);
@@ -8,7 +8,7 @@ int Timer::getElapsedMicroseconds()
 	return result;
 }
 
-float Timer::getElapsedSeconds()
+float STTimer::getElapsedSeconds()
 {
 	int usecs = this->getElapsedMicroseconds();
 	return ((float)usecs) * 0.000001f;

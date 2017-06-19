@@ -36,6 +36,7 @@ void setup()
 	
 	rect = new Rect(0.0f, 0.0f, 0.0f, 0.05f, 0.05f);
 	rect->setVelocity(new STVec3f(0.05f, 0.03f, 0.0f));
+	timer = new STTimer();
 	
 	rect->render();
 }
@@ -72,17 +73,23 @@ void bounce()
 
 void render()
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	GLfloat elapsed = timer->getElapsedSeconds();
+	GLfloat frameTime = 1.0f/SCREEN_FPS;
+	if(elapsed > frameTime)
+	{
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+		
+		STVec4f* shaderColor = new STVec4f(1.0f, 1.0f, 1.0f, 1.0f);
+		std::vector<STUniform*> uniforms;
+		STUniform* colorUniform = new STUniform("vColor", 1, shaderColor);//Using the ST toolkit, you have to know the details of the shader you're using. I might be able to fix that for the stock shaders.
+		uniforms.push_back(colorUniform);
 	
-	STVec4f* shaderColor = new STVec4f(1.0f, 1.0f, 1.0f, 1.0f);
-	std::vector<STUniform*> uniforms;
-	STUniform* colorUniform = new STUniform("vColor", 1, shaderColor);//Using the ST toolkit, you have to know the details of the shader you're using. I might be able to fix that for the stock shaders.
-	uniforms.push_back(colorUniform);
-	
-	//Finally we get to the part where we use the shader! I might want to streamline this...
-	sMan->runShader(sMan->getStockShader(ST_IDENTITY), uniforms);
-	bounce();
-	rect->update();
-	glutSwapBuffers();
+		//Finally we get to the part where we use the shader! I might want to streamline this...
+		sMan->runShader(sMan->getStockShader(ST_IDENTITY), uniforms);
+		bounce();
+		rect->update();
+		glutSwapBuffers();
+		timer->reset();
+	}
 	glutPostRedisplay();
 }

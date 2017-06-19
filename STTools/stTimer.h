@@ -3,12 +3,12 @@
 
 #include <sys/time.h>
 
-class Timer
+class STTimer
 {
 private:
 	timeval tvTicks;
 public:
-	Timer() {gettimeofday(&tvTicks, nullptr);};
+	STTimer() {gettimeofday(&tvTicks, nullptr);};
 	void reset() {gettimeofday(&tvTicks, nullptr);};
 	int getElapsedMicroseconds();
 	float getElapsedSeconds();

@@ -7,7 +7,7 @@
 //Working in OpenGL 3, things are... a little different.
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
-const int SCREEN_FPS = 60;
+const int SCREEN_FPS = 60.0f;
 const GLfloat PROJECTION_HEIGHT = 100.0f;
 const GLfloat PROJECTION_WIDTH = 100.0f;
 const GLfloat PROJECTION_DEPTH = 100.0f;
@@ -20,6 +20,7 @@ const GLfloat WINDOW_HEIGHT = 1.0f;
 STShaderManager* sMan;
 std::vector<STPrimitiveBatch*> geometry;
 Rect* rect;
+STTimer* timer;
 
 void bounce();
 void resize(int w, int h);
