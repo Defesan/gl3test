@@ -91,5 +91,9 @@ void render()
 		glutSwapBuffers();
 		timer->reset();
 	}
+	else
+	{
+		
+	}
 	glutPostRedisplay();
 }
