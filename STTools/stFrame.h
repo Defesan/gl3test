@@ -41,14 +41,14 @@ public:
 	STVec3f* getYAxis() {return this->upVector;};
 	STVec3f* getZAxis() {return this->forwardVector;};
 	
-	//This one's a bit trickier, and I don't feel comfortable putting it in the header.
-	STVec3f* getXAxis();
+	//This one's a bit trickier.
+	STVec3f* getXAxis() {return this->upVector->crossProduct(forwardVector);};
 	
 	//Again, this is simple enough, and straightforward.
 	void translateWorldBy(float x, float y, float z) {this->origin->addVec3f(new STVec3f(x, y, z));};
 	
 	//But this...slightly trickier.
-	void translateLocalBy(float x, float y, float z);
+	void translateLocal(float x, float y, float z);
 	
 	//Now all of the functions that most definitely don't fit in the header. Sorry, RSW, but I don't roll that way unless told to.
 	STMatrix44f* getMatrix(bool rotOnly);

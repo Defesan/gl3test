@@ -276,6 +276,16 @@ STMatrix44f* STMatrix44f::copyMatrix()
 	return copy;
 }
 
+void STMatrix44f::setColumn(int index, STVec3f* column)
+{
+	int startPos = index * 4;
+	for(int i = 0; i < 3; i++)
+	{
+		this->data[startPos + i] = column->getData()[i]; 	
+	}
+	this->data[startPos + 3] = 0.0f;
+}
+
 /*	STMatrix33d
 	3x3 column-major matrix with doubles
  */

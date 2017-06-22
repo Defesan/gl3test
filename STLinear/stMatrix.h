@@ -48,6 +48,8 @@ public:
 	void loadScaleMatrix(float x, float y, float z) {this->loadIdentity(); this->data[0] = x; this->data[5] = y; this->data[10] = z;};
 	void loadPerspectiveMatrix(float fov, float aspect, float zMin, float zMax);
 	void loadOrthoMatrix(float xMin, float xMax, float yMin, float yMax, float zMin, float zMax);
+	void setColumn(int index, STVec3f* column);
+	void setElement(int index, float value) {this->data[index] = value;};
 	
 	STMatrix44f* copyMatrix();
 };
