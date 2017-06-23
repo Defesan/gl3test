@@ -92,6 +92,14 @@ STVec3f::STVec3f(float x, float y, float z)
 	this->data.push_back(z);
 }
 
+//Initialize from another vector
+STVec3f::STVec3f(STVec3f* original)
+{
+	this->data.push_back(original->getX());
+	this->data.push_back(original->getY());
+	this->data.push_back(original->getZ());
+}
+
 void STVec3f::addVec3f(STVec3f* v2)
 {
 	this->addX(v2->getX());
@@ -184,6 +192,12 @@ void STVec3f::print()
 {
 	std::cout << "X = " << this->getX() << " Y = " << this->getY() << " Z = " << this->getZ() << std::endl;
 
+}
+
+void STVec3f::normalize()
+{
+	float length = this->length();
+	this->mulScalar(1.0f / length);	//So that's why we had a length function.
 }
 
 /*

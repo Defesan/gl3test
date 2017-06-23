@@ -36,6 +36,7 @@ public:
 	
 	void set(int row,int col, float val) {this->data[row + (col * 4)] = val;};	
 	float get(int row, int col) {return this->data[row + (col * 4)];};
+	float getElement(int index) {return this->data[index];};
 	
 	float* getData() {return this->data.data();};
 
@@ -49,7 +50,7 @@ public:
 	void loadPerspectiveMatrix(float fov, float aspect, float zMin, float zMax);
 	void loadOrthoMatrix(float xMin, float xMax, float yMin, float yMax, float zMin, float zMax);
 	void setColumn(int index, STVec3f* column);
-	void setElement(int index, float value) {this->data[index] = value;};
+	void setRow(int index, STVec3f* row);
 	
 	STMatrix44f* copyMatrix();
 };

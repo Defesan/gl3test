@@ -278,12 +278,20 @@ STMatrix44f* STMatrix44f::copyMatrix()
 
 void STMatrix44f::setColumn(int index, STVec3f* column)
 {
-	int startPos = index * 4;
 	for(int i = 0; i < 3; i++)
 	{
-		this->data[startPos + i] = column->getData()[i]; 	
+		this->set(i, index, column->get(i)); 	
 	}
-	this->data[startPos + 3] = 0.0f;
+	this->set(3, index, 0.0f);
+}
+
+void STMatrix44f::setRow(int index, STVec3f* row)
+{
+	for(int i = 0; i < 3; i++)
+	{
+		this->set(index, i, row->get(i));
+	}
+	this->set(index, 3, 0.0f);
 }
 
 /*	STMatrix33d

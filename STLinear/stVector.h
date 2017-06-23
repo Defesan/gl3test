@@ -55,10 +55,14 @@ private:
 	
 public:
 	STVec3f(float x, float y, float z);
+	STVec3f(STVec3f* original);
 	STVec3f() : STVec3f(0.0f, 0.0f, 0.0f) {};
 	
 	std::vector<float> getData() {return this->data;};
 	float* getDataArray() {return this->data.data();};
+	
+	float get(int index) {return this->data[index];};
+	void set(int index, float val) {this->data[index] = val;};
 	
 	float getX() {return this->data[0];};
 	float getY() {return this->data[1];};
@@ -87,11 +91,12 @@ public:
 	STVec3f* diff(STVec3f* v2);
 	float dotProduct(STVec3f* v2);
 	STVec3f* crossProduct(STVec3f* v2);
-	float length() {return sqrtf(this->dotProduct(this));};	//I'm hoping this'll work... Also hoping to find a reason for its existence.
+	float length() {return sqrtf(this->dotProduct(this));};
 	float distance(STVec3f* v2);
 	bool closeEnough(STVec3f* v2, float delta);
 	bool closeEnough(float x, float y, float z, float delta);
 	void print();
+	void normalize();
 };
 
 class STVec4f
