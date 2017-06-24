@@ -196,44 +196,77 @@ void STFrame::rotateLocalZ(float angle)
 	
 void STFrame::normalize()
 {
+	//Going by pure math, this shouldn't change anything. But unfortunately, we live in the real world, so floating point drift happens.
 	STVec3f* crossVector = this->upVector->crossProduct(this->forwardVector);
-	this->forwardVector = crossVector->crossProduct(this->upVector);
+	this->forwardVector = crossVector->crossProduct(this->upVector);		
 	this->upVector->normalize();
 	this->forwardVector->normalize();
 }
 
 void STFrame::rotateWorld(float angle, float x, float y, float z)
 {
+	STMatrix44f* rotationMatrix = new STMatrix44f();
+	STVec3f* tempVec = new STVec3f();
 
+	rotationMatrix->loadRotationMatrix(angle, x, y, z);
+	
+	tempVec->setX((rotationMatrix->getElement(0) * this->upVector->getX()) +
+					(rotationMatrix->getElement(4) * this->upVector->getY()) +
+					(rotationMatrix->getElement(8) * this->upVector->getZ()));
+	tempVec->setY((rotationMatrix->getElement(1) * this->upVector->getX()) +
+					(rotationMatrix->getElement(5) * this->upVector->getY()) +
+					(rotationMatrix->getElement(9) * this->upVector->getZ()));
+	tempVec->setZ((rotationMatrix->getElement(2) * this->upVector->getX()) +
+					(rotationMatrix->getElement(6) * this->upVector->getY()) +
+					(rotationMatrix->getElement(10) * this->upVector->getZ()));
+						
+	this->upVector = new STVec3f(tempVec);
+	
+	tempVec->setX((rotationMatrix->getElement(0) * this->forwardVector->getX()) +
+					(rotationMatrix->getElement(4) * this->forwardVector->getY()) +
+					(rotationMatrix->getElement(8) * this->forwardVector->getZ()));
+	tempVec->setY((rotationMatrix->getElement(1) * this->forwardVector->getX()) +
+					(rotationMatrix->getElement(5) * this->forwardVector->getY()) +
+					(rotationMatrix->getElement(9) * this->forwardVector->getZ()));
+	tempVec->setZ((rotationMatrix->getElement(2) * this->forwardVector->getX()) +
+					(rotationMatrix->getElement(6) * this->forwardVector->getY()) +
+					(rotationMatrix->getElement(10) * this->forwardVector->getZ()));
+	
+	this->forwardVector = new STVec3f(tempVec);
 }
 
 void STFrame::rotateLocal(float angle, float x, float y, float z)
 {
-
+	STVec3f* worldVec = new STVec3f();
+	STVec3f* localVec = new STVec3f(x, y, z);
+	
+	worldVec = this->worldFromLocal(localVec, true);
+	this->rotateWorld(angle, worldVec->getX(), worldVec->getY(), worldVec->getZ());
+	//Well THAT was easy!
 }
 
-STVec3f* worldFromLocal(STVec3f* localVector, bool rotOnly)
+STVec3f* STFrame::worldFromLocal(STVec3f* localVector, bool rotOnly)
 {
 	STVec3f* worldCoords = new STVec3f();
 	
 	return worldCoords;
 }
 
-STVec3f* localFromWorld(STVec3f* worldVector)
+STVec3f* STFrame::localFromWorld(STVec3f* worldVector)
 {
 	STVec3f* localCoords = new STVec3f();
 
 	return localCoords;
 }
 	
-STVec3f* transformPoint(STVec3f* point)
+STVec3f* STFrame::transformPoint(STVec3f* point)
 {
 	STVec3f* result = new STVec3f();
 	
 	return result;
 }
 
-STVec3f* rotateVector(STVec3f* vector)
+STVec3f* STFrame::rotateVector(STVec3f* vector)
 {
 	STVec3f* result = new STVec3f();
 	
