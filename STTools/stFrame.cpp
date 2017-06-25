@@ -262,6 +262,20 @@ STVec3f* STFrame::localFromWorld(STVec3f* worldVector)
 STVec3f* STFrame::transformPoint(STVec3f* point)
 {
 	STVec3f* result = new STVec3f();
+	STMatrix44f* frameMatrix = this->getMatrix(false);
+	
+	result->setX((frameMatrix->getElement(0) * point->getX()) + 
+					(frameMatrix->getElement(4) * point->getY()) +
+					(frameMatrix->getElement(8) * point->getZ()) + 
+					frameMatrix->getElement(12));
+	result->setY((frameMatrix->getElement(1) * point->getX()) + 
+					(frameMatrix->getElement(5) * point->getY()) +
+					(frameMatrix->getElement(9) * point->getZ()) + 
+					frameMatrix->getElement(13));
+	result->setZ((frameMatrix->getElement(2) * point->getX()) + 
+					(frameMatrix->getElement(6) * point->getY()) +
+					(frameMatrix->getElement(10) * point->getZ()) + 
+					frameMatrix->getElement(14));
 	
 	return result;
 }
@@ -269,6 +283,17 @@ STVec3f* STFrame::transformPoint(STVec3f* point)
 STVec3f* STFrame::rotateVector(STVec3f* vector)
 {
 	STVec3f* result = new STVec3f();
+	STMatrix44f* frameRotation = this->getMatrix(true);
+	
+	result->setX((frameMatrix->getElement(0) * point->getX()) + 
+					(frameMatrix->getElement(4) * point->getY()) +
+					(frameMatrix->getElement(8) * point->getZ()));
+	result->setY((frameMatrix->getElement(1) * point->getX()) + 
+					(frameMatrix->getElement(5) * point->getY()) +
+					(frameMatrix->getElement(9) * point->getZ()));
+	result->setZ((frameMatrix->getElement(2) * point->getX()) + 
+					(frameMatrix->getElement(6) * point->getY()) +
+					(frameMatrix->getElement(10) * point->getZ()));
 	
 	return result;
 }

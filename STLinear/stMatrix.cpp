@@ -137,6 +137,13 @@ STMatrix44f::STMatrix44f(float x1, float y1, float z1, float w1, float x2, float
 	this->data.push_back(w4);
 }
 
+float determinantIJ(int i, int j)
+{
+	//Okay, so we have to find the determinant of a matrix
+
+
+}
+
 STMatrix44f* STMatrix44f::mul(STMatrix44f* m2)
 {
 	STMatrix44f* result = new STMatrix44f();
@@ -292,6 +299,16 @@ void STMatrix44f::setRow(int index, STVec3f* row)
 		this->set(index, i, row->get(i));
 	}
 	this->set(index, 3, 0.0f);
+}
+
+void STMatrix44f::invert()
+{
+	//After the past few days' Khan Academy videos, I had a sneaking suspicion I'd need this...
+	//Unfortunately, it will NOT be easy. I mean, just to do the checkerboard, RSW uses:
+	//the ternary comparison operator(as you do),
+	//and a determinant-finding function that uses variable names like i and j(fairly normal), but also, ii and jj! Just 'cause, I guess.
+	
+	
 }
 
 /*	STMatrix33d

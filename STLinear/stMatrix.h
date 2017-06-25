@@ -38,6 +38,9 @@ public:
 	float get(int row, int col) {return this->data[row + (col * 4)];};
 	float getElement(int index) {return this->data[index];};
 	
+	float determinant();
+	float determinantIJ(int i, int j);
+	
 	float* getData() {return this->data.data();};
 
 	STMatrix44f* mul(STMatrix44f* m2);
@@ -51,6 +54,7 @@ public:
 	void loadOrthoMatrix(float xMin, float xMax, float yMin, float yMax, float zMin, float zMax);
 	void setColumn(int index, STVec3f* column);
 	void setRow(int index, STVec3f* row);
+	void invert();
 	
 	STMatrix44f* copyMatrix();
 };
