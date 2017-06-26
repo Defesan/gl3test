@@ -113,6 +113,19 @@ STMatrix33f* STMatrix33f::copyMatrix()
 	return copy;
 }
 
+float determinant()
+{
+	float determinant = 0.0f;
+	
+	STMatrix22f* det00 = new STMatrix22f(this->get(1,1), this->get(1,2), this->get(2,1), this->get(2,2));
+	STMatrix22f* det01 = new STMatrix22f(this->get(1,0), this->get(1,2), this->get(2,0), this->get(2,2));
+	STMatrix22f* det02 = new STMatrix22f(this->get(1,0), this->get(1,1), this->get(2,0), this->get(2,1));
+	
+	determinant = determinant + det00->determinant() - det01->determinant() + det02->determinant();
+	
+	return determinant;	//And that was the easy one.
+}
+
 /*  STMatrix44f
 	4x4 column-major matrix with floats
  */
@@ -137,11 +150,18 @@ STMatrix44f::STMatrix44f(float x1, float y1, float z1, float w1, float x2, float
 	this->data.push_back(w4);
 }
 
-float determinantIJ(int i, int j)
+float determinant()
 {
-	//Okay, so we have to find the determinant of a matrix
+	float determinant = 0.0f;
+	
+	STMatrix33f* det00 = new STMatrix33f(this->get(1,1), this->get(1,2), this->get(1,3), this->get(2,1), this->get(2,2), this->get(2,3), this->get(3,1), this->get(3,2), this->get(3,3));
+	STMatrix33f* det01 = new STMatrix33f(this->get(1,0), this->get(1,2), this->get(1,3), this->get(2,0), this->get(2,2), this->get(2,3), this->get(3,0), this->get(3,2), this->get(3,3));
+	STMatrix33f* det02 = new STMatrix33f(this->get(1,0), this->get(1,1), this->get(1,3), this->get(2,0), this->get(2,1), this->get(2,3), this->get(3,0), this->get(3,1), this->get(3,3));
+	STMatrix33f* det03 = new STMatrix33f(this->get(1,0), this->get(1,1), this->get(1,2), this->get(2,0), this->get(2,1), this->get(2,2), this->get(3,0), this->get(3,1), this->get(3,2));
 
-
+	determinant = determinant + det00->determinant() - det01->determinant() + det02->determinant() - det03->determinant();
+	
+	return determinant;
 }
 
 STMatrix44f* STMatrix44f::mul(STMatrix44f* m2)
@@ -303,11 +323,7 @@ void STMatrix44f::setRow(int index, STVec3f* row)
 
 void STMatrix44f::invert()
 {
-	//After the past few days' Khan Academy videos, I had a sneaking suspicion I'd need this...
-	//Unfortunately, it will NOT be easy. I mean, just to do the checkerboard, RSW uses:
-	//the ternary comparison operator(as you do),
-	//and a determinant-finding function that uses variable names like i and j(fairly normal), but also, ii and jj! Just 'cause, I guess.
-	
+	float determinant = this->determinant();	
 	
 }
 

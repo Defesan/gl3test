@@ -17,6 +17,8 @@ public:
 	
 	float* getData() {return this->data.data();};
 	
+	float determinant();
+	
 	STMatrix33f* mul(STMatrix33f* m2);
 	STVec3f* mulVector(STVec3f* vec);
 	
@@ -39,7 +41,6 @@ public:
 	float getElement(int index) {return this->data[index];};
 	
 	float determinant();
-	float determinantIJ(int i, int j);
 	
 	float* getData() {return this->data.data();};
 
@@ -130,6 +131,8 @@ public:
 	float get(int row, int col) {return this->data[row + (col * 2)];};
 	
 	float* getData() {return this->data.data();};
+	
+	float determinant() {return (this->get(0,0) * this->get(1,1)) - (this->get(0,1) * this->get(1,0));};
 	
 	void loadIdentity();
 	STMatrix22f* copyMatrix();
