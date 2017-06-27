@@ -249,12 +249,52 @@ STVec3f* STFrame::worldFromLocal(STVec3f* localVector, bool rotOnly)
 {
 	STVec3f* worldCoords = new STVec3f();
 	
+	STMatrix44f* rotationMatrix = this->getMatrix(true);
+	
+	//Rotate the local vector by the frame's coordinate system
+	worldCoords->setX((rotationMatrix->getElement(0) * localVector->getX()) +
+					(rotationMatrix->getElement(4) * localVector->getY()) +
+					(rotationMatrix->getElement(8) * localVector->getZ()));
+	worldCoords->setY((rotationMatrix->getElement(1) * localVector->getX()) +
+					(rotationMatrix->getElement(5) * localVector->getY()) +
+					(rotationMatrix->getElement(9) * localVector->getZ()));
+	worldCoords->setZ((rotationMatrix->getElement(2) * localVector->getX()) +
+					(rotationMatrix->getElement(6) * localVector->getY()) +
+					(rotationMatrix->getElement(10) * localVector->getZ()));
+	
+	//For absolute coords, add the frame's origin, as well.			
+	if(!rotOnly)
+	{
+		worldCoords->addVec3f(this->origin);	
+	}
+	
 	return worldCoords;
 }
 
 STVec3f* STFrame::localFromWorld(STVec3f* worldVector)
 {
 	STVec3f* localCoords = new STVec3f();
+	
+	STMatrix44f* rotationMatrix = this->getMatrix(true);
+	STMatrix44f* inverseMatrix = rotationMatrix->invert();
+	
+	//Translate the world coordinates
+	localCoords->setX(worldVector->getX() - this->origin->getX());
+	localCoords->setX(worldVector->getY() - this->origin->getY());
+	localCoords->setX(worldVector->getZ() - this->origin->getZ());
+	
+	//Rotate back from world coordinates with the inverse matrix
+	//I think I'll pull this block out as its own function... I'm using it too often.
+	localCoords->setX((inverseMatrix->getElement(0) * worldVector->getX()) +
+					(inverseMatrix->getElement(4) * worldVector->getY()) +
+					(inverseMatrix->getElement(8) * worldVector->getZ()));
+	localCoords->setY((inverseMatrix->getElement(1) * worldVector->getX()) +
+					(inverseMatrix->getElement(5) * worldVector->getY()) +
+					(inverseMatrix->getElement(9) * worldVector->getZ()));
+	localCoords->setZ((inverseMatrix->getElement(2) * worldVector->getX()) +
+					(inverseMatrix->getElement(6) * worldVector->getY()) +
+					(inverseMatrix->getElement(10) * worldVector->getZ()));
+	
 
 	return localCoords;
 }
