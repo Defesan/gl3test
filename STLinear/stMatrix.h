@@ -41,6 +41,7 @@ public:
 	float getElement(int index) {return this->data[index];};
 	
 	float determinant();
+	float detIJ(int i, int j);
 	
 	float* getData() {return this->data.data();};
 
@@ -55,8 +56,8 @@ public:
 	void loadOrthoMatrix(float xMin, float xMax, float yMin, float yMax, float zMin, float zMax);
 	void setColumn(int index, STVec3f* column);
 	void setRow(int index, STVec3f* row);
-	void invert();
 	
+	STMatrix44f* invert();
 	STMatrix44f* copyMatrix();
 };
 

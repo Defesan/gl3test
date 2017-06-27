@@ -113,7 +113,7 @@ STMatrix33f* STMatrix33f::copyMatrix()
 	return copy;
 }
 
-float determinant()
+float STMatrix33f::determinant()
 {
 	float determinant = 0.0f;
 	
@@ -150,7 +150,7 @@ STMatrix44f::STMatrix44f(float x1, float y1, float z1, float w1, float x2, float
 	this->data.push_back(w4);
 }
 
-float determinant()
+float STMatrix44f::determinant()
 {
 	float determinant = 0.0f;
 	
@@ -162,6 +162,34 @@ float determinant()
 	determinant = determinant + det00->determinant() - det01->determinant() + det02->determinant() - det03->determinant();
 	
 	return determinant;
+}
+
+float STMatrix44f::detIJ(int i, int j)
+{
+	STMatrix33f* subMatrix = new STMatrix33f();
+	int x = 0;
+	int y = 0;
+
+	//Starting to see why all that ii and jj nonsense was in there...
+	for(int k = 0; k < 4; k++)
+	{
+		//First step is to iterate through the full matrix.
+		//We don't want to use the i or j elements.
+		if(k != i)
+		{
+			y = 0;
+			for(int l = 0; l < 4; l++)
+			{
+				if(l != j)
+				{
+					subMatrix->set(x,y,this->get(k,l));					
+				}
+				y++;
+			}
+			x++;
+		}
+	}
+	return subMatrix->determinant();
 }
 
 STMatrix44f* STMatrix44f::mul(STMatrix44f* m2)
@@ -321,10 +349,25 @@ void STMatrix44f::setRow(int index, STVec3f* row)
 	this->set(index, 3, 0.0f);
 }
 
-void STMatrix44f::invert()
+STMatrix44f* STMatrix44f::invert()
 {
 	float determinant = this->determinant();	
+	float invDet = 1.0f / determinant;		//We're going to be using this sixteen times. It's not MUCH of a time saver, given the determinant calculation process, but it helps. 
+	STMatrix44f* inverse = new STMatrix44f();
 	
+	for(int i = 0; i < 4; i++)
+	{
+		for(int j = 0; j < 4; j++)
+		{
+			float ijVal = this->detIJ(i,j) * invDet;
+			if((i + j) & 0x1)
+			{
+				ijVal = -ijVal;
+			}
+			inverse->set(i, j, ijVal);
+		}
+	}
+	return inverse;
 }
 
 /*	STMatrix33d

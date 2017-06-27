@@ -285,15 +285,15 @@ STVec3f* STFrame::rotateVector(STVec3f* vector)
 	STVec3f* result = new STVec3f();
 	STMatrix44f* frameRotation = this->getMatrix(true);
 	
-	result->setX((frameMatrix->getElement(0) * point->getX()) + 
-					(frameMatrix->getElement(4) * point->getY()) +
-					(frameMatrix->getElement(8) * point->getZ()));
-	result->setY((frameMatrix->getElement(1) * point->getX()) + 
-					(frameMatrix->getElement(5) * point->getY()) +
-					(frameMatrix->getElement(9) * point->getZ()));
-	result->setZ((frameMatrix->getElement(2) * point->getX()) + 
-					(frameMatrix->getElement(6) * point->getY()) +
-					(frameMatrix->getElement(10) * point->getZ()));
+	result->setX((frameRotation->getElement(0) * vector->getX()) + 
+					(frameRotation->getElement(4) * vector->getY()) +
+					(frameRotation->getElement(8) * vector->getZ()));
+	result->setY((frameRotation->getElement(1) * vector->getX()) + 
+					(frameRotation->getElement(5) * vector->getY()) +
+					(frameRotation->getElement(9) * vector->getZ()));
+	result->setZ((frameRotation->getElement(2) * vector->getX()) + 
+					(frameRotation->getElement(6) * vector->getY()) +
+					(frameRotation->getElement(10) * vector->getZ()));
 	
 	return result;
 }
