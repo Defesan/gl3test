@@ -37,6 +37,7 @@ public:
 	STMatrix44f() : STMatrix44f(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f) {};	//In case you want to make an empty matrix easily.
 	
 	void set(int row,int col, float val) {this->data[row + (col * 4)] = val;};	
+	void setElement(int index, float val) {this->data[index] = val;};
 	float get(int row, int col) {return this->data[row + (col * 4)];};
 	float getElement(int index) {return this->data[index];};
 	

@@ -10,6 +10,8 @@
 #include <cmath>
 #include <iostream>
 
+#define PI 3.1415926f
+
 class STFrustum
 {
 private:
