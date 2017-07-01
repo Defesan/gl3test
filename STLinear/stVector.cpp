@@ -200,6 +200,17 @@ void STVec3f::normalize()
 	this->mulScalar(1.0f / length);	//So that's why we had a length function.
 }
 
+STVec3f* STVec3f::copy()
+{
+	STVec3f* returnVector = new STVec3f();
+	
+	returnVector->setX(this->getX());
+	returnVector->setY(this->getY());
+	returnVector->setZ(this->getZ());
+	
+	return returnVector;
+}
+
 /*
 	STVec4f
 	4 element vector with floats	
@@ -295,6 +306,33 @@ bool STVec4f::closeEnough(float x, float y, float z, float w, float delta)
 		return true;
 	}
 	return false;
+}
+
+void STVec4f::genPlaneEquation(STVec4f* p1, STVec4f* p2, STVec4f* p3)
+{
+	STVec3f* protoPlane = new STVec3f();
+	STVec3f* v1 = new STVec3f();
+	STVec3f* v2 = new STVec3f();
+	
+	//The first vector in the plane is p3 - p1(really, we could use any vectors created from the three given points)
+	v1->setX(p3->getX() - p1->getX());
+	v1->setY(p3->getY() - p1->getY());
+	v1->setZ(p3->getZ() - p1->getZ());
+	
+	//Now let's go with p2 - p1.
+	v2->setX(p2->getX() - p1->getX());
+	v2->setY(p2->getY() - p1->getY());
+	v2->setZ(p2->getZ() - p1->getZ());
+	
+	protoPlane = v1->crossProduct(v2);
+	protoPlane->normalize();
+	
+	this->setX(protoPlane->getX());
+	this->setY(protoPlane->getY());
+	this->setZ(protoPlane->getZ());
+	//And the slightly more complex fourth element...
+	this->setW(-1.0f * ((protoPlane->getX() * p3->getX()) + (protoPlane->getY() * p3->getY()) + (protoPlane->getZ() * p3->getZ())));
+	
 }
 
 /*

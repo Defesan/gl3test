@@ -139,10 +139,67 @@ void STFrustum::setOrthographic(float xMin, float xMax, float yMin, float yMax, 
 
 }
 
+//Transforms the frustum so that it encloses the volume actually seen by the 'camera', the associated STFrame.
+//Apparently tricky. Also apparently I don't have to do the heavy lifting, because I have an example to work off of.
+//Really looking forward to stretching my brain with some exercises that even I will admit are more my speed right now.
 void STFrustum::transform(STFrame* camera)
 {
+	STMatrix44f* rotationMatrix = new STMatrix44f();
+	
+	STVec3f* forwardVector = camera->getForward()->copy();
+	STVec3f* upVector = camera->getUp()->copy();
+	STVec3f* origin = camera->getOrigin()->copy();
+	STVec3f* rightVector = upVector->crossProduct(forwardVector);
+	
+	forwardVector->mulScalar(-1.0f);
+	
+	rotationMatrix->setElement(0, rightVector->getX());
+	rotationMatrix->setElement(1, rightVector->getY());
+	rotationMatrix->setElement(2, rightVector->getZ());
+	rotationMatrix->setElement(3, 0.0f);
+	
+	rotationMatrix->setElement(4, upVector->getX());
+	rotationMatrix->setElement(5, upVector->getY());
+	rotationMatrix->setElement(6, upVector->getZ());
+	rotationMatrix->setElement(7, 0.0f);
+	
+	rotationMatrix->setElement(8, forwardVector->getX());
+	rotationMatrix->setElement(9, forwardVector->getY());
+	rotationMatrix->setElement(10, forwardVector->getZ());
+	rotationMatrix->setElement(11, 0.0f);
+	
+	rotationMatrix->setElement(12, origin->getX());
+	rotationMatrix->setElement(13, origin->getY());
+	rotationMatrix->setElement(14, origin->getZ());
+	rotationMatrix->setElement(15, 1.0f);
+	
+	this->nearUpLeftTrans = rotationMatrix->mulVector(this->nearUpLeft);
+	this->nearUpRightTrans = rotationMatrix->mulVector(this->nearUpRight);
+	this->nearDownLeftTrans = rotationMatrix->mulVector(this->nearDownLeft);
+	this->nearDownRightTrans = rotationMatrix->mulVector(this->nearDownRight);
+	
+	this->farUpLeftTrans = rotationMatrix->mulVector(this->farUpLeft);
+	this->farUpRightTrans = rotationMatrix->mulVector(this->farUpRight);
+	this->farDownLeftTrans = rotationMatrix->mulVector(this->farDownLeft);
+	this->farDownRightTrans = rotationMatrix->mulVector(this->farDownRight);
 
-
+	//Now for the plane equations.
+	this->nearPlane = new STVec4f();
+	this->farPlane = new STVec4f();
+	this->topPlane = new STVec4f();
+	this->bottomPlane = new STVec4f();
+	this->rightPlane = new STVec4f();
+	this->leftPlane = new STVec4f();
+	
+	this->nearPlane->genPlaneEquation(this->nearUpRightTrans, this->nearUpLeftTrans, this->nearDownLeftTrans);
+	this->farPlane->genPlaneEquation(this->farUpLeftTrans, this->farUpRightTrans, this->farDownLeftTrans);
+	
+	this->topPlane->genPlaneEquation(this->nearUpLeftTrans, this->nearUpRightTrans, this->farUpRightTrans);
+	this->bottomPlane->genPlaneEquation(this->nearDownLeftTrans, this->farDownLeftTrans, this->farDownRightTrans);
+	
+	this->leftPlane->genPlaneEquation(this->nearDownLeftTrans, this->nearUpLeftTrans, this->farUpLeftTrans);
+	this->rightPlane->genPlaneEquation(this->nearDownRightTrans, this->farDownRightTrans, this->farUpRightTrans);
+	//Whew!
 }
 
 bool STFrustum::testSphere(STVec3f* origin, float radius)

@@ -97,6 +97,7 @@ public:
 	bool closeEnough(float x, float y, float z, float delta);
 	void print();
 	void normalize();
+	STVec3f* copy();
 };
 
 class STVec4f
@@ -146,6 +147,8 @@ public:
 	float distance(STVec4f* v2);
 	bool closeEnough(STVec4f* v2, float delta);
 	bool closeEnough(float x, float y, float z, float w, float delta);
+	
+	void genPlaneEquation(STVec4f* p1, STVec4f* p2, STVec4f* p3);
 };
 
 
