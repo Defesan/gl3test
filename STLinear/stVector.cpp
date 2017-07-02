@@ -335,6 +335,13 @@ void STVec4f::genPlaneEquation(STVec4f* p1, STVec4f* p2, STVec4f* p3)
 	
 }
 
+float STVec4f::planeDistanceFromPoint(STVec3f* point)
+{
+	float distance = (this->getX() * point->getX()) + (this->getY() * point->getY()) + (this->getZ() * point->getZ()) + this->getW();
+	
+	return distance;
+}
+
 /*
 	STVec2d
 	2 element vector with double	

@@ -147,12 +147,16 @@ void STFrustum::transform(STFrame* camera)
 	STMatrix44f* rotationMatrix = new STMatrix44f();
 	
 	STVec3f* forwardVector = camera->getForward()->copy();
-	STVec3f* upVector = camera->getUp()->copy();
-	STVec3f* origin = camera->getOrigin()->copy();
+	STVec3f* upVector = camera->getUp();
+	STVec3f* origin = camera->getOrigin();
 	STVec3f* rightVector = upVector->crossProduct(forwardVector);
 	
+	//Point down the negative z axis
 	forwardVector->mulScalar(-1.0f);
 	
+	//Build the (slightly non-standard) rotation matrix
+	//We're working off of a transform, not a straight up rotation,
+	//but since the transformation SHOULD be orthonormal, it functions as a rotation.
 	rotationMatrix->setElement(0, rightVector->getX());
 	rotationMatrix->setElement(1, rightVector->getY());
 	rotationMatrix->setElement(2, rightVector->getZ());
@@ -173,6 +177,7 @@ void STFrustum::transform(STFrame* camera)
 	rotationMatrix->setElement(14, origin->getZ());
 	rotationMatrix->setElement(15, 1.0f);
 	
+	//Now that we have the transformation matrix, transform the vertices of the frustum to their new positions relative to the camera.
 	this->nearUpLeftTrans = rotationMatrix->mulVector(this->nearUpLeft);
 	this->nearUpRightTrans = rotationMatrix->mulVector(this->nearUpRight);
 	this->nearDownLeftTrans = rotationMatrix->mulVector(this->nearDownLeft);
@@ -183,7 +188,7 @@ void STFrustum::transform(STFrame* camera)
 	this->farDownLeftTrans = rotationMatrix->mulVector(this->farDownLeft);
 	this->farDownRightTrans = rotationMatrix->mulVector(this->farDownRight);
 
-	//Now for the plane equations.
+	//Now generate the plane equations.
 	this->nearPlane = new STVec4f();
 	this->farPlane = new STVec4f();
 	this->topPlane = new STVec4f();
@@ -191,6 +196,11 @@ void STFrustum::transform(STFrame* camera)
 	this->rightPlane = new STVec4f();
 	this->leftPlane = new STVec4f();
 	
+	//This one is actually a bit of mind bender if you come at it cold. The points have to be listed counter-clockwise,
+	//facing *into* the frustum *through* the plane they define. The near plane is the easiest, since that's the default.
+	//The far plane is only a little harder, since it's the near plane, just reversed.
+	//Then you have to stretch your spacial reorientation muscles and look at the frustum from different angles, which is...
+	//Well, it's not easy. 
 	this->nearPlane->genPlaneEquation(this->nearUpRightTrans, this->nearUpLeftTrans, this->nearDownLeftTrans);
 	this->farPlane->genPlaneEquation(this->farUpLeftTrans, this->farUpRightTrans, this->farDownLeftTrans);
 	
@@ -204,8 +214,44 @@ void STFrustum::transform(STFrame* camera)
 
 bool STFrustum::testSphere(STVec3f* origin, float radius)
 {
-	bool returnVal = false;
 	
+	float distance = 0.0f;
 	
-	return returnVal;
+	distance = this->nearPlane->planeDistanceFromPoint(origin);
+	if(distance + radius <= 0.0f)
+	{
+		return false;
+	}
+	
+	distance = this->farPlane->planeDistanceFromPoint(origin);
+	if(distance + radius <= 0.0f)
+	{
+		return false;
+	}
+	
+	distance = this->leftPlane->planeDistanceFromPoint(origin);
+	if(distance + radius <= 0.0f)
+	{
+		return false;
+	}
+	
+	distance = this->rightPlane->planeDistanceFromPoint(origin);
+	if(distance + radius <= 0.0f)
+	{
+		return false;
+	}
+	
+	distance = this->topPlane->planeDistanceFromPoint(origin);
+	if(distance + radius <= 0.0f)
+	{
+		return false;
+	}
+	
+	distance = this->bottomPlane->planeDistanceFromPoint(origin);
+	if(distance + radius <= 0.0f)
+	{
+		return false;
+	}
+	
+	return true;
 }

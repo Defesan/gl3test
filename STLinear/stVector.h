@@ -149,6 +149,7 @@ public:
 	bool closeEnough(float x, float y, float z, float w, float delta);
 	
 	void genPlaneEquation(STVec4f* p1, STVec4f* p2, STVec4f* p3);
+	float planeDistanceFromPoint(STVec3f* point);
 };
 
 
