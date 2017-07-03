@@ -17,6 +17,11 @@ const GLfloat WINDOW_WIDTH = 1.0f;
 const GLfloat WINDOW_HEIGHT = 1.0f;
 
 //UGH!!! Globals!
+STFrame* viewFrame;
+STFrustum* viewFrustum;
+STMatrixStack* modelViewStack;
+STMatrixStack* projectionStack;
+STMatrixPipeline* pipeline;
 STShaderManager* sMan;
 std::vector<STPrimitiveBatch*> geometry;
 Rect* rect;

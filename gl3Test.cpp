@@ -15,7 +15,13 @@ int main(int argc, char* argv[])
 		std::cerr << "GLEW Error: " << glewGetErrorString(error) << std::endl;
 		return 1;
 	}
-
+	
+	//I begin to see why he does it the other way...
+	viewFrame = new STFrame();
+	viewFrustum = new STFrustum(35.0f, float(SCREEN_WIDTH)/float(SCREEN_HEIGHT), 1.0f, 100.0f);
+	modelViewStack = new STMatrixStack();
+	projectionStack = new STMatrixStack();
+	pipeline = new STMatrixPipeline(modelViewStack, projectionStack);
 	sMan = new STShaderManager();
 	
 	setup();
@@ -27,7 +33,20 @@ int main(int argc, char* argv[])
 
 void resize(int w, int h)
 {
-	glViewport(0,0,w,h); //Is it just me or is this a little easier than how it was before?
+	if(w < MIN_WIDTH)
+	{
+		w = MIN_WIDTH;
+	}
+	if(h < MIN_HEIGHT)
+	{
+		h = MIN_HEIGHT;
+	}
+	
+	glViewport(0,0,w,h); 
+	viewFrustum->setPerspective(35.0f, float(w)/float(h), 1.0f, 100.0f);
+	
+	projectionStack->loadMatrix(viewFrustum->getProjectionMatrix());
+	pipeline->setProjectionStack(projectionStack);
 }
 
 void setup()
@@ -79,6 +98,8 @@ void render()
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 		
+		modelViewStack->pushMatrix(viewFrame->getMatrix(false));
+		
 		STVec4f* shaderColor = new STVec4f(1.0f, 1.0f, 1.0f, 1.0f);
 		std::vector<STUniform*> uniforms;
 		STUniform* colorUniform = new STUniform("vColor", 1, shaderColor);//Using the ST toolkit, you have to know the details of the shader you're using. I might be able to fix that for the stock shaders.
@@ -88,6 +109,7 @@ void render()
 		sMan->runShader(sMan->getStockShader(ST_IDENTITY), uniforms);
 		bounce();
 		rect->update();
+		modelViewStack->popMatrix();
 		glutSwapBuffers();
 		timer->reset();
 	}

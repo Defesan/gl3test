@@ -14,7 +14,8 @@ private:
 	int stackDepth; 			//Normally, I wouldn't use it, but it serves as a handy braking mechanism in case of things going terribly wrong.
 	ST_STACK_ERROR lastError;	//Without this, of course, there's nothing stopping a program from just asking for negative elements or trying to put elements over the limit.
 public:
-	STMatrixStack(int stackDepth=64);
+	STMatrixStack(int stackDepth);
+	STMatrixStack() : STMatrixStack(64) {};
 	~STMatrixStack();
 	
 	void setDepth(int newDepth)	{this->stackDepth = newDepth;};							//Changes the stack depth

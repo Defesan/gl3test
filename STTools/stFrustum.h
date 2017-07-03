@@ -10,7 +10,10 @@
 #include <cmath>
 #include <iostream>
 
+#ifndef PI
 #define PI 3.1415926f
+#endif
+
 
 class STFrustum
 {
@@ -49,9 +52,11 @@ STVec4f* rightPlane;
 STVec4f* leftPlane;
 
 public:
-STFrustum() {this->setOrthographic(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f);};
+STFrustum() : STFrustum(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f) {};
 STFrustum(float fov, float aspect, float nearDistance, float farDistance) {this->setPerspective(fov, aspect, nearDistance, farDistance);};
 STFrustum(float xMin, float xMax, float yMin, float yMax, float zMin, float zMax) {this->setOrthographic(xMin, xMax, yMin, yMax, zMin, zMax);};
+
+void init();	//Initialize members
 
 STMatrix44f* getProjectionMatrix() {return this->projectionMatrix;};
 

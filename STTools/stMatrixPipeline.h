@@ -9,7 +9,7 @@ private:
 	STMatrixStack* modelView;
 	STMatrixStack* projection;
 public:
-	STMatrixPipeline(STMatrixStack* modelView, STMatrixStack* projection);
+	STMatrixPipeline(STMatrixStack* modelView, STMatrixStack* projection) {this->modelView = modelView; this->projection = projection;};
 	void setModelViewStack(STMatrixStack* modelView) {this->modelView = modelView;};
 	void setProjectionStack(STMatrixStack* projection) {this->projection = projection;};
 	STMatrix44f* getModelViewMatrix() {return this->modelView->getMatrix();};

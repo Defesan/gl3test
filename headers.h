@@ -17,6 +17,8 @@
 #include "STLinear/stVector.h"
 #include "STLinear/stMatrix.h"
 
+#include "STTools/stFrame.h"
+#include "STTools/stFrustum.h"
 #include "STTools/stPrimitiveBatch.h"
 #include "STTools/stTriangleBatch.h"
 #include "STTools/stMatrixPipeline.h"

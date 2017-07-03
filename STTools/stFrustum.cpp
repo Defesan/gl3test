@@ -1,5 +1,36 @@
 #include "stFrustum.h"
 
+void STFrustum::init()
+{
+	this->projectionMatrix = new STMatrix44f();
+	
+	this->nearUpLeft = new STVec4f();
+	this->nearUpRight = new STVec4f();
+	this->nearDownLeft = new STVec4f();
+	this->nearDownRight = new STVec4f();
+	this->farUpLeft = new STVec4f();
+	this->farUpRight = new STVec4f();
+	this->farDownLeft = new STVec4f();
+	this->farDownRight = new STVec4f();
+	
+	this->nearUpLeftTrans = new STVec4f();
+	this->nearUpRightTrans = new STVec4f();
+	this->nearDownLeftTrans = new STVec4f();
+	this->nearDownRightTrans = new STVec4f();
+	this->farUpLeftTrans = new STVec4f();
+	this->farUpRightTrans = new STVec4f();
+	this->farDownLeftTrans = new STVec4f();
+	this->farDownRightTrans = new STVec4f();
+	
+	this->nearPlane = new STVec4f();
+	this->farPlane = new STVec4f();
+	this->leftPlane = new STVec4f();
+	this->rightPlane = new STVec4f();
+	this->topPlane = new STVec4f();
+	this->bottomPlane = new STVec4f();
+
+}
+
 void STFrustum::setPerspective(float fov, float aspect, float nearDistance, float farDistance)
 {
 	//For this, we'll be calculating the x and y minimums and maximums. The far clipping plane is larger than the near one,
@@ -16,7 +47,7 @@ void STFrustum::setPerspective(float fov, float aspect, float nearDistance, floa
 	float yMinF = 0.0f;
 	float yMaxF = 0.0f;	
 	
-	this->projectionMatrix = new STMatrix44f();
+	this->init();
 	this->projectionMatrix->loadIdentity();
 	
 	//Near plane calculations
@@ -89,8 +120,9 @@ void STFrustum::setPerspective(float fov, float aspect, float nearDistance, floa
 
 void STFrustum::setOrthographic(float xMin, float xMax, float yMin, float yMax, float zMin, float zMax)
 {
+	
 	//Set up the projection matrix
-	this->projectionMatrix = new STMatrix44f();
+	this->init();
 	this->projectionMatrix->loadOrthoMatrix(xMin, xMax, yMin, yMax, zMin, zMax);
 	this->projectionMatrix->set(3,3,1.0f);
 	
@@ -136,7 +168,7 @@ void STFrustum::setOrthographic(float xMin, float xMax, float yMin, float yMax, 
 	this->farDownRight->setY(yMin);
 	this->farDownRight->setZ(zMax);
 	this->farDownRight->setW(1.0f);
-
+	
 }
 
 //Transforms the frustum so that it encloses the volume actually seen by the 'camera', the associated STFrame.

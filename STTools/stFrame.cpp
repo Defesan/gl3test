@@ -14,26 +14,7 @@ STFrame::~STFrame()
 }
 
 void STFrame::translateLocal(float x, float y, float z)
-{
-	//Now this one's tricky. GLTools has it as three function calls:
-	//MoveForward(z)
-	//MoveUp(y)
-	//MoveRight(x)
-	//Of course, negative values for x, y and z, move left, down and back, rsepectively.
-	//..Come to think of it, that makes those three functions quite poorly named.
-	//Beyond that, they're used ONLY in the context of this function.
-	//MoveForward(z) is functionally equivalent to TranslateLocal(0.0f, 0.0f, z), so...
-	//Really, it just complicates the class.
-	
-	//now for the actual movements.
-	//Given point O(the origin,) and vectors F and U(the forward and up vectors, respectively,
-	//as well as a perpendicular vector R(the 'right' vector, which is constructed here by crossing F and U)
-	//the function goes as follows:
-	//x translation: O = O + xR
-	//y translation: O = O + yU
-	//z translation: O = O + zF
-	//This makes sense, logically -- we're moving the origin along each vector, with the distance measured by a scaling factor.
-	
+{	
 	if(x != 0.0f)
 	{
 		STVec3f* rightVector = this->upVector->crossProduct(forwardVector);

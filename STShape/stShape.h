@@ -12,8 +12,9 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
-
+#ifndef PI
 #define PI 3.1415926
+#endif
 
 //Ah, the prototypical abstract class. But... I am making shapes here, so I need one.
 class Shape
