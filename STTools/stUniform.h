@@ -113,7 +113,7 @@ public:
 	STUniform(std::string name, GLsizei count, GLboolean transpose, STMatrix34f* v34m);
 	STUniform(std::string name, GLsizei count, GLboolean transpose, STMatrix42f* v42m);
 	STUniform(std::string name, GLsizei count, GLboolean transpose, STMatrix43f* v43m);
-	STUniform(std::string name, GLsizei count, GLboolean transpose, STMatrix44f* v44m);
+	STUniform(std::string name, GLsizei count, GLboolean transpose, STMatrix44f* v44m, bool mat);
 	
 	//Now, I know there are plenty of things I could do to trim that list.
 	//Specifically, the lowest-hanging fruit here is to add a base class to stMatrix and stVector, and give each a type enum, then switch on that.

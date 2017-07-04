@@ -18,7 +18,8 @@ int main(int argc, char* argv[])
 	
 	//I begin to see why he does it the other way...
 	viewFrame = new STFrame();
-	viewFrustum = new STFrustum(35.0f, float(SCREEN_WIDTH)/float(SCREEN_HEIGHT), 1.0f, 100.0f);
+	//viewFrustum = new STFrustum(35.0f, float(SCREEN_WIDTH)/float(SCREEN_HEIGHT), 1.0f, 100.0f);
+	viewFrustum = new STFrustum(-10.0f, 10.0f, -10.0f, 10.0f, -1.0f, 1.0f);
 	modelViewStack = new STMatrixStack();
 	projectionStack = new STMatrixStack();
 	pipeline = new STMatrixPipeline(modelViewStack, projectionStack);
@@ -43,8 +44,8 @@ void resize(int w, int h)
 	}
 	
 	glViewport(0,0,w,h); 
-	viewFrustum->setPerspective(35.0f, float(w)/float(h), 1.0f, 100.0f);
-	
+	//viewFrustum->setPerspective(35.0f, float(w)/float(h), 1.0f, 100.0f);
+	viewFrustum->setOrthographic(-10.0f, 10.0f, -10.0f, 10.0f, -1.0f, 1.0f);
 	projectionStack->loadMatrix(viewFrustum->getProjectionMatrix());
 	pipeline->setProjectionStack(projectionStack);
 }
@@ -53,8 +54,9 @@ void setup()
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	
-	rect = new Rect(0.0f, 0.0f, 0.0f, 0.05f, 0.05f);
+	rect = new Rect(0.0f, 0.0f, 0.0f, 1.5f, 1.5f);
 	rect->setVelocity(new STVec3f(0.05f, 0.03f, 0.0f));
+	//viewFrame->translateLocal(0.0f, 0.0f, 7.0f);
 	timer = new STTimer();
 	
 	rect->render();
@@ -72,12 +74,12 @@ void bounce()
 	GLfloat velY = rect->getVelY();
 	
 	
-	if(lXPos < -1.0f || rXPos > 1.0f)
+	if(lXPos < -10.0f || rXPos > 10.0f)
 	{
 		velX = -velX;
 		dirty = true;
 	}
-	if(bYPos < -1.0f || tYPos > 1.0f)
+	if(bYPos < -10.0f || tYPos > 10.0f)
 	{
 		velY = -velY;
 		dirty = true;
@@ -97,16 +99,20 @@ void render()
 	if(elapsed > frameTime)
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-		
+		viewFrame->rotateLocal(0.002f,0.0f, 1.0f, 1.0f);
+		//viewFrame->translateLocal(0.0f, 0.0f, 0.001f);
 		modelViewStack->pushMatrix(viewFrame->getMatrix(false));
 		
 		STVec4f* shaderColor = new STVec4f(1.0f, 1.0f, 1.0f, 1.0f);
 		std::vector<STUniform*> uniforms;
-		STUniform* colorUniform = new STUniform("vColor", 1, shaderColor);//Using the ST toolkit, you have to know the details of the shader you're using. I might be able to fix that for the stock shaders.
+		STUniform* colorUniform = new STUniform("vColor", 1, shaderColor);
 		uniforms.push_back(colorUniform);
+		
+		STUniform* mvpUniform = new STUniform("mvpMatrix", 1, GL_FALSE, pipeline->getMVPMatrix(), true);
+		uniforms.push_back(mvpUniform);
 	
 		//Finally we get to the part where we use the shader! I might want to streamline this...
-		sMan->runShader(sMan->getStockShader(ST_IDENTITY), uniforms);
+		sMan->runShader(sMan->getStockShader(ST_FLAT), uniforms);
 		bounce();
 		rect->update();
 		modelViewStack->popMatrix();

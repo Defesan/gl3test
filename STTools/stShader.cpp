@@ -7,10 +7,10 @@ STShaderManager::STShaderManager()
 	
 	//Let's start with a basic identity shader. This should just take a color to render, and pass it through to the fragment shader.
 	
-	std::string vertexShader = "attribute vec4 vVertex;"	//I have to admit, this format is useful for writing code in strings inside a program...
+	std::string vertexShader = "attribute vec4 vVertex;"	
 							   "void main()"
 							   "{"
-							   "	gl_Position = vVertex;"//But where does vVertex come from?
+							   "	gl_Position = vVertex;"
 							   "}";
 	
 	std::string fragShader = "uniform vec4 vColor;"
@@ -22,6 +22,18 @@ STShaderManager::STShaderManager()
 	GLuint shaderHandle = this->loadShaderPairSrcWithAttributes(vertexShader, fragShader, 1, ST_ATTRIBUTE_VERTEX, "vVertex");
 	this->activeShaderPointers.push_back(shaderHandle);
 	
+	vertexShader = "uniform mat4 mvpMatrix;"
+				   "attribute vec4 vVertex;"	
+				   "void main()"
+				   "{"
+				   "	gl_Position = mvpMatrix * vVertex;"
+				   "}";
+	//Fragshader, in this case, is *literally* unchanged.
+	
+	shaderHandle = this->loadShaderPairSrcWithAttributes(vertexShader, fragShader, 1, ST_ATTRIBUTE_VERTEX, "vVertex");
+	this->activeShaderPointers.push_back(shaderHandle);
+	//All in all, the flat shader is actually a pretty decent 'next step' from a learning perspective.
+	//We literally change one line and add one uniform, and the whole thing explodes. As in, it now positions vertices with respect to the modelViewProjection matrix!
 }
 
 STShaderManager::~STShaderManager()

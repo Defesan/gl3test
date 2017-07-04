@@ -436,7 +436,7 @@ STUniform::STUniform(std::string name, GLsizei count, GLboolean transpose, STMat
 	this->v43m = v43m;
 }
 
-STUniform::STUniform(std::string name, GLsizei count, GLboolean transpose, STMatrix44f* v44m)
+STUniform::STUniform(std::string name, GLsizei count, GLboolean transpose, STMatrix44f* v44m, bool mat)
 {
 	this->init();
 	this->type = ST_UNIFORMMATRIX4FV;
