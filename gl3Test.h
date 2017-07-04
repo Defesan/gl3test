@@ -31,6 +31,7 @@ void bounce();
 void resize(int w, int h);
 void setup();
 void render();
+void runShader();
 
 
 #endif //__GL3TEST_H__

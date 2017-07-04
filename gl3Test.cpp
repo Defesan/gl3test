@@ -99,23 +99,16 @@ void render()
 	if(elapsed > frameTime)
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-		viewFrame->rotateLocal(0.002f,0.0f, 1.0f, 1.0f);
+		
+		viewFrame->rotateLocal(degreesToRadians(0.5f),0.0f, 1.0f, 1.0f);
 		//viewFrame->translateLocal(0.0f, 0.0f, 0.001f);
+		
 		modelViewStack->pushMatrix(viewFrame->getMatrix(false));
-		
-		STVec4f* shaderColor = new STVec4f(1.0f, 1.0f, 1.0f, 1.0f);
-		std::vector<STUniform*> uniforms;
-		STUniform* colorUniform = new STUniform("vColor", 1, shaderColor);
-		uniforms.push_back(colorUniform);
-		
-		STUniform* mvpUniform = new STUniform("mvpMatrix", 1, GL_FALSE, pipeline->getMVPMatrix(), true);
-		uniforms.push_back(mvpUniform);
-	
-		//Finally we get to the part where we use the shader! I might want to streamline this...
-		sMan->runShader(sMan->getStockShader(ST_FLAT), uniforms);
-		bounce();
-		rect->update();
+			runShader();
+			bounce();
+			rect->update();
 		modelViewStack->popMatrix();
+		
 		glutSwapBuffers();
 		timer->reset();
 	}
@@ -124,4 +117,19 @@ void render()
 		
 	}
 	glutPostRedisplay();
+}
+
+void runShader()
+{
+	std::vector<STUniform*> uniforms;
+	
+	//STVec4f* shaderColor = new STVec4f(1.0f, 1.0f, 1.0f, 1.0f);
+	//STUniform* colorUniform = new STUniform("vColor", 1, shaderColor);
+	//uniforms.push_back(colorUniform);
+	
+	STUniform* mvpUniform = new STUniform("mvpMatrix", 1, GL_FALSE, pipeline->getMVPMatrix(), true);
+	uniforms.push_back(mvpUniform);
+	
+	sMan->runShader(sMan->getStockShader(ST_SHADER_SHADED), uniforms);
+
 }

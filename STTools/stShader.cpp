@@ -22,6 +22,7 @@ STShaderManager::STShaderManager()
 	GLuint shaderHandle = this->loadShaderPairSrcWithAttributes(vertexShader, fragShader, 1, ST_ATTRIBUTE_VERTEX, "vVertex");
 	this->activeShaderPointers.push_back(shaderHandle);
 	
+	//A flat shader. Just transform the coords and display a given color.
 	vertexShader = "uniform mat4 mvpMatrix;"
 				   "attribute vec4 vVertex;"	
 				   "void main()"
@@ -34,6 +35,25 @@ STShaderManager::STShaderManager()
 	this->activeShaderPointers.push_back(shaderHandle);
 	//All in all, the flat shader is actually a pretty decent 'next step' from a learning perspective.
 	//We literally change one line and add one uniform, and the whole thing explodes. As in, it now positions vertices with respect to the modelViewProjection matrix!
+	
+	//A shaded shader. Now we use the colors given to the thing being shaded instead of pasting something else on.
+	vertexShader = "uniform mat4 mvpMatrix;"
+				   "attribute vec4 color;"
+				   "attribute vec4 vertex;"
+				   "varying vec4 fragColor;"
+				   "void main()"
+				   "{"
+				   "	fragColor = color;"
+				   "	gl_Position = mvpMatrix * vertex;"
+				   "}";
+	
+	fragShader =   "varying vec4 fragColor;"
+				   "void main()"
+				   "{"
+				   "	gl_FragColor = fragColor;"
+				   "}";
+	shaderHandle = this->loadShaderPairSrcWithAttributes(vertexShader, fragShader, 2, ST_ATTRIBUTE_VERTEX, "vertex", ST_ATTRIBUTE_COLOR, "color");
+	this->activeShaderPointers.push_back(shaderHandle); 
 }
 
 STShaderManager::~STShaderManager()
