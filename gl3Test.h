@@ -26,12 +26,14 @@ STShaderManager* sMan;
 std::vector<STPrimitiveBatch*> geometry;
 Rect* rect;
 STTimer* timer;
+int prints;
 
 void bounce();
 void resize(int w, int h);
 void setup();
 void render();
 void runShader();
+void specialKeyHandler(int key, int x, int y);
 
 
 #endif //__GL3TEST_H__
