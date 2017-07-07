@@ -9,6 +9,11 @@ public:
 	STPrimitiveBatch(GLuint numTexLayers);
 	~STPrimitiveBatch();
 	
+	//We always use vertices(duh) but the others are sort of optional.
+	bool usingColors;
+	bool usingTextures;
+	bool usingNormals;
+	
 	void begin();
 	void finalize();
 	
@@ -19,6 +24,7 @@ public:
 	void copyColorData(std::vector<STVec4f*> colors);
 	void copyColorData(std::vector<GLfloat> colors);
 	void copyTexCoordData(std::vector<STVec2f*> texCoords, GLuint textureLayer);
+	void copyIndexData(std::vector<GLuint> indices);
 	
 	void draw() override;
 };

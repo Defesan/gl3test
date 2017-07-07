@@ -19,8 +19,8 @@ int main(int argc, char* argv[])
 	
 	//I begin to see why he does it the other way...
 	viewFrame = new STFrame();
-	viewFrustum = new STFrustum(35.0f, float(SCREEN_WIDTH)/float(SCREEN_HEIGHT), 1.0f, 100.0f);
-	//viewFrustum = new STFrustum(-10.0f, 10.0f, -10.0f, 10.0f, -1.0f, 1.0f);
+	//viewFrustum = new STFrustum(35.0f, float(SCREEN_WIDTH)/float(SCREEN_HEIGHT), 1.0f, 100.0f);
+	viewFrustum = new STFrustum(-10.0f, 10.0f, -10.0f, 10.0f, -1.0f, 1.0f);
 	modelViewStack = new STMatrixStack();
 	projectionStack = new STMatrixStack();
 	pipeline = new STMatrixPipeline(modelViewStack, projectionStack);
@@ -45,8 +45,8 @@ void resize(int w, int h)
 	}
 	
 	glViewport(0,0,w,h); 
-	viewFrustum->setPerspective(35.0f, float(w)/float(h), 1.0f, 100.0f);
-	//viewFrustum->setOrthographic(-10.0f, 10.0f, -10.0f, 10.0f, -1.0f, 1.0f);
+	//viewFrustum->setPerspective(35.0f, float(w)/float(h), 1.0f, 100.0f);
+	viewFrustum->setOrthographic(-10.0f, 10.0f, -10.0f, 10.0f, -1.0f, 1.0f);
 	projectionStack->loadMatrix(viewFrustum->getProjectionMatrix());
 	pipeline->setProjectionStack(projectionStack);
 }
@@ -55,7 +55,7 @@ void setup()
 {
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	
-	rect = new Rect(0.0f, 0.0f, -20.0f, 1.5f, 1.5f);
+	rect = new Rect(0.0f, 0.0f, 0.0f, 1.5f, 1.5f);
 	rect->setVelocity(new STVec3f(0.05f, 0.03f, 0.0f));
 	//viewFrame->translateLocal(0.0f, 0.0f, 7.0f);
 	timer = new STTimer();
@@ -124,9 +124,10 @@ void runShader()
 {
 	std::vector<STUniform*> uniforms;
 	
-	//STVec4f* shaderColor = new STVec4f(1.0f, 1.0f, 1.0f, 1.0f);
+	//STVec4f* shaderColor = new STVec4f(0.0f, 0.0f, 0.0f, 1.0f);
 	//STUniform* colorUniform = new STUniform("vColor", 1, shaderColor);
 	//uniforms.push_back(colorUniform);
+	
 	STMatrix44f* mvpMatrix = pipeline->getMVPMatrix();
 	
 	STUniform* mvpUniform = new STUniform("mvpMatrix", 1, GL_FALSE, mvpMatrix, true);

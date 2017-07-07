@@ -11,9 +11,15 @@ private:
 	GLfloat radius;
 	GLushort numSlices;
 	
+	std::vector<GLfloat> verts;
+	std::vector<GLfloat> norms;
+	std::vector<GLfloat> colors;
+	std::vector<GLuint> indices;
+	
 	void genVerts() override;
 	void genIndices() override;
 	void genColors() override;
+	void genNormals() override;
 	
 public:
 	
@@ -21,29 +27,37 @@ public:
 	Circle(GLfloat originX, GLfloat originY, GLfloat radius) : Circle(originX, originY, 0.0f, radius, 12) {};
 	~Circle() override;
 	
-	GLfloat* getVerts() override {return this->verts.data();};
-	GLubyte* getColors() override {return this->colors.data();};
-	GLushort* getIndices() override {return this->indices.data();};
+	bool setColors(std::vector<GLfloat> colorArray) override;
+	
+	void setColorToGLColor() override;
+	
+	void setOrigin(STVec3f* origin) override {this->origin = origin;};
+	void setAcceleration(STVec3f* accel) override {this->acceleration = accel;};
+	void setVelocity(STVec3f* velocity) override {this->velocity = velocity;};
+	
+	STVec3f* getOrigin() override {return this->origin;};
 	
 	GLfloat getOriginX() override {return this->origin->getX();};
 	GLfloat getOriginY() override {return this->origin->getY();};
 	GLfloat getOriginZ() override {return this->origin->getZ();};
 	
+	STVec3f* getVelocity() override {return this->velocity;};
+	
 	GLfloat getVelX() override {return this->velocity->getX();};
 	GLfloat getVelY() override {return this->velocity->getY();};
 	GLfloat getVelZ() override {return this->velocity->getZ();};
 	
+	STVec3f* getAcceleration() override {return this->acceleration;};
+	
+	GLfloat getAccX() override {return this->acceleration->getX();};
+	GLfloat getAccY() override {return this->acceleration->getY();};
+	GLfloat getAccZ() override {return this->acceleration->getZ();};
+	
 	GLfloat getRadius() {return this->radius;};
 
-	bool setColors(GLubyte** colors) override;
-	void setColorToGLColor() override;
-	
-	void setBounds(GLfloat xPos, GLfloat xNeg, GLfloat yPos, GLfloat yNeg, GLfloat zPos, GLfloat zNeg) override;
-	
 	void render() override;
 	void update() override;
 	
-	void setVelocity(GLfloat velX, GLfloat velY, GLfloat velZ) override;
 	void accelerate(GLfloat accX, GLfloat accY, GLfloat accZ) override;
 	void translate(GLfloat x, GLfloat y, GLfloat z) override;
 };

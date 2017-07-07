@@ -75,21 +75,21 @@ void STPrimitiveBatch::finalize()
 		//Bind the vertex array
 		glEnableVertexAttribArray(ST_ATTRIBUTE_VERTEX);
 		glBindBuffer(GL_ARRAY_BUFFER, vertID);
-		glVertexAttribPointer(ST_ATTRIBUTE_VERTEX, 3, GL_FLOAT, GL_FALSE, 0, nullptr);	//Now, I'm still not 100% on why we're initializing the buffer with a null pointer here.
+		glVertexAttribPointer(ST_ATTRIBUTE_VERTEX, 3, GL_FLOAT, GL_FALSE, 0, this->vertData.data());	//Now, I'm still not 100% on why we're initializing the buffer with a null pointer here.
 	}
 	if(normID != 0)
 	{
 		//Bind the normal array
 		glEnableVertexAttribArray(ST_ATTRIBUTE_NORMAL);
 		glBindBuffer(GL_ARRAY_BUFFER, normID);
-		glVertexAttribPointer(ST_ATTRIBUTE_NORMAL, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+		glVertexAttribPointer(ST_ATTRIBUTE_NORMAL, 3, GL_FLOAT, GL_FALSE, 0, this->normData.data());
 	}
 	if(colorID != 0)
 	{
 		//Bind the color array
 		glEnableVertexAttribArray(ST_ATTRIBUTE_COLOR);
 		glBindBuffer(GL_ARRAY_BUFFER, colorID);
-		glVertexAttribPointer(ST_ATTRIBUTE_COLOR, 4, GL_FLOAT, GL_FALSE, 0, nullptr);
+		glVertexAttribPointer(ST_ATTRIBUTE_COLOR, 4, GL_FLOAT, GL_FALSE, 0, this->colorData.data());
 	}
 	int i = 0;
 	for(iter = this->texIDs.begin(); iter < this->texIDs.end(); iter++)
@@ -99,11 +99,10 @@ void STPrimitiveBatch::finalize()
 		glBindBuffer(GL_ARRAY_BUFFER, *iter);
 		glVertexAttribPointer(ST_ATTRIBUTE_TEXTURE0 + i, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
 	}
+
 	glBindVertexArray(0);
-	
 }
 
-//Alright... Let's see if we can make this as fast and painless as possible. Time for VECTOR::INSERT!!!
 
 void STPrimitiveBatch::copyVertexData(std::vector<STVec3f*> verts)
 {
@@ -287,6 +286,16 @@ void STPrimitiveBatch::copyTexCoordData(std::vector<STVec2f*> texCoords, GLuint 
 	}
 }
 
+void STPrimitiveBatch::copyIndexData(std::vector<GLuint> indices)
+{
+	//There's no buffer for indices: they're what you send to glDrawElements.
+	std::vector<GLuint>::iterator iter = indices.begin();
+	for(; iter != indices.end(); iter++)
+	{
+		this->indexData.push_back(*iter);
+	}
+}
+
 
 void STPrimitiveBatch::draw()
 {
@@ -294,7 +303,8 @@ void STPrimitiveBatch::draw()
 	//I mean... I'm impressed. VBOs make this ridiculously simple.
 	glBindVertexArray(this->vertexBufferArrayID);
 	
-	glDrawArrays(GL_TRIANGLES, 0, (this->vertData.size() / 3));
+	//glDrawArrays(GL_TRIANGLES, 0, (this->vertData.size() / 3));
+	glDrawElements(GL_TRIANGLES, this->indexData.size(), GL_UNSIGNED_INT, this->indexData.data());	//yes?
 	
 	glBindVertexArray(0);
 	

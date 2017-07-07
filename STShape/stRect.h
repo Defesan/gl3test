@@ -13,6 +13,7 @@ private:
 	std::vector<GLfloat> verts;
 	std::vector<GLfloat> norms;
 	std::vector<GLfloat> colors;
+	std::vector<GLuint> indices;
 	
 	bool batchStarted;
 	
@@ -26,6 +27,7 @@ private:
 	void genVerts() override;
 	void genNormals() override;
 	void genColors() override;
+	void genIndices() override;
 	
 public:
 	Rect(GLfloat originX, GLfloat originY, GLfloat originZ, GLfloat width, GLfloat height);
@@ -68,6 +70,7 @@ public:
 	
 	void render() override;
 	void update() override;
+	
 	void translate(GLfloat x, GLfloat y, GLfloat z) override;
 	void translate(STVec3f* direction) { this->translate(direction->getX(), direction->getY(), direction->getZ()); }; 
 	void accelerate(GLfloat accX, GLfloat accY, GLfloat accZ) override;

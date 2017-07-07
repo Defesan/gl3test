@@ -45,7 +45,7 @@ void Rect::genVerts()
 	this->verts.push_back(this->origin->getX() - offsetX);
 	this->verts.push_back(this->origin->getY() - offsetY);
 	this->verts.push_back(this->origin->getZ());
-	
+	/*
 	this->verts.push_back(this->origin->getX() - offsetX);
 	this->verts.push_back(this->origin->getY() - offsetY);
 	this->verts.push_back(this->origin->getZ());
@@ -53,7 +53,7 @@ void Rect::genVerts()
 	this->verts.push_back(this->origin->getX() + offsetX);
 	this->verts.push_back(this->origin->getY() + offsetY);
 	this->verts.push_back(this->origin->getZ());
-	
+	*/
 	this->verts.push_back(this->origin->getX() + offsetX);
 	this->verts.push_back(this->origin->getY() - offsetY);
 	this->verts.push_back(this->origin->getZ());
@@ -64,7 +64,7 @@ void Rect::genVerts()
 
 void Rect::genColors()
 {
-	for(int i = 0; i < 6; i++)
+	for(int i = 0; i < 4; i++)
 	{
 		this->colors.push_back(0.05f * i);
 		this->colors.push_back(0.07f * i);
@@ -72,18 +72,17 @@ void Rect::genColors()
 		this->colors.push_back(1.0f);
 	}
 	this->batch->copyColorData(this->colors);
-
 }
 
 void Rect::genNormals()
 {
 	//Actually, this one seems reasonable. Just use 0,0,1. It's a flat rectangle on the xy plane.
-	this->norms.push_back(0.0f);
-	this->norms.push_back(0.0f);
-	this->norms.push_back(1.0f);
-	this->norms.push_back(0.0f);
+	/*this->norms.push_back(0.0f);
 	this->norms.push_back(0.0f);
 	this->norms.push_back(1.0f);
+	this->norms.push_back(0.0f);
+	this->norms.push_back(0.0f);
+	this->norms.push_back(1.0f);*/
 	this->norms.push_back(0.0f);
 	this->norms.push_back(0.0f);
 	this->norms.push_back(1.0f);
@@ -98,6 +97,18 @@ void Rect::genNormals()
 	this->norms.push_back(1.0f);
 
 	this->batch->copyNormalData(this->norms);
+}
+
+void Rect::genIndices()
+{
+	this->indices.push_back(1);
+	this->indices.push_back(2);
+	this->indices.push_back(3);
+	this->indices.push_back(3);
+	this->indices.push_back(2);
+	this->indices.push_back(4);
+
+	this->batch->copyIndexData(this->indices);
 }
 
 bool Rect::setColors(std::vector<GLfloat> colorArray)
@@ -134,7 +145,6 @@ void Rect::render()
 
 void Rect::update()
 {
-	//Have to figure out what to do here...
 	this->velocity->addVec3f(this->acceleration);
 	this->translate(this->velocity);
 	this->render();
