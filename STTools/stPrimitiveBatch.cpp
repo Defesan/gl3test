@@ -75,21 +75,21 @@ void STPrimitiveBatch::finalize()
 		//Bind the vertex array
 		glEnableVertexAttribArray(ST_ATTRIBUTE_VERTEX);
 		glBindBuffer(GL_ARRAY_BUFFER, vertID);
-		glVertexAttribPointer(ST_ATTRIBUTE_VERTEX, 3, GL_FLOAT, GL_FALSE, 0, this->vertData.data());	//Now, I'm still not 100% on why we're initializing the buffer with a null pointer here.
+		glVertexAttribPointer(ST_ATTRIBUTE_VERTEX, 3, GL_FLOAT, GL_FALSE, 0, nullptr);//this->vertData.data());	//Now, I'm still not 100% on why we're initializing the buffer with a null pointer here.
 	}
 	if(normID != 0)
 	{
 		//Bind the normal array
 		glEnableVertexAttribArray(ST_ATTRIBUTE_NORMAL);
 		glBindBuffer(GL_ARRAY_BUFFER, normID);
-		glVertexAttribPointer(ST_ATTRIBUTE_NORMAL, 3, GL_FLOAT, GL_FALSE, 0, this->normData.data());
+		glVertexAttribPointer(ST_ATTRIBUTE_NORMAL, 3, GL_FLOAT, GL_FALSE, 0, nullptr);//this->normData.data());
 	}
 	if(colorID != 0)
 	{
 		//Bind the color array
 		glEnableVertexAttribArray(ST_ATTRIBUTE_COLOR);
 		glBindBuffer(GL_ARRAY_BUFFER, colorID);
-		glVertexAttribPointer(ST_ATTRIBUTE_COLOR, 4, GL_FLOAT, GL_FALSE, 0, this->colorData.data());
+		glVertexAttribPointer(ST_ATTRIBUTE_COLOR, 4, GL_FLOAT, GL_FALSE, 0, nullptr);//this->colorData.data());
 	}
 	int i = 0;
 	for(iter = this->texIDs.begin(); iter < this->texIDs.end(); iter++)
@@ -99,7 +99,7 @@ void STPrimitiveBatch::finalize()
 		glBindBuffer(GL_ARRAY_BUFFER, *iter);
 		glVertexAttribPointer(ST_ATTRIBUTE_TEXTURE0 + i, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
 	}
-
+	
 	glBindVertexArray(0);
 }
 
@@ -195,9 +195,10 @@ void STPrimitiveBatch::copyNormalData(std::vector<GLfloat> norms)
 	
 	for(; iterN != norms.end(); iterN++)
 	{
+		std::cout << *iterN << " ";
 		this->normData.push_back(*iterN);
 	}
-	
+	std::cout << std::endl;
 	if(this->normID == 0)
 	{
 		glGenBuffers(1, &(this->normID));

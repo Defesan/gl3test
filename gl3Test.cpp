@@ -117,7 +117,7 @@ void render()
 	{
 		
 	}
-	glutPostRedisplay();
+	//glutPostRedisplay();
 }
 
 void runShader()
