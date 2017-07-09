@@ -18,6 +18,7 @@ Rect::Rect(GLfloat originX, GLfloat originY, GLfloat originZ, GLfloat width, GLf
 	this->genVerts();
 	this->genNormals();
 	this->genColors();
+	this->genIndices();
 	
 	this->batch->finalize();
 	

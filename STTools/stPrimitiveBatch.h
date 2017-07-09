@@ -9,11 +9,6 @@ public:
 	STPrimitiveBatch(GLuint numTexLayers);
 	~STPrimitiveBatch();
 	
-	//We always use vertices(duh) but the others are sort of optional.
-	bool usingColors;
-	bool usingTextures;
-	bool usingNormals;
-	
 	void begin();
 	void finalize();
 	

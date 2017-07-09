@@ -77,6 +77,10 @@ void STPrimitiveBatch::finalize()
 		glBindBuffer(GL_ARRAY_BUFFER, vertID);
 		glVertexAttribPointer(ST_ATTRIBUTE_VERTEX, 3, GL_FLOAT, GL_FALSE, 0, nullptr);//this->vertData.data());	//Now, I'm still not 100% on why we're initializing the buffer with a null pointer here.
 	}
+	if(indexID != 0)
+	{
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexID);
+	}
 	if(normID != 0)
 	{
 		//Bind the normal array
@@ -100,6 +104,7 @@ void STPrimitiveBatch::finalize()
 		glVertexAttribPointer(ST_ATTRIBUTE_TEXTURE0 + i, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
 	}
 	
+	
 	glBindVertexArray(0);
 }
 
@@ -110,7 +115,10 @@ void STPrimitiveBatch::copyVertexData(std::vector<STVec3f*> verts)
 	//Also, hopefully, minimum memory thrashing.
 	
 	std::vector<STVec3f*>::iterator iterV = verts.begin();
-	
+	if(!this->vertData.empty())
+	{
+		this->vertData.clear();
+	}
 	for(; iterV != verts.end(); iterV++)
 	{
 		this->vertData.push_back((*iterV)->getX());
@@ -137,9 +145,6 @@ void STPrimitiveBatch::copyVertexData(std::vector<STVec3f*> verts)
 
 void STPrimitiveBatch::copyVertexData(std::vector<GLfloat> verts)
 {
-	//Turns out it's sometimes easier to do this.
-	//Okay, probably most of the time. Also, that optimization? This is it.
-	
 	std::vector<GLfloat>::iterator iterV = verts.begin();
 	if(!this->vertData.empty())
 	{
@@ -152,7 +157,6 @@ void STPrimitiveBatch::copyVertexData(std::vector<GLfloat> verts)
 	
 	if(this->vertID == 0)
 	{
-		//We've never bound a buffer before. So, we need a new Buffer ID.
 		glGenBuffers(1, &(this->vertID));
 		glBindBuffer(GL_ARRAY_BUFFER, this->vertID);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * this->vertData.size(), this->vertData.data(), GL_DYNAMIC_DRAW);
@@ -168,7 +172,10 @@ void STPrimitiveBatch::copyNormalData(std::vector<STVec3f*> norms)
 {
 	std::vector<STVec3f*>::iterator iterN = norms.begin();
 	std::vector<GLfloat>::iterator iterD = this->normData.begin();
-	
+	if(!this->normData.empty())
+	{
+		this->normData.clear();
+	}
 	for(; iterN != norms.end(); iterN++)
 	{
 		this->normData.insert(iterD, (*iterN)->getData().begin(), (*iterN)->getData().end());
@@ -192,13 +199,15 @@ void STPrimitiveBatch::copyNormalData(std::vector<STVec3f*> norms)
 void STPrimitiveBatch::copyNormalData(std::vector<GLfloat> norms)
 {
 	std::vector<GLfloat>::iterator iterN = norms.begin();
-	
+	if(!this->normData.empty())
+	{
+		this->normData.clear();
+	}
 	for(; iterN != norms.end(); iterN++)
 	{
-		std::cout << *iterN << " ";
 		this->normData.push_back(*iterN);
 	}
-	std::cout << std::endl;
+
 	if(this->normID == 0)
 	{
 		glGenBuffers(1, &(this->normID));
@@ -210,13 +219,17 @@ void STPrimitiveBatch::copyNormalData(std::vector<GLfloat> norms)
 		glBindBuffer(GL_ARRAY_BUFFER, this->normID);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat) * this->normData.size(), this->normData.data());
 	}
+	
 }
 
 void STPrimitiveBatch::copyColorData(std::vector<STVec4f*> colors)
 {
 	std::vector<STVec4f*>::iterator iterC = colors.begin();
 	std::vector<GLfloat>::iterator iterD = this->colorData.begin();
-
+	if(!this->colorData.empty())
+	{
+		this->colorData.clear();
+	}
 	for(; iterC != colors.end(); iterC++)
 	{
 		this->colorData.insert(iterD, (*iterC)->getData().begin(), (*iterC)->getData().end());
@@ -239,7 +252,10 @@ void STPrimitiveBatch::copyColorData(std::vector<STVec4f*> colors)
 void STPrimitiveBatch::copyColorData(std::vector<GLfloat> colors)
 {
 	std::vector<GLfloat>::iterator iterC = colors.begin();
-	
+	if(!this->colorData.empty())
+	{
+		this->colorData.clear();
+	}
 	for(; iterC != colors.end(); iterC++)
 	{
 		this->colorData.push_back(*iterC);
@@ -267,7 +283,12 @@ void STPrimitiveBatch::copyTexCoordData(std::vector<STVec2f*> texCoords, GLuint 
 	}
 	std::vector<STVec2f*>::iterator iterT = texCoords.begin();
 	std::vector<GLfloat>::iterator iterD = this->texCoordData[textureLayer].begin();
-
+	
+	if(!this->texCoordData[textureLayer].empty())
+	{
+		this->texCoordData[textureLayer].clear();
+	}
+	
 	for(; iterT != texCoords.end(); iterT++)
 	{
 		this->texCoordData[textureLayer].insert(iterD, (*iterT)->getData().begin(), (*iterT)->getData().end());
@@ -289,11 +310,27 @@ void STPrimitiveBatch::copyTexCoordData(std::vector<STVec2f*> texCoords, GLuint 
 
 void STPrimitiveBatch::copyIndexData(std::vector<GLuint> indices)
 {
-	//There's no buffer for indices: they're what you send to glDrawElements.
 	std::vector<GLuint>::iterator iter = indices.begin();
+	
+	if(!this->indexData.empty())
+	{
+		this->indexData.clear();
+	}
+	
 	for(; iter != indices.end(); iter++)
 	{
 		this->indexData.push_back(*iter);
+	}
+	if(this->indexID == 0)
+	{
+		glGenBuffers(1, &(this->indexID));
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->indexID);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * this->indexData.size(), this->indexData.data(), GL_DYNAMIC_DRAW);	
+	}
+	else
+	{
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->indexID);
+		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(GLuint) * this->indexData.size(), this->indexData.data());
 	}
 }
 
@@ -303,9 +340,9 @@ void STPrimitiveBatch::draw()
 	//For some reason I was putting this off. Then I looked more closely at what *OpenGL* needs, as opposed to cross-platform OpenGL and OpenGL ES.
 	//I mean... I'm impressed. VBOs make this ridiculously simple.
 	glBindVertexArray(this->vertexBufferArrayID);
-	
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexID);
 	//glDrawArrays(GL_TRIANGLES, 0, (this->vertData.size() / 3));
-	glDrawElements(GL_TRIANGLES, this->indexData.size(), GL_UNSIGNED_INT, this->indexData.data());	//yes?
+	glDrawElements(GL_TRIANGLES, this->indexData.size(), GL_UNSIGNED_INT, nullptr);
 	
 	glBindVertexArray(0);
 	
