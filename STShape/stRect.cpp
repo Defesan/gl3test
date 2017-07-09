@@ -102,12 +102,12 @@ void Rect::genNormals()
 
 void Rect::genIndices()
 {
+	this->indices.push_back(0);
 	this->indices.push_back(1);
 	this->indices.push_back(2);
-	this->indices.push_back(3);
-	this->indices.push_back(3);
 	this->indices.push_back(2);
-	this->indices.push_back(4);
+	this->indices.push_back(1);
+	this->indices.push_back(3);
 
 	this->batch->copyIndexData(this->indices);
 }
