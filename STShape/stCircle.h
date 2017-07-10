@@ -9,12 +9,7 @@ class Circle : public Shape
 {
 private:
 	GLfloat radius;
-	GLushort numSlices;
-	
-	std::vector<GLfloat> verts;
-	std::vector<GLfloat> norms;
-	std::vector<GLfloat> colors;
-	std::vector<GLuint> indices;
+	GLuint numSlices;
 	
 	void genVerts() override;
 	void genIndices() override;
@@ -23,9 +18,12 @@ private:
 	
 public:
 	
-	Circle(GLfloat originX, GLfloat originY, GLfloat originZ, GLfloat radius, GLushort numVerts);
+	Circle(GLfloat originX, GLfloat originY, GLfloat originZ, GLfloat radius, GLuint numVerts);
 	Circle(GLfloat originX, GLfloat originY, GLfloat radius) : Circle(originX, originY, 0.0f, radius, 12) {};
 	~Circle() override;
+	
+	//One really good thing about languages like Obj-C and C# is the ability to declare member variables and have the compiler automatically make gets and sets for them...
+	//This whole section would have four, maybe five custom getters and setters...
 	
 	bool setColors(std::vector<GLfloat> colorArray) override;
 	
@@ -53,13 +51,16 @@ public:
 	GLfloat getAccY() override {return this->acceleration->getY();};
 	GLfloat getAccZ() override {return this->acceleration->getZ();};
 	
+	
 	GLfloat getRadius() {return this->radius;};
+	GLuint getNumSlices() {return this->numSlices;};	
 
 	void render() override;
 	void update() override;
 	
 	void accelerate(GLfloat accX, GLfloat accY, GLfloat accZ) override;
 	void translate(GLfloat x, GLfloat y, GLfloat z) override;
+	void translate(STVec3f* direction) { this->translate(direction->getX(), direction->getY(), direction->getZ()); }; 
 };
 
 

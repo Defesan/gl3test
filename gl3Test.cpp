@@ -55,24 +55,25 @@ void setup()
 {
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	
-	rect = new Rect(0.0f, 0.0f, 0.0f, 1.5f, 1.5f);
-	rect->setVelocity(new STVec3f(0.05f, 0.03f, 0.0f));
+	circle = new Circle(0.0f, 0.0f, 0.0f, 1.0f, 16);
+	circle->setVelocity(new STVec3f(0.05f, 0.03f, 0.0f));
 	//viewFrame->translateLocal(0.0f, 0.0f, 7.0f);
 	timer = new STTimer();
 	
-	rect->render();
+	circle->render();
 }
 
 void bounce()
 {
 	bool dirty = false;
-	GLfloat lXPos = rect->getOriginX() - (rect->getWidth() / 2);
-	GLfloat rXPos = rect->getOriginX() + (rect->getWidth() / 2);
-	GLfloat tYPos = rect->getOriginY() + (rect->getHeight() / 2);
-	GLfloat bYPos = rect->getOriginY() - (rect->getHeight() / 2);
 	
-	GLfloat velX = rect->getVelX();
-	GLfloat velY = rect->getVelY();
+	GLfloat lXPos = circle->getOriginX() - circle->getRadius();
+	GLfloat rXPos = circle->getOriginX() + circle->getRadius();
+	GLfloat bYPos = circle->getOriginY() - circle->getRadius();
+	GLfloat tYPos = circle->getOriginY() + circle->getRadius();
+	
+	GLfloat velX = circle->getVelX();
+	GLfloat velY = circle->getVelY();
 	
 	
 	if(lXPos < -10.0f || rXPos > 10.0f)
@@ -89,7 +90,7 @@ void bounce()
 	if(dirty)
 	{
 		STVec3f* velocity = new STVec3f(velX, velY, 0.0f);
-		rect->setVelocity(velocity);
+		circle->setVelocity(velocity);
 	}
 }
 
@@ -107,7 +108,7 @@ void render()
 		modelViewStack->pushMatrix(viewFrame->getMatrix(false));
 			runShader();
 			bounce();
-			rect->update();
+			circle->update();
 		modelViewStack->popMatrix();
 		
 		glutSwapBuffers();

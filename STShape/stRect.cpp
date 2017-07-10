@@ -10,8 +10,6 @@ Rect::Rect(GLfloat originX, GLfloat originY, GLfloat originZ, GLfloat width, GLf
 	this->height = height;
 	
 	this->batch = new STPrimitiveBatch(0);
-	this->batchStarted = false;
-	//That should be all the members initialized. Now the really hard part.
 	
 	this->batch->begin();
 	
@@ -46,15 +44,7 @@ void Rect::genVerts()
 	this->verts.push_back(this->origin->getX() - offsetX);
 	this->verts.push_back(this->origin->getY() - offsetY);
 	this->verts.push_back(this->origin->getZ());
-	/*
-	this->verts.push_back(this->origin->getX() - offsetX);
-	this->verts.push_back(this->origin->getY() - offsetY);
-	this->verts.push_back(this->origin->getZ());
-	
-	this->verts.push_back(this->origin->getX() + offsetX);
-	this->verts.push_back(this->origin->getY() + offsetY);
-	this->verts.push_back(this->origin->getZ());
-	*/
+
 	this->verts.push_back(this->origin->getX() + offsetX);
 	this->verts.push_back(this->origin->getY() - offsetY);
 	this->verts.push_back(this->origin->getZ());
@@ -78,12 +68,6 @@ void Rect::genColors()
 void Rect::genNormals()
 {
 	//Actually, this one seems reasonable. Just use 0,0,1. It's a flat rectangle on the xy plane.
-	/*this->norms.push_back(0.0f);
-	this->norms.push_back(0.0f);
-	this->norms.push_back(1.0f);
-	this->norms.push_back(0.0f);
-	this->norms.push_back(0.0f);
-	this->norms.push_back(1.0f);*/
 	this->norms.push_back(0.0f);
 	this->norms.push_back(0.0f);
 	this->norms.push_back(1.0f);
@@ -149,14 +133,11 @@ void Rect::update()
 	this->velocity->addVec3f(this->acceleration);
 	this->translate(this->velocity);
 	this->render();
-
 }
 
 
 void Rect::translate(GLfloat x, GLfloat y, GLfloat z)
 {
-	std::vector<GLfloat>::iterator iter;
-
 	//Update the origin
 	this->origin->addX(x);
 	this->origin->addY(y);

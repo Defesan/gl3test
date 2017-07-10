@@ -30,5 +30,6 @@
 #include "STTools/stUtil.h"
 
 #include "STShape/stRect.h"
+#include "STShape/stCircle.h"
 
 #endif //__HEADERS_H__

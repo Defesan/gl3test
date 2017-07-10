@@ -23,6 +23,12 @@ protected:
 	//Duh... We use batches now.
 	STPrimitiveBatch* batch;
 	
+	//Seems I need these after all...
+	std::vector<GLfloat> verts;
+	std::vector<GLfloat> norms;
+	std::vector<GLfloat> colors;
+	std::vector<GLuint> indices;
+	
 	//To be honest, EVERY shape will have these!
 	STVec3f* origin;
 	STVec3f* velocity;

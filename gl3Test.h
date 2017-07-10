@@ -24,9 +24,10 @@ STMatrixStack* projectionStack;
 STMatrixPipeline* pipeline;
 STShaderManager* sMan;
 std::vector<STPrimitiveBatch*> geometry;
-Rect* rect;
+//Rect* rect;
+Circle* circle;
 STTimer* timer;
-int prints;
+
 
 void bounce();
 void resize(int w, int h);

@@ -75,7 +75,7 @@ void STPrimitiveBatch::finalize()
 		//Bind the vertex array
 		glEnableVertexAttribArray(ST_ATTRIBUTE_VERTEX);
 		glBindBuffer(GL_ARRAY_BUFFER, vertID);
-		glVertexAttribPointer(ST_ATTRIBUTE_VERTEX, 3, GL_FLOAT, GL_FALSE, 0, nullptr);//this->vertData.data());	//Now, I'm still not 100% on why we're initializing the buffer with a null pointer here.
+		glVertexAttribPointer(ST_ATTRIBUTE_VERTEX, 3, GL_FLOAT, GL_FALSE, 0, nullptr);	//Now, I'm still not 100% on why we're initializing the buffer with a null pointer here.
 	}
 	if(indexID != 0)
 	{
@@ -86,14 +86,14 @@ void STPrimitiveBatch::finalize()
 		//Bind the normal array
 		glEnableVertexAttribArray(ST_ATTRIBUTE_NORMAL);
 		glBindBuffer(GL_ARRAY_BUFFER, normID);
-		glVertexAttribPointer(ST_ATTRIBUTE_NORMAL, 3, GL_FLOAT, GL_FALSE, 0, nullptr);//this->normData.data());
+		glVertexAttribPointer(ST_ATTRIBUTE_NORMAL, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 	}
 	if(colorID != 0)
 	{
 		//Bind the color array
 		glEnableVertexAttribArray(ST_ATTRIBUTE_COLOR);
 		glBindBuffer(GL_ARRAY_BUFFER, colorID);
-		glVertexAttribPointer(ST_ATTRIBUTE_COLOR, 4, GL_FLOAT, GL_FALSE, 0, nullptr);//this->colorData.data());
+		glVertexAttribPointer(ST_ATTRIBUTE_COLOR, 4, GL_FLOAT, GL_FALSE, 0, nullptr);
 	}
 	int i = 0;
 	for(iter = this->texIDs.begin(); iter < this->texIDs.end(); iter++)
@@ -111,8 +111,6 @@ void STPrimitiveBatch::finalize()
 
 void STPrimitiveBatch::copyVertexData(std::vector<STVec3f*> verts)
 {
-	//The objective is to get the data from the vector of Vec3d's into this object's vector of GLdoubles with minimum fuss.
-	//Also, hopefully, minimum memory thrashing.
 	
 	std::vector<STVec3f*>::iterator iterV = verts.begin();
 	if(!this->vertData.empty())
@@ -125,15 +123,11 @@ void STPrimitiveBatch::copyVertexData(std::vector<STVec3f*> verts)
 		this->vertData.push_back((*iterV)->getY());
 		this->vertData.push_back((*iterV)->getZ());
 	}
-	//That...should work. Sadly, it IS basically extra work, which means it WILL be slower, but it's probably the best the setup I made can offer.
-	//Okay, maybe not probably. I'm sure there's an optimization SOMEWHERE.
 	
 	if(this->vertID == 0)
 	{
-		//We've never bound a buffer before. So, we need a new Buffer ID.
 		glGenBuffers(1, &(this->vertID));
 		glBindBuffer(GL_ARRAY_BUFFER, this->vertID);
-		//Oh, Hey-o, guess what I get to do that GLTools couldn't? Vectors can report their size! That's why I started using them in the first place!
 		glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * this->vertData.size(), this->vertData.data(), GL_DYNAMIC_DRAW);
 	}
 	else

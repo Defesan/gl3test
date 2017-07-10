@@ -1,23 +1,24 @@
 #include "stCircle.h"
 
-Circle::Circle(GLfloat originX, GLfloat originY, GLfloat originZ, GLfloat radius, GLushort numVerts)
+Circle::Circle(GLfloat originX, GLfloat originY, GLfloat originZ, GLfloat radius, GLuint numVerts)
 {
-
-	this->origin = new STVec3f();
+	this->batch = new STPrimitiveBatch(0);
+	this->origin = new STVec3f(originX, originY, originZ);
 	
 	this->radius = radius;
 	this->numSlices = numVerts;
 	
 	this->velocity = new STVec3f();
+	this->acceleration = new STVec3f();
 	
-	this->boundPos = new STVec3f(100.0f, 100.0f, 100.0f);
-	this->boundNeg = new STVec3f(-100.0f, -100.0f, -100.0f);
+	this->batch->begin();
 
 	this->genVerts();
 	this->genIndices();
 	this->genColors();
+	this->genNormals();
 	
-	this->translate(originX, originY, originZ);	
+	this->batch->finalize();
 }
 
 Circle::~Circle()
@@ -28,25 +29,27 @@ Circle::~Circle()
 void Circle::genVerts()
 {
 	GLfloat sliceAngle = (2 * PI) / (GLfloat)this->numSlices; 
-
-	this->verts.push_back(0.0f);
-	this->verts.push_back(0.0f);
-	this->verts.push_back(0.0f);
+	this->verts.clear();
+	this->verts.push_back(this->origin->getX());
+	this->verts.push_back(this->origin->getY());
+	this->verts.push_back(this->origin->getZ());
 	
-	for(int i = 1; i < (this->numSlices + 1); i++)
+	for(GLuint i = 1; i < (this->numSlices + 1); i++)
 	{
 		GLfloat currentAngle = sliceAngle * (i - 1);
 		
-		this->verts.push_back(sin(currentAngle) * this->radius);
-		this->verts.push_back(cos(currentAngle) * this->radius);
-		this->verts.push_back(0.0f);
+		this->verts.push_back(this->verts[0] + sin(currentAngle) * this->radius);
+		this->verts.push_back(this->verts[1] + cos(currentAngle) * this->radius);
+		this->verts.push_back(this->verts[2]);
 	}
+	
+	this->batch->copyVertexData(this->verts);
 }
 
 void Circle::genIndices()
 {
 	
-	for(int i = 0; i < (this->numSlices - 1); i++)
+	for(GLuint i = 0; i < (this->numSlices - 1); i++)
 	{
 		this->indices.push_back(0);
 		this->indices.push_back(i + 1);
@@ -56,24 +59,20 @@ void Circle::genIndices()
 	this->indices.push_back(0);
 	this->indices.push_back(this->numSlices);
 	this->indices.push_back(1);
+	
+	this->batch->copyIndexData(this->indices);
 }
 
 void Circle::genColors()
 {
-	GLubyte red = 0;
-	GLubyte green = 0;
-	GLubyte blue = 0;
-	GLubyte alpha = 255;
+	GLfloat red = 0.0f;
+	GLfloat green = 0.0f;
+	GLfloat blue = 0.0f;
+	GLfloat alpha = 1.0f;
 	
-	int delta = 765 / (this->numSlices + 1);
+	GLfloat delta = 3.0f / (float)(this->numSlices + 1);	//Floating point division is costly, but here we're only doing it once.
 	
-	if(!delta)
-	{
-		delta = 1;
-	
-	}
-	
-	for(int i = 0; i < (this->numSlices + 1); i++)
+	for(GLuint i = 0; i < (this->numSlices + 1); i++)
 	{
 		this->colors.push_back(red);
 		this->colors.push_back(green);
@@ -82,44 +81,44 @@ void Circle::genColors()
 		
 		//Generate the colors for the next vertex.
 		//If red hasn't been maxed out...
-		if(red < 255)
+		if(red < 1.0f)
 		{
 			//and there's room for a full delta...
-			if((255 - red) > delta)
+			if((1.0f - red) > delta)
 			{
 				//Add the full delta.
 				red += delta;
 			}
 			else	//There's still room, but not ENOUGH room
 			{
-				int overflow = delta - (255 - red);
-				red = 255;
+				GLfloat overflow = delta - (1.0f - red);
+				red = 1.0f;
 				green += overflow;
 			}
 		
 		}
-		else if(green < 255)
+		else if(green < 1.0f)
 		{
-			if((255 - green) > delta)
+			if((1.0f - green) > delta)
 			{
 				green += delta;
 			}
 			else	
 			{
-				int overflow = delta - (255 - green);
-				green = 255;
+				GLfloat overflow = delta - (1.0f - green);
+				green = 1.0f;
 				blue += overflow;
 			}
 		}
-		else if(blue < 255)
+		else if(blue < 1.0f)
 		{
-			if((255 - blue) > delta)
+			if((1.0f - blue) > delta)
 			{
 				blue += delta;
 			}
 			else	
 			{
-				blue = 255;
+				blue = 1.0f;
 			}
 		}
 		else
@@ -127,9 +126,22 @@ void Circle::genColors()
 			std::cout << "Edge case... But this shouldn't happen. All the colors got filled up." << std::endl;
 		}
 	}
+	this->batch->copyColorData(this->colors);
 }
 
-bool Circle::setColors(GLubyte** colors)
+void Circle::genNormals()
+{
+	int vertCount = this->verts.size() / 3;
+	for(int i = 0; i < vertCount; i++)
+	{
+		this->norms.push_back(0.0f);
+		this->norms.push_back(0.0f);
+		this->norms.push_back(1.0f);
+	}
+	this->batch->copyNormalData(this->norms);
+}
+
+bool Circle::setColors(std::vector<GLfloat> colorArray)
 {
 	return false;
 }
@@ -155,79 +167,35 @@ void Circle::setColorToGLColor()
 
 void Circle::render()
 {
-	glColorPointer(4, GL_UNSIGNED_BYTE, 0, this->colors.data());
-	glEnableClientState(GL_COLOR_ARRAY);
-	glVertexPointer(3, GL_FLOAT, 0, this->verts.data());
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_SHORT, this->indices.data());
+	this->batch->draw();
 
 }
 
 void Circle::update()
 {
-	//This acts as a sort of default behavior, really, but external calls can modify it considerably. Still only 'bout as smart as a Roomba...
-	
-	if(((this->origin->getX() + this->radius + this->velocity->getX()) > this->boundPos->getX()) || ((this->origin->getX() - this->radius + this->velocity->getX()) < this->boundNeg->getX()))
-	{
-		this->velocity->mulX(-1);
-	}
-	if(((this->origin->getY() + this->radius + this->velocity->getY()) > this->boundPos->getY()) || ((this->origin->getY() - this->radius + this->velocity->getY()) < this->boundNeg->getY()))
-	{
-		this->velocity->mulY(-1);
-	}
-	if(((this->origin->getZ() + this->velocity->getZ()) > this->boundPos->getZ()) || ((this->origin->getZ() + this->velocity->getZ()) < this->boundNeg->getZ()))
-	{
-		this->velocity->mulZ(-1);
-	}
-	
-	this->translate(this->velocity->getX(), this->velocity->getY(), this->velocity->getZ());
+	this->velocity->addVec3f(this->acceleration);	
+	this->translate(this->velocity);
 	this->render();
 }
 
-void Circle::setVelocity(GLfloat velX, GLfloat velY, GLfloat velZ)
-{
-	this->velocity->setX(velX);
-	this->velocity->setY(velY);
-	this->velocity->setZ(velZ);
-}
 
 void Circle::accelerate(GLfloat accX, GLfloat accY, GLfloat accZ)
 {
-	this->velocity->addX(accX);
-	this->velocity->addY(accY);
-	this->velocity->addZ(accZ);
+	this->acceleration->setX(accX);
+	this->acceleration->setY(accY);
+	this->acceleration->setZ(accZ);
 }
 
 
 void Circle::translate(GLfloat x, GLfloat y, GLfloat z)
 {
-	std::vector<GLfloat>::iterator iter;
-
 	//Update the origin
 	this->origin->addX(x);
 	this->origin->addY(y);
 	this->origin->addZ(z);
 	
 	//...and the verts
-	for(iter = this->verts.begin(); iter != this->verts.end(); iter++)
-	{
-		*iter += x;
-		iter++;
-		*iter += y;
-		iter++;
-		*iter += z;
-	}
-	
+	this->genVerts();
 }
 
-void Circle::setBounds(GLfloat xPos, GLfloat xNeg, GLfloat yPos, GLfloat yNeg, GLfloat zPos, GLfloat zNeg)
-{
-	this->boundPos->setX(xPos);
-	this->boundPos->setY(yPos);
-	this->boundPos->setZ(zPos);
-	
-	this->boundNeg->setX(xNeg);
-	this->boundNeg->setY(yNeg);
-	this->boundNeg->setZ(zNeg);
 
-}

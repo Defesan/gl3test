@@ -9,21 +9,6 @@ private:
 	GLfloat width;
 	GLfloat height;
 	
-	//Seems I need these after all...
-	std::vector<GLfloat> verts;
-	std::vector<GLfloat> norms;
-	std::vector<GLfloat> colors;
-	std::vector<GLuint> indices;
-	
-	bool batchStarted;
-	
-	/*
-		I have two options:
-		1) Figure out how to use indices with the Primitive batch function(actually shouldn't be that hard...)
-		2) Change Rect so that it generates the full lists of vertices, normals, and colors, as they're supposed to be displayed...
-		Going for 2, first.
-	*/
-	
 	void genVerts() override;
 	void genNormals() override;
 	void genColors() override;
