@@ -22,9 +22,6 @@ public:
 	Circle(GLfloat originX, GLfloat originY, GLfloat radius) : Circle(originX, originY, 0.0f, radius, 12) {};
 	~Circle() override;
 	
-	//One really good thing about languages like Obj-C and C# is the ability to declare member variables and have the compiler automatically make gets and sets for them...
-	//This whole section would have four, maybe five custom getters and setters...
-	
 	bool setColors(std::vector<GLfloat> colorArray) override;
 	
 	void setColorToGLColor() override;

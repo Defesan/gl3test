@@ -1,21 +1,25 @@
 #include "stSphere.h"
 
-Sphere::Sphere(GLfloat originX, GLfloat originY, GLfloat originZ, GLfloat radius, GLushort numLayers, GLushort numSlices)
+Sphere::Sphere(GLfloat originX, GLfloat originY, GLfloat originZ, GLfloat radius, GLuint numLayers, GLuint numSlices)
 {
-	this->origin = new STVec3f();
-	this->velocity = new STVec3f();
+	this->batch = new STPrimitiveBatch(0);
+	this->origin = new STVec3f(originX, originY, originZ);
+	
 	this->radius = radius;
 	this->numLayers = numLayers;
 	this->numSlices = numSlices;
-	this->boundPos = new STVec3f(100.0f, 100.0f, 100.0f);
-	this->boundNeg = new STVec3f(-100.0f, -100.0f, -100.0f);
-	this->frame = 0;
+	
+	this->velocity = new STVec3f();
+	this->acceleration = new STVec3f();
+	
+	this->batch->begin();
 	
 	this->genVerts();
 	this->genIndices();
 	this->genColors();
+	this->genNormals();
 	
-	this->translate(originX, originY, originZ);
+	this->batch->finalize();
 }
 
 Sphere::~Sphere()
@@ -26,10 +30,16 @@ Sphere::~Sphere()
 
 void Sphere::genVerts()
 {
+	this->verts.clear();
+
+	GLfloat originX = this->origin->getX();
+	GLfloat originY = this->origin->getY();
+	GLfloat originZ = this->origin->getZ();
+
 	//Sphere construction begins at the top.
-	GLfloat vertexYPos = this->radius;//this->originY + this->radius;
-	GLfloat vertexXPos = 0.0f;//this->originX;
-	GLfloat vertexZPos = 0.0f;//this->originZ;
+	GLfloat vertexYPos = this->radius + originY;
+	GLfloat vertexXPos = originX;
+	GLfloat vertexZPos = originZ;
 	
 	GLfloat layerAngle = PI/(this->numLayers + 1);  //The angle, in radians, between each layer of the sphere
 	GLfloat sliceAngle = (2 * PI)/this->numSlices;  //The angle, in radians, between each meridian of the sphere.
@@ -44,7 +54,7 @@ void Sphere::genVerts()
 	this->verts.push_back(vertexZPos);
 	
 	//Generate layer i
-	for(int i = 0; i < this->numLayers; i++)
+	for(GLuint i = 0; i < this->numLayers; i++)
 	{
 		//Calculate the angle of the current layer
 		currentLayerAngle = layerAngle * (i + 1);	
@@ -54,7 +64,7 @@ void Sphere::genVerts()
 		vertexYPos = cos(currentLayerAngle) * this->radius;
 		
 		//Generate vertex j of layer i
-		for(int j = 0; j < this->numSlices; j++)
+		for(GLuint j = 0; j < this->numSlices; j++)
 		{
 			//Calculate the angle of the current slice
 			currentSliceAngle = j * sliceAngle;
@@ -71,13 +81,15 @@ void Sphere::genVerts()
 	}
 	
 	//Bottom vertex coordinates
-	vertexYPos = -1 * this->radius;
-	vertexXPos = 0.0f;
-	vertexZPos = 0.0f;
+	vertexYPos = -1 * this->radius + originY;
+	vertexXPos = originX;
+	vertexZPos = originZ;
 	
 	this->verts.push_back(vertexXPos);
 	this->verts.push_back(vertexYPos);
 	this->verts.push_back(vertexZPos);
+	
+	this->batch->copyVertexData(this->verts);
 }
 
 void Sphere::genIndices()
@@ -91,7 +103,7 @@ void Sphere::genIndices()
 	*/
 	
 	//1 -- Upper cap generation
-	for(int i = 0; i < this->numSlices; i++)
+	for(GLuint i = 0; i < this->numSlices; i++)
 	{
 		this->indices.push_back(0);			//Each triangle starts with the top vertex...
 		this->indices.push_back(i + 1);		//and extends to the i + 1th slice vertex
@@ -110,16 +122,16 @@ void Sphere::genIndices()
 	
 	//2 -- Strip generation
 	//For N layers, this is done N - 1 times. This is because the strips are defined in terms of both the ith layer and the (i + 1)th layer.
-	for(int i = 0; i < (this->numLayers - 1); i++)
+	for(GLuint i = 0; i < (this->numLayers - 1); i++)
 	{
-		int firstVert = (this->numSlices * i) + 1;			//The index of the first vertex in the current layer
-		int belowFirst = (this->numSlices * (i + 1)) + 1; 	//The index of the first vertex on the layer below the current layer.
+		GLuint firstVert = (this->numSlices * i) + 1;			//The index of the first vertex in the current layer
+		GLuint belowFirst = (this->numSlices * (i + 1)) + 1; 	//The index of the first vertex on the layer below the current layer.
 		
 		//For each j, there are two triangles to generate.
 		//Given vertex v(j) and v(j + M), with slice count M, the triangles are defined as follows:
 		//Tri 1: {v(j), v(j + M), v(j + M + 1)}
 		//Tri 2: {v(j), v(j + 1), v(j + M + 1)}
-		for(int j = 0; j < this->numSlices; j++)
+		for(GLuint j = 0; j < this->numSlices; j++)
 		{
 			//The first two indices in each group of six are always the jth vertex after firstVert and belowFirst, respectively.
 			this->indices.push_back(firstVert + j);
@@ -148,12 +160,12 @@ void Sphere::genIndices()
 		
 	//3 -- Bottom cap generation
 	//Here, the index of the central vertex, as well as the first vertex of the last layer, need to be calculated.
-	int numVerts = this->numSlices * this->numLayers + 2;
-	int lastVert = numVerts - 1;
-	int startOfLastRing = lastVert - this->numSlices;
+	GLuint numVerts = this->numSlices * this->numLayers + 2;
+	GLuint lastVert = numVerts - 1;
+	GLuint startOfLastRing = lastVert - this->numSlices;
 
 	//However, substituting lastVert for 0 and startOfLastRing for 1, the rest proceeds just like the upper cap.
-	for(int i = 0; i < this->numSlices; i++)
+	for(GLuint i = 0; i < this->numSlices; i++)
 	{
 		this->indices.push_back(lastVert);
 		
@@ -168,16 +180,17 @@ void Sphere::genIndices()
 		
 		this->indices.push_back(i + startOfLastRing);
 	}
+	this->batch->copyIndexData(this->indices);
 }
 
 void Sphere::genColors()
 {
 	int numVerts = (this->numLayers * this->numSlices) + 2;
 
-	GLubyte red = 0;
-	GLubyte green = 0;
-	GLubyte blue = 0;
-	GLubyte alpha = 0;
+	GLfloat red = 0.0f;
+	GLfloat green = 0.0f;
+	GLfloat blue = 0.0f;
+	GLfloat alpha = 0.0f;
 	
 	//Color generation, for the moment, is somewhat arbitrary.
 	for(int i = 0; i < numVerts; i++)
@@ -187,147 +200,82 @@ void Sphere::genColors()
 		this->colors.push_back(blue);
 		this->colors.push_back(alpha);
 		
-		red += 1;
-		green += 2;
-		blue += 3;
+		red += 0.01f;
+		green += 0.02f;
+		blue += 0.03f;
 		
 	}
+	this->batch->copyColorData(this->colors);
+}
 
+void Sphere::genNormals()
+{
+	//So here this gets a BIT trickier. Before, we've simply dealt with 2D objects, but this thing has volume.
+	//But it's still simple enough. If I'm thinking about this correctly, the normal for a given point should just be the point subtracted from the origin.
+	//This *should*(right?) provide a vector pointing through the origin AND the vertex, which is thus normal to the surface of the sphere. I think.
+	
+	//Man, the TORUS is going to be fun!
+	
+	int vertCount = this->verts.size() / 3;
+	for(int i = 0; i < vertCount; i++)
+	{
+		this->norms.push_back(this->origin->getX() - this->verts[i]);
+		this->norms.push_back(this->origin->getY() - this->verts[i + 1]);
+		this->norms.push_back(this->origin->getZ() - this->verts[i + 2]);
+	}
+	this->batch->copyNormalData(this->norms);
+	
 }
 
 void Sphere::setColorToGLColor()
 {
-	//These colors are typically floats, which presents a problem....
-	GLfloat colors[4] = {0.0f, 0.0f, 0.0f, 0.0f};
-	GLubyte ubColors[4] = {0, 0, 0, 0};
-	glGetFloatv(GL_CURRENT_COLOR, colors);
 	int colorSize = this->colors.size();
-	
-	//Convert from float to ubyte
-	for(int i = 0; i < 4; i++)
-	{
-		ubColors[i] = (GLubyte)(colors[i] * 255);		//should work?
-	}
 	this->colors.clear();
+	
+	GLfloat colors[4] = {0.0f, 0.0f, 0.0f, 0.0f};
+	glGetFloatv(GL_CURRENT_COLOR, colors);
+		
 	for(int i = 0; i < colorSize; i++)
 	{
-		this->colors.push_back(ubColors[i % 4]);
+		this->colors.push_back(colors[i % 4]);
 	}
 }
 
-bool Sphere::setColors(GLubyte** colors)
+bool Sphere::setColors(std::vector<GLfloat> colorArray)
 {
+	//TODO
 	return false;
 }
 
 void Sphere::render()
 {
-	this->frame++;
-	glColorPointer(4, GL_UNSIGNED_BYTE, 0, this->colors.data());
-	glEnableClientState(GL_COLOR_ARRAY);
-	glVertexPointer(3, GL_FLOAT, 0, this->verts.data());
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_SHORT, this->indices.data());
+	this->batch->draw();
 }
 
 void Sphere::update()
 {
-	//This acts as a sort of default behavior, really, but external calls can modify it considerably. Still only 'bout as smart as a Roomba...
-	if(((this->origin->getX() + this->radius + this->velocity->getX()) > this->boundPos->getX()) || ((this->origin->getX() - this->radius + this->velocity->getX()) < this->boundNeg->getX()))
-	{
-		this->velocity->mulX(-1.0f);
-	}
-	if(((this->origin->getY() + this->radius + this->velocity->getY()) > this->boundPos->getY()) || ((this->origin->getY() - this->radius + this->velocity->getY()) < this->boundNeg->getY()))
-	{
-		this->velocity->mulY(-1.0f);
-	}
-	if(((this->origin->getZ() + this->radius + this->velocity->getZ()) > this->boundPos->getZ()) || ((this->origin->getZ() - this->radius + this->velocity->getZ()) < this->boundNeg->getZ()))
-	{
-		this->velocity->mulZ(-1.0f);
-	}
-	this->translate(this->velocity->getX(), this->velocity->getY(), this->velocity->getZ());
-	
-	//Second bounds check, to make sure we never leave the bounds.
-	GLfloat corrX = 0.0f;
-	GLfloat corrY = 0.0f;
-	GLfloat corrZ = 0.0f;
-	
-	if(this->origin->getX() + this->radius > this->boundPos->getX())
-	{
-		corrX = this->boundPos->getX() - this->radius - this->origin->getX();
-	}
-	if(this->origin->getY() + this->radius > this->boundPos->getY())
-	{
-		corrY = this->boundPos->getY() - this->radius - this->origin->getY();
-	}
-	if(this->origin->getZ() + this->radius > this->boundPos->getZ())
-	{
-		corrZ = this->boundPos->getZ() - this->radius - this->origin->getZ();
-	}
-	if(this->origin->getX() - this->radius > this->boundNeg->getX())
-	{
-		corrX = this->boundNeg->getX() + this->radius - this->origin->getX();
-	}
-	if(this->origin->getY() - this->radius > this->boundNeg->getY())
-	{
-		corrY = this->boundNeg->getY() + this->radius - this->origin->getY();
-	}
-	if(this->origin->getZ() - this->radius > this->boundNeg->getZ())
-	{
-		corrZ = this->boundNeg->getZ() + this->radius - this->origin->getZ();
-	}
-	if(corrX > 0.0f || corrY > 0.0f || corrZ > 0.0f)
-	{
-		this->translate(corrX, corrY, corrZ);
-	}
+	this->velocity->addVec3f(this->acceleration);	
+	this->translate(this->velocity);
 	this->render();
-
-}
-
-void Sphere::setVelocity(GLfloat velX, GLfloat velY, GLfloat velZ)
-{
-	this->velocity->setX(velX);
-	this->velocity->setY(velY);
-	this->velocity->setZ(velZ);
 }
 
 void Sphere::accelerate(GLfloat accX, GLfloat accY, GLfloat accZ)
 {
-	this->velocity->addX(accX);
-	this->velocity->addY(accY);
-	this->velocity->addZ(accZ);
+	this->acceleration->setX(accX);
+	this->acceleration->setY(accY);
+	this->acceleration->setZ(accZ);
 }
 
 
 void Sphere::translate(GLfloat x, GLfloat y, GLfloat z)
 {
-	std::vector<GLfloat>::iterator iter;
-
 	//Update the origin
 	this->origin->addX(x);
 	this->origin->addY(y);
 	this->origin->addZ(z);
 	
 	//...and the verts
-	for(iter = this->verts.begin(); iter != this->verts.end(); iter++)
-	{
-		*iter += x;
-		iter++;
-		*iter += y;
-		iter++;
-		*iter += z;
-	}
+	this->genVerts();
 	
 }
 
-void Sphere::setBounds(GLfloat xPos, GLfloat xNeg, GLfloat yPos, GLfloat yNeg, GLfloat zPos, GLfloat zNeg)
-{
-	this->boundPos->setX(xPos);
-	this->boundPos->setY(yPos);
-	this->boundPos->setZ(zPos);
-	
-	this->boundNeg->setX(xNeg);
-	this->boundNeg->setY(yNeg);
-	this->boundNeg->setZ(zNeg);
-
-}

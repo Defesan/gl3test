@@ -148,20 +148,15 @@ bool Circle::setColors(std::vector<GLfloat> colorArray)
 
 void Circle::setColorToGLColor()
 {
-	GLfloat colors[4] = {0.0f, 0.0f, 0.0f, 0.0f};
-	GLubyte ubColors[4] = {0, 0, 0, 0};
-	glGetFloatv(GL_CURRENT_COLOR, colors);
 	int colorSize = this->colors.size();
-	
-	//Convert from float to ubyte
-	for(int i = 0; i < 4; i++)
-	{
-		ubColors[i] = (GLubyte)(colors[i] * 255);		
-	}
 	this->colors.clear();
+	
+	GLfloat colors[4] = {0.0f, 0.0f, 0.0f, 0.0f};
+	glGetFloatv(GL_CURRENT_COLOR, colors);
+		
 	for(int i = 0; i < colorSize; i++)
 	{
-		this->colors.push_back(ubColors[i % 4]);
+		this->colors.push_back(colors[i % 4]);
 	}
 }
 

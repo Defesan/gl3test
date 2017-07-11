@@ -1,4 +1,4 @@
-OBJS = gl3Test.cpp STTools/glew/src/glew.c STTools/stFrame.cpp STTools/stFrustum.cpp STTools/stMatrixStack.cpp STTools/stPrimitiveBatch.cpp STTools/stShader.cpp STTools/stTimer.cpp STTools/stTriangle.cpp STTools/stTriangleBatch.cpp STTools/stUniform.cpp STTools/stUtil.cpp STLinear/stVector.cpp STLinear/stMatrix.cpp STShape/stRect.cpp STShape/stCircle.cpp
+OBJS = gl3Test.cpp STTools/glew/src/glew.c STTools/stFrame.cpp STTools/stFrustum.cpp STTools/stMatrixStack.cpp STTools/stPrimitiveBatch.cpp STTools/stShader.cpp STTools/stTimer.cpp STTools/stTriangle.cpp STTools/stTriangleBatch.cpp STTools/stUniform.cpp STTools/stUtil.cpp STLinear/stVector.cpp STLinear/stMatrix.cpp STShape/stRect.cpp STShape/stCircle.cpp STShape/stSphere.cpp
 
 LIBDIRS = -L/usr/X11R6/lib -L/usr/X11R6/lib64 -L/usr/local/lib
 INCDIRS = -I/usr/include -I/usr/local/include -I/usr/include/GL

@@ -31,5 +31,6 @@
 
 #include "STShape/stRect.h"
 #include "STShape/stCircle.h"
+#include "STShape/stSphere.h"
 
 #endif //__HEADERS_H__
