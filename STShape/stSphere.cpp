@@ -244,6 +244,8 @@ void Sphere::setColorToGLColor()
 bool Sphere::setColors(std::vector<GLfloat> colorArray)
 {
 	//TODO
+	//Ooh! gedit HIGHLIGHTS todos!
+	//That's actually something I didn't expect.
 	return false;
 }
 

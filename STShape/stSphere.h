@@ -23,6 +23,7 @@ public:
 	
 	GLuint getNumLayers() {return this->numLayers;};
 	GLuint getNumSlices() {return this->numSlices;};
+	GLuint getRadius() {return this->radius;};
 	
 	STVec3f* getOrigin() override {return this->origin;};
 	
