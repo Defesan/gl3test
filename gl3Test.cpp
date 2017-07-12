@@ -20,7 +20,7 @@ int main(int argc, char* argv[])
 	//I begin to see why he does it the other way...
 	viewFrame = new STFrame();
 	//viewFrustum = new STFrustum(35.0f, float(SCREEN_WIDTH)/float(SCREEN_HEIGHT), 1.0f, 100.0f);
-	viewFrustum = new STFrustum(-10.0f, 10.0f, -10.0f, 10.0f, -1.0f, 1.0f);
+	viewFrustum = new STFrustum(-10.0f, 10.0f, -10.0f, 10.0f, -10.0f, 10.0f);
 	modelViewStack = new STMatrixStack();
 	projectionStack = new STMatrixStack();
 	pipeline = new STMatrixPipeline(modelViewStack, projectionStack);
@@ -46,13 +46,16 @@ void resize(int w, int h)
 	
 	glViewport(0,0,w,h); 
 	//viewFrustum->setPerspective(35.0f, float(w)/float(h), 1.0f, 100.0f);
-	viewFrustum->setOrthographic(-10.0f, 10.0f, -10.0f, 10.0f, -1.0f, 1.0f);
+	viewFrustum->setOrthographic(-10.0f, 10.0f, -10.0f, 10.0f, -10.0f, 10.0f);
 	projectionStack->loadMatrix(viewFrustum->getProjectionMatrix());
 	pipeline->setProjectionStack(projectionStack);
 }
 
 void setup()
 {
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_DEPTH_TEST);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	
 	sphere = new Sphere(0.0f, 0.0f, 0.0f, 2.0f, 16, 32);

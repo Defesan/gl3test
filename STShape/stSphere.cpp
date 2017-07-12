@@ -61,7 +61,7 @@ void Sphere::genVerts()
 		
 		//Define the dimensions and position of the current layer
 		layerRadius = sin(currentLayerAngle) * this->radius;
-		vertexYPos = cos(currentLayerAngle) * this->radius;
+		vertexYPos = cos(currentLayerAngle) * this->radius + originY;
 		
 		//Generate vertex j of layer i
 		for(GLuint j = 0; j < this->numSlices; j++)
@@ -70,8 +70,8 @@ void Sphere::genVerts()
 			currentSliceAngle = j * sliceAngle;
 			
 			//Determine the coordinates of the current vertex
-			vertexXPos = sin(currentSliceAngle) * layerRadius;
-			vertexZPos = cos(currentSliceAngle) * layerRadius;
+			vertexXPos = sin(currentSliceAngle) * layerRadius + originX;
+			vertexZPos = cos(currentSliceAngle) * layerRadius + originZ;
 
 			//Place vertex j of layer i
 			this->verts.push_back(vertexXPos);
@@ -204,6 +204,18 @@ void Sphere::genColors()
 		green += 0.02f;
 		blue += 0.03f;
 		
+		if(red >= 1.0f)
+		{
+			red = 0.0f;
+		}
+		if(green >= 1.0f)
+		{
+			green = 0.0f;
+		}
+		if(blue >= 1.0f)
+		{
+			blue = 0.0f;
+		}
 	}
 	this->batch->copyColorData(this->colors);
 }
