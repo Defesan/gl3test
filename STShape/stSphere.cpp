@@ -1,16 +1,15 @@
 #include "stSphere.h"
 
-Sphere::Sphere(GLfloat originX, GLfloat originY, GLfloat originZ, GLfloat radius, GLuint numLayers, GLuint numSlices)
+STSphere::STSphere(GLfloat originX, GLfloat originY, GLfloat originZ, GLfloat radius, GLuint numLayers, GLuint numSlices)
 {
 	this->batch = new STPrimitiveBatch(0);
 	this->origin = new STVec3f(originX, originY, originZ);
+	this->velocity = new STVec3f();
+	this->acceleration = new STVec3f();
 	
 	this->radius = radius;
 	this->numLayers = numLayers;
 	this->numSlices = numSlices;
-	
-	this->velocity = new STVec3f();
-	this->acceleration = new STVec3f();
 	
 	this->batch->begin();
 	
@@ -22,13 +21,13 @@ Sphere::Sphere(GLfloat originX, GLfloat originY, GLfloat originZ, GLfloat radius
 	this->batch->finalize();
 }
 
-Sphere::~Sphere()
+STSphere::~STSphere()
 {
 	//Using vectors, so no current references to delete.
 
 }
 
-void Sphere::genVerts()
+void STSphere::genVerts()
 {
 	this->verts.clear();
 
@@ -92,7 +91,7 @@ void Sphere::genVerts()
 	this->batch->copyVertexData(this->verts);
 }
 
-void Sphere::genIndices()
+void STSphere::genIndices()
 {
 	/*
 		Index generation is done in three parts:
@@ -183,7 +182,7 @@ void Sphere::genIndices()
 	this->batch->copyIndexData(this->indices);
 }
 
-void Sphere::genColors()
+void STSphere::genColors()
 {
 	int numVerts = (this->numLayers * this->numSlices) + 2;
 
@@ -199,7 +198,7 @@ void Sphere::genColors()
 		this->colors.push_back(green);
 		this->colors.push_back(blue);
 		this->colors.push_back(alpha);
-		
+		/*
 		red += 0.01f;
 		green += 0.02f;
 		blue += 0.03f;
@@ -215,12 +214,12 @@ void Sphere::genColors()
 		if(blue >= 1.0f)
 		{
 			blue = 0.0f;
-		}
+		}*/
 	}
 	this->batch->copyColorData(this->colors);
 }
 
-void Sphere::genNormals()
+void STSphere::genNormals()
 {
 	//So here this gets a BIT trickier. Before, we've simply dealt with 2D objects, but this thing has volume.
 	//But it's still simple enough. If I'm thinking about this correctly, the normal for a given point should just be the point subtracted from the origin.
@@ -239,7 +238,7 @@ void Sphere::genNormals()
 	
 }
 
-void Sphere::setColorToGLColor()
+void STSphere::setColorToGLColor()
 {
 	int colorSize = this->colors.size();
 	this->colors.clear();
@@ -253,7 +252,7 @@ void Sphere::setColorToGLColor()
 	}
 }
 
-bool Sphere::setColors(std::vector<GLfloat> colorArray)
+bool STSphere::setColors(std::vector<GLfloat> colorArray)
 {
 	//TODO
 	//Ooh! gedit HIGHLIGHTS todos!
@@ -261,19 +260,19 @@ bool Sphere::setColors(std::vector<GLfloat> colorArray)
 	return false;
 }
 
-void Sphere::render()
+void STSphere::render()
 {
 	this->batch->draw();
 }
 
-void Sphere::update()
+void STSphere::update()
 {
 	this->velocity->addVec3f(this->acceleration);	
 	this->translate(this->velocity);
 	this->render();
 }
 
-void Sphere::accelerate(GLfloat accX, GLfloat accY, GLfloat accZ)
+void STSphere::accelerate(GLfloat accX, GLfloat accY, GLfloat accZ)
 {
 	this->acceleration->setX(accX);
 	this->acceleration->setY(accY);
@@ -281,7 +280,7 @@ void Sphere::accelerate(GLfloat accX, GLfloat accY, GLfloat accZ)
 }
 
 
-void Sphere::translate(GLfloat x, GLfloat y, GLfloat z)
+void STSphere::translate(GLfloat x, GLfloat y, GLfloat z)
 {
 	//Update the origin
 	this->origin->addX(x);

@@ -17,7 +17,7 @@
 #endif
 
 //Ah, the prototypical abstract class. But... I am making shapes here, so I need one.
-class Shape
+class STShape
 {
 protected:
 	//Duh... We use batches now.
@@ -76,7 +76,7 @@ public:
 	virtual void translate(GLfloat x, GLfloat y, GLfloat z) = 0;
 	
 
-	virtual ~Shape() {};
+	virtual ~STShape() {};
 };
 
 

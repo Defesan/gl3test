@@ -1,6 +1,6 @@
 #include "stRect.h"
 
-Rect::Rect(GLfloat originX, GLfloat originY, GLfloat originZ, GLfloat width, GLfloat height)
+STRect::STRect(GLfloat originX, GLfloat originY, GLfloat originZ, GLfloat width, GLfloat height)
 {	
 	this->origin = new STVec3f(originX, originY, originZ);
 	this->velocity = new STVec3f(0.0f, 0.0f, 0.0f);
@@ -22,12 +22,12 @@ Rect::Rect(GLfloat originX, GLfloat originY, GLfloat originZ, GLfloat width, GLf
 	
 }
 
-Rect::~Rect()
+STRect::~STRect()
 {
 
 }
 
-void Rect::genVerts()
+void STRect::genVerts()
 {
 	GLfloat offsetX = this->width / 2;
 	GLfloat offsetY = this->height / 2;
@@ -53,7 +53,7 @@ void Rect::genVerts()
 	
 }
 
-void Rect::genColors()
+void STRect::genColors()
 {
 	for(int i = 0; i < 4; i++)
 	{
@@ -65,7 +65,7 @@ void Rect::genColors()
 	this->batch->copyColorData(this->colors);
 }
 
-void Rect::genNormals()
+void STRect::genNormals()
 {
 	//Actually, this one seems reasonable. Just use 0,0,1. It's a flat rectangle on the xy plane.
 	this->norms.push_back(0.0f);
@@ -84,7 +84,7 @@ void Rect::genNormals()
 	this->batch->copyNormalData(this->norms);
 }
 
-void Rect::genIndices()
+void STRect::genIndices()
 {
 	this->indices.push_back(0);
 	this->indices.push_back(1);
@@ -96,7 +96,7 @@ void Rect::genIndices()
 	this->batch->copyIndexData(this->indices);
 }
 
-bool Rect::setColors(std::vector<GLfloat> colorArray)
+bool STRect::setColors(std::vector<GLfloat> colorArray)
 {
 	if(!colorArray.empty())
 	{
@@ -111,7 +111,7 @@ bool Rect::setColors(std::vector<GLfloat> colorArray)
 	return false;
 }
 
-void Rect::setColorToGLColor()
+void STRect::setColorToGLColor()
 {
 	GLfloat colors[4] = {0.0f, 0.0f, 0.0f, 0.0f};
 	glGetFloatv(GL_CURRENT_COLOR, colors);
@@ -122,13 +122,13 @@ void Rect::setColorToGLColor()
 	}
 }
 
-void Rect::render()
+void STRect::render()
 {
 	this->batch->draw();
 }
 
 
-void Rect::update()
+void STRect::update()
 {
 	this->velocity->addVec3f(this->acceleration);
 	this->translate(this->velocity);
@@ -136,7 +136,7 @@ void Rect::update()
 }
 
 
-void Rect::translate(GLfloat x, GLfloat y, GLfloat z)
+void STRect::translate(GLfloat x, GLfloat y, GLfloat z)
 {
 	//Update the origin
 	this->origin->addX(x);
@@ -147,7 +147,7 @@ void Rect::translate(GLfloat x, GLfloat y, GLfloat z)
 	this->genVerts();
 }
 
-void Rect::accelerate(GLfloat accX, GLfloat accY, GLfloat accZ)
+void STRect::accelerate(GLfloat accX, GLfloat accY, GLfloat accZ)
 {
 	this->acceleration->setX(accX);
 	this->acceleration->setY(accY);

@@ -4,7 +4,7 @@
 #include "stShape.h"
 
 
-class Sphere : public Shape
+class STSphere : public STShape
 {
 private:
 	GLfloat radius;	
@@ -17,13 +17,13 @@ private:
 	void genNormals() override;
 	
 public:
-	Sphere(GLfloat originX, GLfloat originY, GLfloat originZ, GLfloat radius, GLuint numLayers, GLuint numSlices);
-	Sphere(GLfloat originX, GLfloat originY, GLfloat originZ, GLfloat radius) : Sphere(originX, originY, originZ, radius, 6, 12) {};
-	~Sphere() override;
+	STSphere(GLfloat originX, GLfloat originY, GLfloat originZ, GLfloat radius, GLuint numLayers, GLuint numSlices);
+	STSphere(GLfloat originX, GLfloat originY, GLfloat originZ, GLfloat radius) : STSphere(originX, originY, originZ, radius, 6, 12) {};
+	~STSphere() override;
 	
 	GLuint getNumLayers() {return this->numLayers;};
 	GLuint getNumSlices() {return this->numSlices;};
-	GLuint getRadius() {return this->radius;};
+	GLfloat getRadius() {return this->radius;};
 	
 	STVec3f* getOrigin() override {return this->origin;};
 	

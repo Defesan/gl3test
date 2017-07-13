@@ -5,7 +5,7 @@
 
 
 
-class Circle : public Shape
+class STCircle : public STShape
 {
 private:
 	GLfloat radius;
@@ -18,9 +18,9 @@ private:
 	
 public:
 	
-	Circle(GLfloat originX, GLfloat originY, GLfloat originZ, GLfloat radius, GLuint numVerts);
-	Circle(GLfloat originX, GLfloat originY, GLfloat radius) : Circle(originX, originY, 0.0f, radius, 12) {};
-	~Circle() override;
+	STCircle(GLfloat originX, GLfloat originY, GLfloat originZ, GLfloat radius, GLuint numVerts);
+	STCircle(GLfloat originX, GLfloat originY, GLfloat radius) : STCircle(originX, originY, 0.0f, radius, 12) {};
+	~STCircle() override;
 	
 	bool setColors(std::vector<GLfloat> colorArray) override;
 	

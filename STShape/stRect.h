@@ -3,7 +3,7 @@
 
 #include "stShape.h"
 
-class Rect : public Shape
+class STRect : public STShape
 {
 private:
 	GLfloat width;
@@ -15,10 +15,10 @@ private:
 	void genIndices() override;
 	
 public:
-	Rect(GLfloat originX, GLfloat originY, GLfloat originZ, GLfloat width, GLfloat height);
-	Rect(GLfloat originX, GLfloat originY, GLfloat width, GLfloat height) : Rect(originX, originY, 0.0f, width, height) {};
-	Rect(GLfloat originX, GLfloat originY, GLfloat edge) : Rect(originX, originY, 0.0f, edge, edge) {};
-	~Rect() override;
+	STRect(GLfloat originX, GLfloat originY, GLfloat originZ, GLfloat width, GLfloat height);
+	STRect(GLfloat originX, GLfloat originY, GLfloat width, GLfloat height) : STRect(originX, originY, 0.0f, width, height) {};
+	STRect(GLfloat originX, GLfloat originY, GLfloat edge) : STRect(originX, originY, 0.0f, edge, edge) {};
+	~STRect() override;
 	
 	bool setColors(std::vector<GLfloat> colorArray) override;
 	

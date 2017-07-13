@@ -53,12 +53,12 @@ void resize(int w, int h)
 
 void setup()
 {
-	glEnable(GL_CULL_FACE);
-	glEnable(GL_DEPTH_TEST);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	//glEnable(GL_CULL_FACE);
+	//glEnable(GL_DEPTH_TEST);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	
-	sphere = new Sphere(0.0f, 0.0f, 0.0f, 2.0f, 16, 32);
+	sphere = new STSphere(0.0f, 0.0f, 0.0f, 2.0f, 16, 32);
 	sphere->setVelocity(new STVec3f(0.02f, 0.05f, 0.0f));
 	//viewFrame->translateLocal(0.0f, 0.0f, 7.0f);
 	timer = new STTimer();

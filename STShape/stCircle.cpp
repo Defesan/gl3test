@@ -1,6 +1,6 @@
 #include "stCircle.h"
 
-Circle::Circle(GLfloat originX, GLfloat originY, GLfloat originZ, GLfloat radius, GLuint numVerts)
+STCircle::STCircle(GLfloat originX, GLfloat originY, GLfloat originZ, GLfloat radius, GLuint numVerts)
 {
 	this->batch = new STPrimitiveBatch(0);
 	this->origin = new STVec3f(originX, originY, originZ);
@@ -21,12 +21,12 @@ Circle::Circle(GLfloat originX, GLfloat originY, GLfloat originZ, GLfloat radius
 	this->batch->finalize();
 }
 
-Circle::~Circle()
+STCircle::~STCircle()
 {
 
 }
 
-void Circle::genVerts()
+void STCircle::genVerts()
 {
 	GLfloat sliceAngle = (2 * PI) / (GLfloat)this->numSlices; 
 	this->verts.clear();
@@ -46,7 +46,7 @@ void Circle::genVerts()
 	this->batch->copyVertexData(this->verts);
 }
 
-void Circle::genIndices()
+void STCircle::genIndices()
 {
 	
 	for(GLuint i = 0; i < (this->numSlices - 1); i++)
@@ -63,7 +63,7 @@ void Circle::genIndices()
 	this->batch->copyIndexData(this->indices);
 }
 
-void Circle::genColors()
+void STCircle::genColors()
 {
 	GLfloat red = 0.0f;
 	GLfloat green = 0.0f;
@@ -129,7 +129,7 @@ void Circle::genColors()
 	this->batch->copyColorData(this->colors);
 }
 
-void Circle::genNormals()
+void STCircle::genNormals()
 {
 	int vertCount = this->verts.size() / 3;
 	for(int i = 0; i < vertCount; i++)
@@ -141,12 +141,12 @@ void Circle::genNormals()
 	this->batch->copyNormalData(this->norms);
 }
 
-bool Circle::setColors(std::vector<GLfloat> colorArray)
+bool STCircle::setColors(std::vector<GLfloat> colorArray)
 {
 	return false;
 }
 
-void Circle::setColorToGLColor()
+void STCircle::setColorToGLColor()
 {
 	int colorSize = this->colors.size();
 	this->colors.clear();
@@ -160,13 +160,13 @@ void Circle::setColorToGLColor()
 	}
 }
 
-void Circle::render()
+void STCircle::render()
 {
 	this->batch->draw();
 
 }
 
-void Circle::update()
+void STCircle::update()
 {
 	this->velocity->addVec3f(this->acceleration);	
 	this->translate(this->velocity);
@@ -174,7 +174,7 @@ void Circle::update()
 }
 
 
-void Circle::accelerate(GLfloat accX, GLfloat accY, GLfloat accZ)
+void STCircle::accelerate(GLfloat accX, GLfloat accY, GLfloat accZ)
 {
 	this->acceleration->setX(accX);
 	this->acceleration->setY(accY);
@@ -182,7 +182,7 @@ void Circle::accelerate(GLfloat accX, GLfloat accY, GLfloat accZ)
 }
 
 
-void Circle::translate(GLfloat x, GLfloat y, GLfloat z)
+void STCircle::translate(GLfloat x, GLfloat y, GLfloat z)
 {
 	//Update the origin
 	this->origin->addX(x);

@@ -24,9 +24,7 @@ STMatrixStack* projectionStack;
 STMatrixPipeline* pipeline;
 STShaderManager* sMan;
 std::vector<STPrimitiveBatch*> geometry;
-//Rect* rect;
-//Circle* circle;
-Sphere* sphere;
+STSphere* sphere;
 STTimer* timer;
 
 
