@@ -30,7 +30,14 @@ STTorus::~STTorus()
 
 void STTorus::genVerts()
 {
-	//TODO
+	//Planning time!
+	//Generating a torus...
+	//A torus is described by what I'll call an inner radius(r), the radius of the cross-section of the donut and an outer radius(R), the distance from the center of the
+	//donut to the middle of the ring. Not terribly great at describing it.
+	//So we're generating a bunch of circles in a circle around the origin, but the circles are vertically aligned and perpendicular to the line from the origin to their centers.
+	//It's almost a matter of switching coordinate systems, but I don't think we have that luxury. Not generating the vertices every frame, at least!
+	
+	//I actually need to think on this some more.
 
 }
 
