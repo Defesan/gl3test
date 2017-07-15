@@ -36,8 +36,40 @@ void STTorus::genVerts()
 	//donut to the middle of the ring. Not terribly great at describing it.
 	//So we're generating a bunch of circles in a circle around the origin, but the circles are vertically aligned and perpendicular to the line from the origin to their centers.
 	//It's almost a matter of switching coordinate systems, but I don't think we have that luxury. Not generating the vertices every frame, at least!
+
+	//So. Trig!
+	//Let's first find out where the center of our first circle is. I'm constructing the torus vertically, so we'll be on the x-y plane, creating a circle that won't be represented by any points.
+	//Let's say the angle to the point on thic circle that serves as the origin for our smaller circle is theta. Assuming an origin at x, y, z(we'll ignore the z for now), the
+	//minor origin lies at x + sin(theta) * R, y + cos(theta) * R, z.
+	GLfloat theta = 0.0f;
+	GLfloat dTheta = (2 * PI) / (GLfloat)this->numSections;	//the number of radians between sections
 	
-	//I actually need to think on this some more.
+	GLfloat phi = 0.0f;
+	GLfloat dPhi = (2 * PI) / (GLfloat)this->numSlices;
+	
+	for(GLuint i = 0; i < this->numSections; i++)
+	{
+		GLfloat mOriginX = this->origin->getX() + sin(theta) * this->r1;
+		GLfloat mOriginY = this->origin->getY() + cos(theta) * this->r1;
+		GLfloat mOriginZ = this->origin->getZ();
+		
+		for(GLuint j = 0; j < this->numSlices; j++)
+		{
+			//Alright, now for the meat of the problem. And to think it'll probably boil down to three lines of code!
+			//We're now on the u-z plane. Z is the easy one here -- it's just the Z origin plus cos(phi) times the radius.
+			//So to determine the x and y coords of the vertex, I feel like we'll need an updated outer radius.
+			//The distance from the origin of the torus to the vertex will be the distance to the local origin plus the distance FROM the local origin...
+			
+			
+			this->verts.push_back(/*X coordinate*/);
+			this->verts.push_back(/*Y coordinate*/);
+			this->verts.push_back(mOriginZ + cos(phi) * this->r2);
+			
+			phi += dPhi;
+		}
+		phi = 0.0f;
+		theta += dTheta;
+	}
 
 }
 
