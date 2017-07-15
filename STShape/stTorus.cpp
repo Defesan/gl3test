@@ -55,15 +55,15 @@ void STTorus::genVerts()
 		
 		for(GLuint j = 0; j < this->numSlices; j++)
 		{
-			//Alright, now for the meat of the problem. And to think it'll probably boil down to three lines of code!
-			//We're now on the u-z plane. Z is the easy one here -- it's just the Z origin plus cos(phi) times the radius.
-			//So to determine the x and y coords of the vertex, I feel like we'll need an updated outer radius.
-			//The distance from the origin of the torus to the vertex will be the distance to the local origin plus the distance FROM the local origin...
+			//Pretty sure this should work. And it did come out to three lines of code.
+			//Basically, we're going down the components of the outer radius to find an x-y point along it and the line it generates.
+			//To calculate this, we find the offset from the local origin -- defined by the cosine of phi times the inner radius -- and add that to the outer radius.
+			//Because the offset will vary between -1 * r2 and 1 * r2, it's basically the projection of the xy-z plane's function onto x-y.
+			//So yeah. Pretty sure that works.
 			
-			
-			this->verts.push_back(/*X coordinate*/);
-			this->verts.push_back(/*Y coordinate*/);
-			this->verts.push_back(mOriginZ + cos(phi) * this->r2);
+			this->verts.push_back(this->origin->getX() + sin(theta) * (this->r1 + (cos(phi) * this->r2)));
+			this->verts.push_back(this->origin->getY() + cos(theta) * (this->r1 + (cos(phi) * this->r2)));
+			this->verts.push_back(mOriginZ + sin(phi) * this->r2);
 			
 			phi += dPhi;
 		}
@@ -75,7 +75,8 @@ void STTorus::genVerts()
 
 void STTorus::genIndices()
 {
-	//TODO
+	//Now on to the hard part. No trigm I just have to figure out how to connect all the vertices I just generated in such a way that GL_TRIANGLES likes it.
+	//Easy peasy, right?
 
 }
 
