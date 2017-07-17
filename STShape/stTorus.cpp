@@ -27,7 +27,7 @@ STTorus::~STTorus()
 {
 
 }
-
+//Trigonometry
 void STTorus::genVerts()
 {
 	//Planning time!
@@ -70,26 +70,52 @@ void STTorus::genVerts()
 		phi = 0.0f;
 		theta += dTheta;
 	}
-
+	this->batch->copyVertexData(this->verts);
 }
-
+//Graph theory
 void STTorus::genIndices()
 {
 	//Now on to the hard part. No trigm I just have to figure out how to connect all the vertices I just generated in such a way that GL_TRIANGLES likes it.
 	//Easy peasy, right?
-
+	//It's probably easiest to go through the verts list from start to finish. Unlike a sphere, there aren't any 'caps' where the algorithm has to change. In fact, it's just a cylinder,
+	//wrapped around itself.
+	//Like a sphere, for each vertex, there are six indices -- we make two faces per vertex.
+	//Except one problem. There are three elements(x, y and z) for each vertex. So we have to divide it by three, and add three each time. So really, there's only twice as many elements
+	//in the index array than there are in the vertex array.
+	
+	//As with the sphere, there are four vertices that are important in every index calculation stage:(k = i * numSlices + j, l = numSlices + j)
+	//1)v(k) -- the vertex we're at
+	//2)v(k + 1) -- the next vertex up
+	//3)v(k + l) -- the vertex across from v(k)
+	//4)v(k + l + 1) -- the vertex across from v(k + 1)
+	//The first triangle, wound counter-clockwise, goes as follows:
+	//1, 3, 2
+	//And the second one goes:
+	//4, 2, 3
+	for(GLuint i = 0; i < this->verts.size() / 3; i++)
+	{
+		int k = i * this->numSlices;
+		for(GLuint j = 0; j < this->numSlices; j++)
+		{
+			//So there's two sticking points here:
+			//1)when the inner loop wraps around(if j = numSlices - 1)
+			//2)when the outer loop wraps around(if i = numVerts - 1)
+			//In both these cases, adding one -- to find the next vertex in the loop or loop in the torus -- is...a bad idea.
+		}		
+	}
+	this->batch->copyIndexData(this->indices);
 }
-
+//...Color theory?
 void STTorus::genColors()
 {
 	//TODO
-
+	this->batch->copyColorData(this->colors);
 }
-
+//Linear algebra
 void STTorus::genNormals()
 {
 	//TODO
-
+	this->batch->copyNormalData(this->norms);
 }
 
 bool STTorus::setColors(std::vector<GLfloat> colorArray)
