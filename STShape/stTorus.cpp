@@ -167,13 +167,51 @@ void STTorus::genColors()
 //Linear algebra
 void STTorus::genNormals()
 {
-	//TODO
+	//Now, in theory, we just need to subtract the vector that points from the origin of the torus to the local origin of the circle that a vertex is in
+	//from the vector that points from the origin of the torus to the vertex itself.
+	//This should generate a vector that points from the origin of the local circle to the vertex, which would thus be normal to that point on the torus.
+	//To construct the first vector, we need two things:
+	//1)the origin of the torus
+	//2)the origin of the local circle.
+	//we then subtract the origin of the torus from the origin of the local circle, and we have vector A.
+	//For the second, we need:
+	//1)The origin of the torus, again(thankfully, we have that)
+	//2)The coordinates of the vertex.
+	//Again, we subtract the origin from the vertex coords.
+	GLfloat theta = 0.0f;
+	GLfloat dTheta = (2 * PI) / (GLfloat)this->numSections;	//the number of radians between sections
+	
+	GLfloat phi = 0.0f;
+	GLfloat dPhi = (2 * PI) / (GLfloat)this->numSlices;
+	
+	for(GLuint i = 0; i < this->numSections; i++)
+	{
+		GLfloat mOriginX = this->origin->getX() + sin(theta) * this->r1;
+		GLfloat mOriginY = this->origin->getY() + cos(theta) * this->r1;
+		GLfloat mOriginZ = this->origin->getZ();
+		
+		for(GLuint j = 0; j < this->numSlices; j++)
+		{
+			
+		}
+	}
 	this->batch->copyNormalData(this->norms);
 }
 
 bool STTorus::setColors(std::vector<GLfloat> colorArray)
 {
-	//TODO
+	//Let's just tile the color array over the vertices.
+	//It's fairly user-friendly.
+	std::vector<GLfloat>::iterator iterSource = colorArray.begin();
+	std::vector<GLfloat>::iterator iterDest = this->colors.begin();
+	for(; iterDest != this->colors.end(); iterDest++, iterSource++)
+	{
+		if(iterSource == colorArray.end())
+		{
+			iterSource = colorArray.begin();
+		}
+		*iterDest = *iterSource;
+	}
 	return false;
 }
 
