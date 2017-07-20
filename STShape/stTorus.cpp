@@ -47,13 +47,14 @@ void STTorus::genVerts()
 	GLfloat phi = 0.0f;
 	GLfloat dPhi = (2 * PI) / (GLfloat)this->numSlices;
 	
-	for(GLuint i = 0; i < this->numSections; i++)
+	for(int i = 0; i < this->numSections; i++)
 	{
-		GLfloat mOriginX = this->origin->getX() + sin(theta) * this->r1;
-		GLfloat mOriginY = this->origin->getY() + cos(theta) * this->r1;
+		//I may not actually need these first two!
+		//GLfloat mOriginX = this->origin->getX() + sin(theta) * this->r1;
+		//GLfloat mOriginY = this->origin->getY() + cos(theta) * this->r1;
 		GLfloat mOriginZ = this->origin->getZ();
 		
-		for(GLuint j = 0; j < this->numSlices; j++)
+		for(int j = 0; j < this->numSlices; j++)
 		{
 			//Pretty sure this should work. And it did come out to three lines of code.
 			//Basically, we're going down the components of the outer radius to find an x-y point along it and the line it generates.
@@ -92,9 +93,9 @@ void STTorus::genIndices()
 	//1, 3, 2
 	//And the second one goes:
 	//4, 2, 3
-	for(GLuint i = 0; i < this->numSections; i++)
+	for(int i = 0; i < this->numSections; i++)
 	{
-		for(GLuint j = 0; j < this->numSlices; j++)
+		for(int j = 0; j < this->numSlices; j++)
 		{
 			//The vertex number SHOULD be i * numSlices + j
 			//In short, there are numSections * numSlices verts, so the whole thing could be viewed...as a two-dimensional array or matrix A(i,j)
@@ -140,12 +141,12 @@ void STTorus::genIndices()
 				v4 = 0;
 			}
 			
-			this->indexData.push_back(v1);
-			this->indexData.push_back(v3);
-			this->indexData.push_back(v2);
-			this->indexData.push_back(v4);
-			this->indexData.push_back(v2);
-			this->indexData.push_back(v3);
+			this->indices.push_back(v1);
+			this->indices.push_back(v3);
+			this->indices.push_back(v2);
+			this->indices.push_back(v4);
+			this->indices.push_back(v2);
+			this->indices.push_back(v3);
 		}		
 	}
 	this->batch->copyIndexData(this->indices);
@@ -181,19 +182,30 @@ void STTorus::genNormals()
 	GLfloat theta = 0.0f;
 	GLfloat dTheta = (2 * PI) / (GLfloat)this->numSections;	//the number of radians between sections
 	
-	GLfloat phi = 0.0f;
-	GLfloat dPhi = (2 * PI) / (GLfloat)this->numSlices;
-	
-	for(GLuint i = 0; i < this->numSections; i++)
+	for(int i = 0; i < this->numSections; i++)
 	{
 		GLfloat mOriginX = this->origin->getX() + sin(theta) * this->r1;
 		GLfloat mOriginY = this->origin->getY() + cos(theta) * this->r1;
 		GLfloat mOriginZ = this->origin->getZ();
 		
-		for(GLuint j = 0; j < this->numSlices; j++)
+		STVec3f* v1 = new STVec3f(mOriginX - this->origin->getX(), mOriginY - this->origin->getY(), mOriginZ - this->origin->getZ());	//This one's constant for the inner loop.
+		
+		for(int j = 0; j < this->numSlices; j++)
 		{
+			int loc = (i * this->numSlices + j) * 3;
+			STVec3f* v2 = new STVec3f(this->verts[loc] - this->origin->getX(), this->verts[loc + 1] - this->origin->getY(), this->verts[loc + 2] - this->origin->getZ());
+			v2->subVec3f(v1);
+			//Hate to say it, but I'm really hoping I can get away without normalizing, because floating point division is *the worst*.
+			//Unfortunately, these are *normal* vectors, so I'm gonna play it safe for now.
+			//Once I get the torus displaying properly, and a shader that actually utilizes normal vectors, I'll see what happens when I comment out the next line.
+			v2->normalize();
 			
+			//Now that we've generated the normals, they need to be added to the normal array.
+			this->norms.push_back(v2->getX());
+			this->norms.push_back(v2->getY());
+			this->norms.push_back(v2->getZ());
 		}
+		theta += dTheta;
 	}
 	this->batch->copyNormalData(this->norms);
 }
