@@ -30,17 +30,6 @@ STTorus::~STTorus()
 //Trigonometry
 void STTorus::genVerts()
 {
-	//Planning time!
-	//Generating a torus...
-	//A torus is described by what I'll call an inner radius(r), the radius of the cross-section of the donut and an outer radius(R), the distance from the center of the
-	//donut to the middle of the ring. Not terribly great at describing it.
-	//So we're generating a bunch of circles in a circle around the origin, but the circles are vertically aligned and perpendicular to the line from the origin to their centers.
-	//It's almost a matter of switching coordinate systems, but I don't think we have that luxury. Not generating the vertices every frame, at least!
-
-	//So. Trig!
-	//Let's first find out where the center of our first circle is. I'm constructing the torus vertically, so we'll be on the x-y plane, creating a circle that won't be represented by any points.
-	//Let's say the angle to the point on thic circle that serves as the origin for our smaller circle is theta. Assuming an origin at x, y, z(we'll ignore the z for now), the
-	//minor origin lies at x + sin(theta) * R, y + cos(theta) * R, z.
 	GLfloat theta = 0.0f;
 	GLfloat dTheta = (2 * PI) / (GLfloat)this->numSections;	//the number of radians between sections
 	
@@ -56,11 +45,6 @@ void STTorus::genVerts()
 		
 		for(int j = 0; j < this->numSlices; j++)
 		{
-			//Pretty sure this should work. And it did come out to three lines of code.
-			//Basically, we're going down the components of the outer radius to find an x-y point along it and the line it generates.
-			//To calculate this, we find the offset from the local origin -- defined by the cosine of phi times the inner radius -- and add that to the outer radius.
-			//Because the offset will vary between -1 * r2 and 1 * r2, it's basically the projection of the xy-z plane's function onto x-y.
-			//So yeah. Pretty sure that works.
 			
 			this->verts.push_back(this->origin->getX() + sin(theta) * (this->r1 + (cos(phi) * this->r2)));
 			this->verts.push_back(this->origin->getY() + cos(theta) * (this->r1 + (cos(phi) * this->r2)));
@@ -93,19 +77,21 @@ void STTorus::genIndices()
 	//1, 3, 2
 	//And the second one goes:
 	//4, 2, 3
+	
+	//So the problem's in here. The wrong indices are getting pushed all over the place!
 	for(int i = 0; i < this->numSections; i++)
 	{
 		for(int j = 0; j < this->numSlices; j++)
 		{
 			//The vertex number SHOULD be i * numSlices + j
 			//In short, there are numSections * numSlices verts, so the whole thing could be viewed...as a two-dimensional array or matrix A(i,j)
-			int k = i * this->numSlices + j; 
-			int l = this->numSlices + j;
+			int k = i * this->numSlices + j; //k is the vertex index we're 'at'
+			int l = this->numSlices;	//NO idea why I thought I had to add j here!!!
 			
-			int v1 = k;
-			int v2 = 0;
-			int v3 = 0;
-			int v4 = 0;
+			GLuint v1 = (GLuint)k;
+			GLuint v2 = 0;
+			GLuint v3 = 0;
+			GLuint v4 = 0;
 			if(j < (this->numSlices - 1) && i < (this->numSections - 1))
 			{
 				//We're in the clear. The algorithm has no bumps.
