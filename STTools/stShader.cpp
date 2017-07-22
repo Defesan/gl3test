@@ -53,7 +53,36 @@ STShaderManager::STShaderManager()
 				   "	gl_FragColor = fragColor;"
 				   "}";
 	shaderHandle = this->loadShaderPairSrcWithAttributes(vertexShader, fragShader, 2, ST_ATTRIBUTE_VERTEX, "vertex", ST_ATTRIBUTE_COLOR, "color");
-	this->activeShaderPointers.push_back(shaderHandle); 
+	this->activeShaderPointers.push_back(shaderHandle);
+	
+	//This time we add light. Now we find out if I've been doing normals right, or...not.
+	//We start with two uniforms: the modelview matrix and the projection matrix, separate this time.
+	vertexShader = "uniform mat4 mvMatrix;"
+				   "uniform mat4 pMatrix;"
+				   "varying vec4 fragColor;"	
+				   "attribute vec4 color;"		
+				   "attribute vec4 vertex;"		
+				   "attribute vec3 normal;"		
+				   "void main()"
+				   "{"
+				   "	mat3 normalMatrix;"					
+				   "	normalMatrix[0] = mvMatrix[0].xyz;"		
+				   "	normalMatrix[1] = mvMatrix[1].xyz;"		
+				   "	normalMatrix[2] = mvMatrix[2].xyz;"		
+				   "	vec3 nNormal = normalize(normalMatrix * normal);"	
+				   "	vec3 lightDir = vec3(0.0, 0.0, 1.0);"	
+				   "	float normLight = max(0.0, dot(nNormal, lightDir));"	
+				   "	fragColor.rgb = color.rgb * normLight;"	
+				   "	fragColor.a = color.a;"				
+				   "	mat4 mvpMatrix = mvMatrix * pMatrix;"	
+				   "	gl_Position = mvpMatrix * vertex;"
+				   "}";
+	//Again, the frag shader is the same as before.
+	
+	shaderHandle = this->loadShaderPairSrcWithAttributes(vertexShader, fragShader, 3, ST_ATTRIBUTE_VERTEX, "vertex", ST_ATTRIBUTE_COLOR, "color", ST_ATTRIBUTE_NORMAL, "normal");
+	this->activeShaderPointers.push_back(shaderHandle);
+				   
+				   
 }
 
 STShaderManager::~STShaderManager()

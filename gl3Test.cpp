@@ -53,8 +53,8 @@ void resize(int w, int h)
 
 void setup()
 {
-	//glEnable(GL_CULL_FACE);
-	//glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_DEPTH_TEST);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	
@@ -132,12 +132,19 @@ void runShader()
 	//STUniform* colorUniform = new STUniform("vColor", 1, shaderColor);
 	//uniforms.push_back(colorUniform);
 	
-	STMatrix44f* mvpMatrix = pipeline->getMVPMatrix();
+	STMatrix44f* mvMatrix = pipeline->getModelViewMatrix();
+	STMatrix44f* pMatrix = pipeline->getProjectionMatrix();
+	//STMatrix44f* mvpMatrix = pipeline->getMVPMatrix();
 	
-	STUniform* mvpUniform = new STUniform("mvpMatrix", 1, GL_FALSE, mvpMatrix, true);
-	uniforms.push_back(mvpUniform);
+	STUniform* mvUniform = new STUniform("mvMatrix", 1, GL_FALSE, mvMatrix, true);
+	uniforms.push_back(mvUniform);
+	STUniform* pUniform = new STUniform("pMatrix", 1, GL_FALSE, pMatrix, true);
+	uniforms.push_back(pUniform);
 	
-	sMan->runShader(sMan->getStockShader(ST_SHADER_SHADED), uniforms);
+	//STUniform* mvpUniform = new STUniform("mvpMatrix", 1, GL_FALSE, mvpMatrix, true);
+	//uniforms.push_back(mvpUniform);
+	
+	sMan->runShader(sMan->getStockShader(ST_SHADER_LIGHT), uniforms);
 
 }
 
