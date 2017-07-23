@@ -62,7 +62,7 @@ STShaderManager::STShaderManager()
 				   "varying vec4 fragColor;"	
 				   "attribute vec4 color;"		
 				   "attribute vec4 vertex;"		
-				   "attribute vec3 normal;"		
+				   "attribute vec3 normal;"
 				   "void main()"
 				   "{"
 				   "	mat3 normalMatrix;"					
@@ -74,7 +74,8 @@ STShaderManager::STShaderManager()
 				   "	float normLight = max(0.0, dot(nNormal, lightDir));"	
 				   "	fragColor.rgb = color.rgb * normLight;"	
 				   "	fragColor.a = color.a;"				
-				   "	mat4 mvpMatrix = mvMatrix * pMatrix;"	
+				   "	mat4 mvpMatrix;
+				   "	mvpMatrix = mvMatrix * pMatrix;"	
 				   "	gl_Position = mvpMatrix * vertex;"
 				   "}";
 	//Again, the frag shader is the same as before.

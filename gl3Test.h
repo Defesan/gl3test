@@ -24,7 +24,7 @@ STMatrixStack* projectionStack;
 STMatrixPipeline* pipeline;
 STShaderManager* sMan;
 std::vector<STPrimitiveBatch*> geometry;
-//STSphere* sphere;
+STSphere* sphere;
 STTorus* torus;
 STTimer* timer;
 

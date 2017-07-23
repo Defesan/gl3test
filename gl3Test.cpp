@@ -58,14 +58,15 @@ void setup()
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	
-	torus = new STTorus(0.0f, 0.0f, 0.0f, 6.0f, 1.5f, 16, 16);
-	//sphere->setVelocity(new STVec3f(0.02f, 0.05f, 0.0f));
+	//torus = new STTorus(0.0f, 0.0f, 0.0f, 6.0f, 1.5f, 16, 16);
+	sphere = new STSphere(0.0f, 0.0f, 0.0f, 4.0f, 16, 32);
+	sphere->setVelocity(new STVec3f(0.02f, 0.05f, 0.0f));
 	//viewFrame->translateLocal(0.0f, 0.0f, 7.0f);
 	timer = new STTimer();
 	
-	torus->render();
+	sphere->render();
 }
-/*
+
 void bounce()
 {
 	bool dirty = false;
@@ -93,10 +94,10 @@ void bounce()
 	if(dirty)
 	{
 		STVec3f* velocity = new STVec3f(velX, velY, 0.0f);
-		torus->setVelocity(velocity);
+		sphere->setVelocity(velocity);
 	}
 }
-*/
+
 void render()
 {
 	GLfloat elapsed = timer->getElapsedSeconds();
@@ -110,8 +111,8 @@ void render()
 		
 		modelViewStack->pushMatrix(viewFrame->getMatrix(false));
 			runShader();
-			//bounce();
-			torus->update();
+			bounce();
+			sphere->update();
 		modelViewStack->popMatrix();
 		
 		glutSwapBuffers();
