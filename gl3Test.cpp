@@ -53,17 +53,18 @@ void resize(int w, int h)
 
 void setup()
 {
+	glFrontFace(GL_CCW);
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	
-	//torus = new STTorus(0.0f, 0.0f, 0.0f, 6.0f, 1.5f, 16, 16);
+	torus = new STTorus(0.0f, 0.0f, 0.0f, 6.0f, 1.5f, 16, 16);
 	sphere = new STSphere(0.0f, 0.0f, 0.0f, 4.0f, 16, 32);
-	sphere->setVelocity(new STVec3f(0.02f, 0.05f, 0.0f));
+	//sphere->setVelocity(new STVec3f(0.02f, 0.05f, 0.0f));
 	//viewFrame->translateLocal(0.0f, 0.0f, 7.0f);
 	timer = new STTimer();
-	
+	torus->render();
 	sphere->render();
 }
 
@@ -112,6 +113,7 @@ void render()
 		modelViewStack->pushMatrix(viewFrame->getMatrix(false));
 			runShader();
 			bounce();
+			torus->update();
 			sphere->update();
 		modelViewStack->popMatrix();
 		

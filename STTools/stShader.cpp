@@ -74,7 +74,7 @@ STShaderManager::STShaderManager()
 				   "	float normLight = max(0.0, dot(nNormal, lightDir));"	
 				   "	fragColor.rgb = color.rgb * normLight;"	
 				   "	fragColor.a = color.a;"				
-				   "	mat4 mvpMatrix;
+				   "	mat4 mvpMatrix;"
 				   "	mvpMatrix = mvMatrix * pMatrix;"	
 				   "	gl_Position = mvpMatrix * vertex;"
 				   "}";

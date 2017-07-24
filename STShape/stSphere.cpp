@@ -198,7 +198,7 @@ void STSphere::genColors()
 		this->colors.push_back(green);
 		this->colors.push_back(blue);
 		this->colors.push_back(alpha);
-		/*
+		
 		red += 0.01f;
 		green += 0.02f;
 		blue += 0.03f;
@@ -214,7 +214,7 @@ void STSphere::genColors()
 		if(blue >= 1.0f)
 		{
 			blue = 0.0f;
-		}*/
+		}
 	}
 	this->batch->copyColorData(this->colors);
 }
