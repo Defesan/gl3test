@@ -60,33 +60,12 @@ void STTorus::genVerts()
 //Graph theory
 void STTorus::genIndices()
 {
-	//Now on to the hard part. No trigm I just have to figure out how to connect all the vertices I just generated in such a way that GL_TRIANGLES likes it.
-	//Easy peasy, right?
-	//It's probably easiest to go through the verts list from start to finish. Unlike a sphere, there aren't any 'caps' where the algorithm has to change. In fact, it's just a cylinder,
-	//wrapped around itself.
-	//Like a sphere, for each vertex, there are six indices -- we make two faces per vertex.
-	//Except one problem. There are three elements(x, y and z) for each vertex. So we have to divide it by three, and add three each time. So really, there's only twice as many elements
-	//in the index array than there are in the vertex array.
-	
-	//As with the sphere, there are four vertices that are important in every index calculation stage:(k = i * numSlices + j, l = numSlices + j)
-	//1)v(k) -- the vertex we're at
-	//2)v(k + 1) -- the next vertex up
-	//3)v(k + l) -- the vertex across from v(k)
-	//4)v(k + l + 1) -- the vertex across from v(k + 1)
-	//The first triangle, wound counter-clockwise, goes as follows:
-	//1, 3, 2
-	//And the second one goes:
-	//4, 2, 3
-	
-	//So the problem's in here. The wrong indices are getting pushed all over the place!
 	for(int i = 0; i < this->numSections; i++)
 	{
 		for(int j = 0; j < this->numSlices; j++)
 		{
-			//The vertex number SHOULD be i * numSlices + j
-			//In short, there are numSections * numSlices verts, so the whole thing could be viewed...as a two-dimensional array or matrix A(i,j)
-			int k = i * this->numSlices + j; //k is the vertex index we're 'at'
-			int l = this->numSlices;	//NO idea why I thought I had to add j here!!!
+			int k = i * this->numSlices + j; 
+			int l = this->numSlices;	
 			
 			GLuint v1 = (GLuint)k;
 			GLuint v2 = 0;
@@ -177,44 +156,48 @@ void STTorus::genColors()
 //Linear algebra
 void STTorus::genNormals()
 {
-	//Now, in theory, we just need to subtract the vector that points from the origin of the torus to the local origin of the circle that a vertex is in
-	//from the vector that points from the origin of the torus to the vertex itself.
-	//This should generate a vector that points from the origin of the local circle to the vertex, which would thus be normal to that point on the torus.
-	//To construct the first vector, we need two things:
-	//1)the origin of the torus
-	//2)the origin of the local circle.
-	//we then subtract the origin of the torus from the origin of the local circle, and we have vector A.
-	//For the second, we need:
-	//1)The origin of the torus, again(thankfully, we have that)
-	//2)The coordinates of the vertex.
-	//Again, we subtract the origin from the vertex coords.
+	//I switched to the method RSW used...and got the same result. Which, actually, you know, I kind of take as a compliment!
 	GLfloat theta = 0.0f;
 	GLfloat dTheta = (2 * PI) / (GLfloat)this->numSections;	//the number of radians between sections
 	
+	GLfloat phi = 0.0f;
+	GLfloat dPhi = (2 * PI) / (GLfloat)this->numSlices;
+	
 	for(int i = 0; i < this->numSections; i++)
 	{
-		GLfloat mOriginX = this->origin->getX() + sin(theta) * this->r1;
-		GLfloat mOriginY = this->origin->getY() + cos(theta) * this->r1;
-		GLfloat mOriginZ = this->origin->getZ();
+		//GLfloat mOriginX = this->origin->getX() + sin(theta) * this->r1;
+		//GLfloat mOriginY = this->origin->getY() + cos(theta) * this->r1;
+		//GLfloat mOriginZ = this->origin->getZ();
 		
-		STVec3f* v1 = new STVec3f(mOriginX - this->origin->getX(), mOriginY - this->origin->getY(), mOriginZ - this->origin->getZ());	//This one's constant for the inner loop.
+		//so in the other code, a0 is simply the angle from 0 to the current section.
+		//That's theta.
+		//x0 and y0 are the sin and cos of a0.
+		GLfloat x0 = sin(theta);
+		GLfloat y0 = cos(theta);
 		
 		for(int j = 0; j < this->numSlices; j++)
 		{
-			int loc = (i * this->numSlices + j) * 3;
-			STVec3f* v2 = new STVec3f(this->verts[loc] - this->origin->getX(), this->verts[loc + 1] - this->origin->getY(), this->verts[loc + 2] - this->origin->getZ());
-			v2->subVec3f(v1);
-			//Hate to say it, but I'm really hoping I can get away without normalizing, because floating point division is *the worst*.
-			//Unfortunately, these are *normal* vectors, so I'm gonna play it safe for now.
-			//Once I get the torus displaying properly, and a shader that actually utilizes normal vectors, I'll see what happens when I comment out the next line.
-			v2->normalize();
+			//Ok... So......
+			//I need c, as well.
+			//b is just phi.
+			GLfloat c = cos(phi);
 			
-			//Now that we've generated the normals, they need to be added to the normal array.
-			this->norms.push_back(v2->getX());
-			this->norms.push_back(v2->getY());
-			this->norms.push_back(v2->getZ());
+			//and 'z' is just r2 times the sin of phi.
+			//'cept the normal construction DIVIDES z by r2, so... it's just sin of phi.
+			GLfloat z = sin(phi);
+			
+			STVec3f* normal = new STVec3f(x0 * c, y0 * c, z);
+			normal->normalize();
+			
+			//Now we have everything.
+			this->norms.push_back(normal->getX());
+			this->norms.push_back(normal->getY());
+			this->norms.push_back(normal->getZ());
+			
+			phi += dPhi;
 		}
 		theta += dTheta;
+		phi = 0.0f;
 	}
 	this->batch->copyNormalData(this->norms);
 }

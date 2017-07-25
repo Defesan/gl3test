@@ -230,9 +230,11 @@ void STSphere::genNormals()
 	int vertCount = this->verts.size() / 3;
 	for(int i = 0; i < vertCount; i++)
 	{
-		this->norms.push_back(this->origin->getX() - this->verts[i]);
-		this->norms.push_back(this->origin->getY() - this->verts[i + 1]);
-		this->norms.push_back(this->origin->getZ() - this->verts[i + 2]);
+		STVec3f* normal = new STVec3f(this->origin->getX() - this->verts[i], this->origin->getY() - this->verts[i + 1], this->origin->getZ() - this->verts[i + 2]);
+		normal->normalize();
+		this->norms.push_back(normal->getX());
+		this->norms.push_back(normal->getY());
+		this->norms.push_back(normal->getZ());
 	}
 	this->batch->copyNormalData(this->norms);
 	
