@@ -226,7 +226,7 @@ void STSphere::genNormals()
 	//This *should*(right?) provide a vector pointing through the origin AND the vertex, which is thus normal to the surface of the sphere. I think.
 	
 	//Man, the TORUS is going to be fun!
-	
+	/*
 	int vertCount = this->verts.size() / 3;
 	for(int i = 0; i < vertCount; i += 3)
 	{
@@ -243,7 +243,43 @@ void STSphere::genNormals()
 		this->norms.push_back(normal->getX());
 		this->norms.push_back(normal->getY());
 		this->norms.push_back(normal->getZ());
+	}*/
+	
+	//Alright, let's try this the trig way.
+	GLfloat theta = 0.0f;
+	GLfloat phi = 0.0f;
+	
+	GLfloat dTheta = PI/this->numLayers;
+	GLfloat dPhi = (2 * PI)/this->numSlices;
+	
+	for(GLuint i = 0; i < this->numLayers; i++)
+	{
+		GLfloat sinTheta = sin(theta);
+		GLfloat cosTheta = cos(theta);
+		
+		for(GLuint j = 0; j < this->numSlices; j++)
+		{
+			GLfloat sinPhi = -1 * sin(phi);
+			GLfloat cosPhi = cos(phi);
+			
+			GLfloat x = sinTheta * sinPhi;
+			GLfloat y = cosTheta * sinPhi;
+			GLfloat z = cosPhi;
+		
+			STVec3f* normal = new STVec3f(x,y,z);
+			normal->normalize();
+			
+			this->norms.push_back(normal->getX());
+			this->norms.push_back(normal->getY());
+			this->norms.push_back(normal->getZ());
+			
+			phi += dPhi;
+		}
+		phi = 0.0f;
+		theta += dTheta;
 	}
+	
+	
 	this->batch->copyNormalData(this->norms);
 	
 }
