@@ -70,7 +70,7 @@ STShaderManager::STShaderManager()
 				   "	normalMatrix[1] = mvMatrix[1].xyz;"		
 				   "	normalMatrix[2] = mvMatrix[2].xyz;"		
 				   "	vec3 nNormal = normalize(normalMatrix * normal);"	
-				   "	vec3 lightDir = vec3(0.0, 1.0, 0.0);"	
+				   "	vec3 lightDir = vec3(0.0, 0.0, 1.0);"	
 				   "	float normLight = max(0.0, dot(nNormal, lightDir));"	
 				   "	fragColor.rgb = color.rgb * normLight;"	
 				   "	fragColor.a = color.a;"				

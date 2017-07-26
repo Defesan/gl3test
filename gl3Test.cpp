@@ -64,7 +64,7 @@ void setup()
 	//sphere->setVelocity(new STVec3f(0.02f, 0.05f, 0.0f));
 	//viewFrame->translateLocal(0.0f, 0.0f, 7.0f);
 	timer = new STTimer();
-	torus->render();
+	//torus->render();
 	sphere->render();
 }
 
@@ -113,7 +113,7 @@ void render()
 		modelViewStack->pushMatrix(viewFrame->getMatrix(false));
 			runShader();
 			bounce();
-			torus->update();
+			//torus->update();
 			sphere->update();
 		modelViewStack->popMatrix();
 		
@@ -154,16 +154,16 @@ void runShader()
 void specialKeyHandler(int key, int x, int y)
 {
 	if(key == GLUT_KEY_UP)
-		viewFrame->rotateLocal(degreesToRadians(-5.0f), 1.0f, 0.0f, 0.0f);
+		viewFrame->rotateWorld(degreesToRadians(-5.0f), 1.0f, 0.0f, 0.0f);
 
 	if(key == GLUT_KEY_DOWN)
-		viewFrame->rotateLocal(degreesToRadians(5.0f), 1.0f, 0.0f, 0.0f);
+		viewFrame->rotateWorld(degreesToRadians(5.0f), 1.0f, 0.0f, 0.0f);
         
 	if(key == GLUT_KEY_LEFT)
-		viewFrame->rotateLocal(degreesToRadians(-5.0f), 0.0f, 1.0f, 0.0f);
+		viewFrame->rotateWorld(degreesToRadians(-5.0f), 0.0f, 1.0f, 0.0f);
         
 	if(key == GLUT_KEY_RIGHT)
-		viewFrame->rotateLocal(degreesToRadians(5.0f), 0.0f, 1.0f, 0.0f);
+		viewFrame->rotateWorld(degreesToRadians(5.0f), 0.0f, 1.0f, 0.0f);
 
 	// Refresh the Window
 	glutPostRedisplay();

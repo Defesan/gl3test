@@ -228,10 +228,18 @@ void STSphere::genNormals()
 	//Man, the TORUS is going to be fun!
 	
 	int vertCount = this->verts.size() / 3;
-	for(int i = 0; i < vertCount; i++)
+	for(int i = 0; i < vertCount; i += 3)
 	{
-		STVec3f* normal = new STVec3f(this->origin->getX() - this->verts[i], this->origin->getY() - this->verts[i + 1], this->origin->getZ() - this->verts[i + 2]);
+		STVec3f* normal = new STVec3f(this->verts[i],this->verts[i + 1],this->verts[i + 2]);
+		if(i % 10 == 0)
+		{
+			std::cout << i / 3 << ") X = "<< normal->getX() << " Y = " << normal->getY() << " Z = " << normal->getZ() << std::endl;
+		}
 		normal->normalize();
+		if(i % 10 == 0)
+		{
+			std::cout << i / 3 << " normalized) X = "<< normal->getX() << " Y = " << normal->getY() << " Z = " << normal->getZ() << std::endl;
+		}
 		this->norms.push_back(normal->getX());
 		this->norms.push_back(normal->getY());
 		this->norms.push_back(normal->getZ());
