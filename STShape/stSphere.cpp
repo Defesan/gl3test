@@ -300,9 +300,17 @@ void STSphere::setColorToGLColor()
 
 bool STSphere::setColors(std::vector<GLfloat> colorArray)
 {
-	//TODO
-	//Ooh! gedit HIGHLIGHTS todos!
-	//That's actually something I didn't expect.
+	this->colors.clear();
+	std::vector<GLfloat>::iterator iterSource = colorArray.begin();
+	std::vector<GLfloat>::iterator iterDest = this->colors.begin();
+	for(; iterDest != this->colors.end(); iterDest++, iterSource++)
+	{
+		if(iterSource == colorArray.end())
+		{
+			iterSource = colorArray.begin();
+		}
+		*iterDest = *iterSource;
+	}
 	return false;
 }
 

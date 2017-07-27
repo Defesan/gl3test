@@ -204,8 +204,7 @@ void STTorus::genNormals()
 
 bool STTorus::setColors(std::vector<GLfloat> colorArray)
 {
-	//Let's just tile the color array over the vertices.
-	//It's fairly user-friendly.
+	this->colors.clear();
 	std::vector<GLfloat>::iterator iterSource = colorArray.begin();
 	std::vector<GLfloat>::iterator iterDest = this->colors.begin();
 	for(; iterDest != this->colors.end(); iterDest++, iterSource++)
