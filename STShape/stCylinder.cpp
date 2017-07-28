@@ -30,7 +30,45 @@ STCylinder::~STCylinder()
 
 void STCylinder::genVerts()
 {
-
+	GLfloat verticalOffset = this->height / 2;
+	GLfloat theta = 0.0f;
+	GLfloat dTheta = (2 * PI) / this->numSlices;
+	
+	//Generate the top vertex
+	this->verts.push_back(this->origin->getX());
+	this->verts.push_back(this->origin->getY());
+	this->verts.push_back(this->origin->getZ() + verticalOffset);
+	
+	//Generate the top ring(if applicable)
+	if(this->topRadius > 0.0f)
+	{
+		for(int i = 0; i < this->numSlices; i++)
+		{
+			this->verts.push_back(this->origin->getX() + (this->topRadius * sin(theta)));
+			this->verts.push_back(this->origin->getY() + (this->bottomRadius * cos(theta)));
+			this->verts.push_back(this->origin->getZ() + verticalOffset);
+			theta += dTheta;
+		}
+		theta = 0.0f;	
+	}
+	
+	//Generate the bottom ring(if applicable)
+	if(this->bottomRadius > 0.0f)
+	{
+		for(int i = 0; i < this->numSlices; i++)
+		{
+			this->verts.push_back(this->origin->getX() + (this->topRadius * sin(theta)));
+			this->verts.push_back(this->origin->getY() + (this->bottomRadius * cos(theta)));
+			this->verts.push_back(this->origin->getZ() - verticalOffset);
+			theta += dTheta;
+		}
+	}
+	
+	//Generate the bottom vertex
+	this->verts.push_back(this->origin->getX());
+	this->verts.push_back(this->origin->getY());
+	this->verts.push_back(this->origin->getZ() - verticalOffset);
+	
 
 	this->batch->copyVertexData(this->verts);
 }
