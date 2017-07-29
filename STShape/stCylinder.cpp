@@ -75,7 +75,142 @@ void STCylinder::genVerts()
 
 void STCylinder::genIndices()
 {
-
+	//This bit's tricky because of how general I made it. Regretting that decision now, but this'll make it VERY versatile.
+	//Though it looks like the GLTools version ALMOST went this far.
+	//Turns out the algorithm's the same for both types of cones.
+	if((this->topRadius == 0.0f && this->bottomRadius > 0.0f) || (this->topRadius > 0.0f && this->bottomRadius == 0.0f))
+	{
+		//Here we have a typical cone with a point on the top and a circle, closed, at the bottom.
+		//First we generate the cone...
+		for(int i = 0; i < this->numSlices; i++)
+		{
+			int k = 0;
+			if(i < (this->numSlices - 1))
+			{
+				k = i + 2;
+			}
+			else
+			{
+				k = 1;
+			}
+		
+			this->indices.push_back(0);
+			this->indices.push_back(i + 1);
+			this->indices.push_back(k);
+		}
+		
+		//Next we create the bottom.
+		//find the index of the last vertex:
+		int last = this->numSlices + 1;	
+		
+		for(int i = 0; i < this->numSlices; i++)
+		{
+			int k = 0;
+			if(i < (this->numSlices - 1))
+			{
+				k = i + 2;
+			}
+			else
+			{
+				k = 1;
+			}
+			
+			//I think I have to invert the last two. We'll see.
+			this->indices.push_back(last);
+			this->indices.push_back(k);
+			this->indices.push_back(i + 1);
+		}
+		
+		
+	
+	}
+	else if(this->topRadius > 0.0f && this->bottomRadius > 0.0f)
+	{
+		//Here we have some type of cylindrical solid with circles at the top and the bottom.
+		
+		//First, we create the top. Same as creating the cone in the first case.
+		for(int i = 0; i < this->numSlices; i++)
+		{
+			int k = 0;
+			if(i < (this->numSlices - 1))
+			{
+				k = i + 2;
+			}
+			else
+			{
+				k = 1;
+			}
+		
+			this->indices.push_back(0);
+			this->indices.push_back(i + 1);
+			this->indices.push_back(k);
+		}
+		
+		//Next, we connect the top ring to the bottom ring.
+		//Now, here I think RSW made a mistake. See, his cylinder has multiple layers, like a sphere. But the difference between the radii of the circles that make up
+		//the layers is linear. It will ALWAYS be a straight line. Adding more vertices simply adds geometrical complexity, and can't be seen. I think. Pretty sure
+		//that even TEXTURES wouldn't be affected, though you could create more colorful cylinders without textures. Adding more slices, sure, that increases the roundness of the cylinder,
+		//but more layers?
+		for(int i = 0; i < this->numSlices; i++)
+		{
+			int k = 0;
+			int j = 0;
+			if(i < (this->numSlices - 1))
+			{
+				k = i + 2;
+				j = i + 2 + this->numSlices;
+			}
+			else
+			{
+				k = 1;
+				j = this->numSlices + 1;
+			}
+			//So here we have the same setup as STSphere.
+			this->indices.push_back(i + 1);
+			this->indices.push_back(i + 1 + this->numSlices);
+			this->indices.push_back(j);
+			this->indices.push_back(i + 1);
+			this->indices.push_back(j);
+			this->indices.push_back(k);
+			
+		}
+		
+		//Finally, we create the bottom.
+		//Same as before.
+		int last = this->numSlices + 1;	
+		
+		for(int i = 0; i < this->numSlices; i++)
+		{
+			int k = 0;
+			if(i < (this->numSlices - 1))
+			{
+				k = i + 2;
+			}
+			else
+			{
+				k = 1;
+			}
+			
+			//I think I have to invert the last two. We'll see.
+			this->indices.push_back(last);
+			this->indices.push_back(k);
+			this->indices.push_back(i + 1);
+		}
+	}
+	else if(this->topRadius == 0.0f && this->bottomRadius == 0.0f)
+	{
+		//Here we have...a line segment. This reminds me of the scene in Grim Fandango where Manny asks the balloon artist for a dead worm.
+		//That said... GL_TRIANGLES wants at least three indices...
+		this->indices.push_back(0);
+		this->indices.push_back(1);
+		this->indices.push_back(0);
+		//It's a degenerate triangle, but hey. I'm curious to see if it'll work!
+	}
+	else
+	{
+		//Well, here, we have a problem. This basically means that one or both of the radii are *negative*. We shouldn't even GET here.
+		std::cerr << "Warning! Negative distances, such as radii, may cause universal collapse!" << std::endl;
+	}
 
 	this->batch->copyIndexData(this->indices);
 }

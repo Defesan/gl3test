@@ -138,7 +138,7 @@ void STSphere::genIndices()
 			//Again, the circular nature of the strips requires a branch.
 			if(j != (this->numSlices - 1))		//For all but the last vertex in the strip,
 			{
-				this->indices.push_back(belowFirst + j);
+				this->indices.push_back(belowFirst + j);		//v(j + M)
 				this->indices.push_back(belowFirst + (j + 1));	//v(j + M + 1)
 				this->indices.push_back(firstVert + j);			//v(j)
 				this->indices.push_back(belowFirst + (j + 1));  //v(j + M + 1)
