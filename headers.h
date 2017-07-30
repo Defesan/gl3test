@@ -33,5 +33,6 @@
 #include "STShape/stCircle.h"
 #include "STShape/stSphere.h"
 #include "STShape/stTorus.h"
+#include "STShape/stCylinder.h"
 
 #endif //__HEADERS_H__

@@ -61,11 +61,13 @@ void setup()
 	
 	torus = new STTorus(0.0f, 0.0f, 0.0f, 6.0f, 1.5f, 16, 16);
 	sphere = new STSphere(0.0f, 0.0f, 0.0f, 4.0f, 16, 32);
+	cylinder = new STCylinder(0.0f, 0.0f, 0.0f, 4.0f, 2.0f, 2.0f, 32);
 	//sphere->setVelocity(new STVec3f(0.02f, 0.05f, 0.0f));
 	//viewFrame->translateLocal(0.0f, 0.0f, 7.0f);
 	timer = new STTimer();
 	//torus->render();
-	sphere->render();
+	//sphere->render();
+	cylinder->render();
 }
 
 void bounce()
@@ -113,8 +115,9 @@ void render()
 		modelViewStack->pushMatrix(viewFrame->getMatrix(false));
 			runShader();
 			bounce();
+			cylinder->update();
 			//torus->update();
-			sphere->update();
+			//sphere->update();
 		modelViewStack->popMatrix();
 		
 		glutSwapBuffers();

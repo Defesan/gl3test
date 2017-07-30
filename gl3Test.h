@@ -26,6 +26,7 @@ STShaderManager* sMan;
 std::vector<STPrimitiveBatch*> geometry;
 STSphere* sphere;
 STTorus* torus;
+STCylinder* cylinder;
 STTimer* timer;
 
 

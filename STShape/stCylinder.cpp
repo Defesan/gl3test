@@ -237,7 +237,29 @@ void STCylinder::genColors()
 
 void STCylinder::genNormals()
 {
-
+	//This is why I made this. Where do the normals on a vertex point when they're all on 90 degree corners?
+	//Hmmm... I wonder if I've been doing normals wrong. Here, the first two coordinates of any normal are the coordinates of its vertex.
+	//The z coordinate is the bottom radius minus the top radius. 
+	
+	int numVerts = (this->numSlices * 2) + 2;
+	int currPos = 0;
+	GLfloat zNorm = this->bottomRadius - this->topRadius;
+	
+	if(abs(zNorm) < 0.00001f)
+	{
+		zNorm = 0.0f;	
+	}
+	
+	for(int i = 0; i < numVerts; i++)
+	{
+		this->norms.push_back(this->verts[currPos]);
+		currPos++;
+		this->norms.push_back(this->verts[currPos]);
+		currPos++;
+		this->norms.push_back(zNorm);
+		currPos++;
+	}
+	
 	this->batch->copyNormalData(this->norms);
 }
 

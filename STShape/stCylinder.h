@@ -1,7 +1,7 @@
 #ifndef __ST_CYLINDER_H__
 #define __ST_CYLINDER_H__
 
-#indlude "stShape.h"
+#include "stShape.h"
 
 //Time to work on the four GLTools shapes I don't have: cylinder, cube, cone, and disc
 
@@ -21,6 +21,7 @@ private:
 public:
 	STCylinder(GLfloat x, GLfloat y, GLfloat z, GLfloat height, GLfloat topRadius, GLfloat bottomRadius, GLint numSlices);
 	STCylinder(GLfloat x, GLfloat y, GLfloat z, GLfloat height, GLfloat radius, GLint numSlices) : STCylinder(x, y, z, height, radius, radius, numSlices) {};
+	~STCylinder() override;
 	
 	GLfloat getHeight() {return this->height;};
 	GLfloat getTopRadius() {return this->topRadius;};
