@@ -45,7 +45,7 @@ void STCylinder::genVerts()
 		for(int i = 0; i < this->numSlices; i++)
 		{
 			this->verts.push_back(this->origin->getX() + (this->topRadius * sin(theta)));
-			this->verts.push_back(this->origin->getY() + (this->bottomRadius * cos(theta)));
+			this->verts.push_back(this->origin->getY() + (this->topRadius * cos(theta)));
 			this->verts.push_back(this->origin->getZ() + verticalOffset);
 			theta += dTheta;
 		}
@@ -57,7 +57,7 @@ void STCylinder::genVerts()
 	{
 		for(int i = 0; i < this->numSlices; i++)
 		{
-			this->verts.push_back(this->origin->getX() + (this->topRadius * sin(theta)));
+			this->verts.push_back(this->origin->getX() + (this->bottomRadius * sin(theta)));
 			this->verts.push_back(this->origin->getY() + (this->bottomRadius * cos(theta)));
 			this->verts.push_back(this->origin->getZ() - verticalOffset);
 			theta += dTheta;
@@ -177,18 +177,18 @@ void STCylinder::genIndices()
 		
 		//Finally, we create the bottom.
 		//Same as before.
-		int last = this->numSlices + 1;	
+		int last = 2 * this->numSlices + 1;	
 		
-		for(int i = 0; i < this->numSlices; i++)
+		for(int i = this->numSlices; i < last; i++)
 		{
 			int k = 0;
-			if(i < (this->numSlices - 1))
+			if(i < (last - 1))
 			{
 				k = i + 2;
 			}
 			else
 			{
-				k = 1;
+				k = this->numSlices;
 			}
 			
 			//I think I have to invert the last two. We'll see.
@@ -323,4 +323,29 @@ void STCylinder::translate(GLfloat x, GLfloat y, GLfloat z)
 	//...and the verts
 	this->genVerts();
 	
+}
+
+void STCylinder::printVerts()
+{
+	std::vector<GLfloat>::iterator iter = this->verts.begin();
+	
+	int i = 0;
+	
+	for(; iter != this->verts.end(); iter += 3, i++)
+	{
+		std::cout << "Vert " << i << ") X = " << *iter << " Y = " << *(iter + 1) << " Z = " << *(iter + 2) << std::endl;
+	}
+}
+
+
+void STCylinder::printIndices()
+{
+	std::vector<GLuint>::iterator iter = this->indices.begin();
+	
+	int i = 0;
+	
+	for(; iter != this->indices.end(); iter += 3, i++)
+	{
+		std::cout << "Tri " << i << ") " << *iter << " " << *(iter + 1) << " " << *(iter + 2) << std::endl;
+	}
 }

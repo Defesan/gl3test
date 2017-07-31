@@ -59,6 +59,9 @@ public:
 	void accelerate(GLfloat accX, GLfloat accY, GLfloat accZ) override;
 	void translate(GLfloat x, GLfloat y, GLfloat z) override;
 	void translate(STVec3f* direction) { this->translate(direction->getX(), direction->getY(), direction->getZ()); };
+	
+	void printVerts();
+	void printIndices();
 };
 
 
