@@ -155,24 +155,10 @@ void STCylinder::genIndices()
 		{
 			int k = 0;
 			int j = 0;
-			if(i < (this->numSlices - 1))
+			if(i == (this->numSlices - 1))
 			{
-				k = i + 2;
-				j = i + 2 + this->numSlices;
+				
 			}
-			else
-			{
-				k = 1;
-				j = this->numSlices + 1;
-			}
-			//So here we have the same setup as STSphere.
-			this->indices.push_back(i + 1);
-			this->indices.push_back(i + 1 + this->numSlices);
-			this->indices.push_back(j);
-			this->indices.push_back(i + 1);
-			this->indices.push_back(j);
-			this->indices.push_back(k);
-			
 		}
 		
 		//Finally, we create the bottom.
@@ -205,6 +191,7 @@ void STCylinder::genIndices()
 		this->indices.push_back(1);
 		this->indices.push_back(0);
 		//It's a degenerate triangle, but hey. I'm curious to see if it'll work!
+		//It...isn't looking likely.
 	}
 	else
 	{
