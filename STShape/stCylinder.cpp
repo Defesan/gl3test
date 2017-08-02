@@ -128,6 +128,10 @@ void STCylinder::genIndices()
 	{
 		//Here we have some type of cylindrical solid with circles at the top and the bottom.
 		
+		//For definitions' sake:
+		//k is the next vertex along the CURRENT circle(so top if we're working with the top or side, bottom if we're working with the bottom)
+		//j is the next vertex along the NEXT circle(so bottom if we're working with the side.
+		
 		//First, we create the top. Same as creating the cone in the first case.
 		for(int i = 0; i < this->numSlices; i++)
 		{
@@ -151,36 +155,58 @@ void STCylinder::genIndices()
 		//the layers is linear. It will ALWAYS be a straight line. Adding more vertices simply adds geometrical complexity, and can't be seen. I think. Pretty sure
 		//that even TEXTURES wouldn't be affected, though you could create more colorful cylinders without textures. Adding more slices, sure, that increases the roundness of the cylinder,
 		//but more layers?
-		for(int i = 0; i < this->numSlices; i++)
+		for(int i = 1; i <= this->numSlices; i++)
 		{
-			int k = 0;
-			int j = 0;
-			if(i == (this->numSlices - 1))
+			int k = 0;	//next vertex along the top
+			int j = 0;	//next vertex along the bottom
+			int l = i + this->numSlices;  //vertex directly 'below' i
+			if(i == this->numSlices)	//We're at the last vertex before it loops around, so...
 			{
-				
+				//k needs to be 1
+				k = 1;
+				//j needs to be... 1 + this->numSlices, or numSlices vertices farther down the list.
+				j = 1 + this->numSlices;
 			}
+			else
+			{
+				//This is just a normal, plain old vertex, not special at all.
+				//So k has to be the vertex after i
+				k = i + 1;
+				//and j has to be the vertex after i plus numSlices.
+				j = i + 1 + this->numSlices;
+				//There. Really, that wasn't hard at all!
+			}
+			//And...now we figure out how to ORDER them.
+			//If we're looking out from inside the cylinder, the directions are reversed from looking in from outside, which is how I imagine it...
+			//So counter-clockwise is clockwise, and vice-versa.
+			this->indices.push_back(i);
+			this->indices.push_back(l);
+			this->indices.push_back(k);
+			this->indices.push_back(k);
+			this->indices.push_back(l);
+			this->indices.push_back(j);	//Wow. THAT'S readable.
 		}
 		
 		//Finally, we create the bottom.
 		//Same as before.
 		int last = 2 * this->numSlices + 1;	
 		
-		for(int i = this->numSlices; i < last; i++)
+		for(int i = this->numSlices + 1; i < last; i++)
 		{
 			int k = 0;
-			if(i < (last - 1))
+			if(i == (last - 1))
 			{
-				k = i + 2;
+				k = this->numSlices + 1;
 			}
 			else
 			{
-				k = this->numSlices;
+				k = i + 1;
 			}
 			
 			//I think I have to invert the last two. We'll see.
 			this->indices.push_back(last);
 			this->indices.push_back(k);
-			this->indices.push_back(i + 1);
+			this->indices.push_back(i);
 		}
 	}
 	else if(this->topRadius == 0.0f && this->bottomRadius == 0.0f)
