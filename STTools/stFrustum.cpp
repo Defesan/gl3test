@@ -70,7 +70,7 @@ void STFrustum::setPerspective(float fov, float aspect, float nearDistance, floa
 	this->projectionMatrix->setElement(9, ((yMax + yMin) / (yMax - yMin)));
 	this->projectionMatrix->setElement(10, -((farDistance + nearDistance) / (farDistance - nearDistance)));
 	this->projectionMatrix->setElement(11, -1.0f);
-	this->projectionMatrix->setElement(14, -((2.0f * (farDistance * nearDistance))/(farDistance - nearDistance)));
+	this->projectionMatrix->setElement(14, -(((2.0f * (farDistance * nearDistance))/(farDistance - nearDistance))));
 	this->projectionMatrix->setElement(15, 0.0f);
 	
 	//And now we set up the vertices describing the MUCH more interesting frustum.

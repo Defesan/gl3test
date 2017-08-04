@@ -9,6 +9,7 @@ int main(int argc, char* argv[])
     glutReshapeFunc(resize);
     glutDisplayFunc(render);
     glutSpecialFunc(specialKeyHandler);
+    glutKeyboardFunc(keyboardHandler);
     
     GLenum error = glewInit();
 	if (error != GLEW_OK) 
@@ -45,7 +46,7 @@ void resize(int w, int h)
 	}
 	
 	glViewport(0,0,w,h); 
-	viewFrustum->setPerspective(35.0f, float(w)/float(h), -10.0f, 100.0f);
+	viewFrustum->setPerspective(90.0f, float(w)/float(h), 1.0f, 100.0f);
 	//viewFrustum->setOrthographic(-10.0f, 10.0f, -10.0f, 10.0f, -10.0f, 10.0f);
 	projectionStack->loadMatrix(viewFrustum->getProjectionMatrix());
 	pipeline->setProjectionStack(projectionStack);
@@ -61,9 +62,9 @@ void setup()
 	
 	torus = new STTorus(0.0f, 0.0f, 0.0f, 6.0f, 1.5f, 16, 16);
 	sphere = new STSphere(0.0f, 0.0f, 0.0f, 4.0f, 16, 32);
-	cylinder = new STCylinder(0.0f, 0.0f, 5.0f, 6.0f, 2.0f, 1.0f, 32);
+	cylinder = new STCylinder(0.0f, 0.0f, 0.0f, 6.0f, 2.0f, 1.0f, 32);
 	//sphere->setVelocity(new STVec3f(0.02f, 0.05f, 0.0f));
-	viewFrame->translateLocal(0.0f, 0.0f, 7.0f);
+	//viewFrame->translateLocal(0.0f, 0.0f, 30.0f);
 	timer = new STTimer();
 	//torus->render();
 	//sphere->render();
@@ -158,17 +159,42 @@ void specialKeyHandler(int key, int x, int y)
 {
 	if(key == GLUT_KEY_UP)
 		viewFrame->rotateWorld(degreesToRadians(-5.0f), 1.0f, 0.0f, 0.0f);
+		
 
 	if(key == GLUT_KEY_DOWN)
 		viewFrame->rotateWorld(degreesToRadians(5.0f), 1.0f, 0.0f, 0.0f);
         
 	if(key == GLUT_KEY_LEFT)
 		viewFrame->rotateWorld(degreesToRadians(-5.0f), 0.0f, 1.0f, 0.0f);
+		
         
 	if(key == GLUT_KEY_RIGHT)
 		viewFrame->rotateWorld(degreesToRadians(5.0f), 0.0f, 1.0f, 0.0f);
+		
 
 	// Refresh the Window
 	glutPostRedisplay();
+
+}
+
+void keyboardHandler(unsigned char key, int x, int y)
+{
+	switch(key)
+	{
+		case 'w':
+			viewFrame->translateLocal(0.0f, 0.0f, -0.05f);
+			break;
+		case 's':
+			viewFrame->translateLocal(0.0f, 0.0f, 0.05f);
+			break;
+		case 'a':
+			viewFrame->translateLocal(-0.05f, 0.0f, 0.0f);
+			break;
+		case 'd':
+			viewFrame->translateLocal(0.05f, 0.0f, 0.0f);
+			break;
+		default:
+			break;
+	}
 
 }
