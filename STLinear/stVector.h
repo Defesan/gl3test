@@ -147,7 +147,7 @@ public:
 	float distance(STVec4f* v2);
 	bool closeEnough(STVec4f* v2, float delta);
 	bool closeEnough(float x, float y, float z, float w, float delta);
-	
+	void print() {std::cout << "X = " << this->getX() << " Y = " << this->getY() << " Z = " << this->getZ() << " W = " << this->getW() << std::endl;};
 	void genPlaneEquation(STVec4f* p1, STVec4f* p2, STVec4f* p3);
 	float planeDistanceFromPoint(STVec3f* point);
 };

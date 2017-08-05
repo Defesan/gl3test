@@ -57,7 +57,7 @@ public:
 	void loadOrthoMatrix(float xMin, float xMax, float yMin, float yMax, float zMin, float zMax);
 	void setColumn(int index, STVec3f* column);
 	void setRow(int index, STVec3f* row);
-	
+	void print(); //Always handy for debug purposes!
 	STMatrix44f* invert();
 	STMatrix44f* copyMatrix();
 };

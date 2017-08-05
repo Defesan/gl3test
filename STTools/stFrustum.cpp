@@ -28,6 +28,8 @@ void STFrustum::init()
 	this->rightPlane = new STVec4f();
 	this->topPlane = new STVec4f();
 	this->bottomPlane = new STVec4f();
+	
+	this->initialized = true;
 
 }
 
@@ -47,7 +49,10 @@ void STFrustum::setPerspective(float fov, float aspect, float nearDistance, floa
 	float yMinF = 0.0f;
 	float yMaxF = 0.0f;	
 	
-	this->init();
+	if(!initialized)
+	{
+		this->init();
+	}
 	this->projectionMatrix->loadIdentity();
 	
 	//Near plane calculations
@@ -72,47 +77,47 @@ void STFrustum::setPerspective(float fov, float aspect, float nearDistance, floa
 	this->projectionMatrix->setElement(11, -1.0f);
 	this->projectionMatrix->setElement(14, -(((2.0f * (farDistance * nearDistance))/(farDistance - nearDistance))));
 	this->projectionMatrix->setElement(15, 0.0f);
-	
+	this->projectionMatrix->print();
 	//And now we set up the vertices describing the MUCH more interesting frustum.
 	
 	this->nearUpLeft->setX(xMin);
 	this->nearUpLeft->setY(yMax);
-	this->nearUpLeft->setZ(nearDistance);
+	this->nearUpLeft->setZ(-nearDistance);
 	this->nearUpLeft->setW(1.0f);
 	
 	this->nearDownLeft->setX(xMin);
 	this->nearDownLeft->setY(yMin);
-	this->nearDownLeft->setZ(nearDistance);
+	this->nearDownLeft->setZ(-nearDistance);
 	this->nearDownLeft->setW(1.0f);
 	
 	this->nearUpRight->setX(xMax);
 	this->nearUpRight->setY(yMax);
-	this->nearUpRight->setZ(nearDistance);
+	this->nearUpRight->setZ(-nearDistance);
 	this->nearUpRight->setW(1.0f);
 	
 	this->nearDownRight->setX(xMax);
 	this->nearDownRight->setY(yMin);
-	this->nearDownRight->setZ(nearDistance);
+	this->nearDownRight->setZ(-nearDistance);
 	this->nearDownRight->setW(1.0f);
 	
 	this->farUpLeft->setX(xMinF);
 	this->farUpLeft->setY(yMaxF);
-	this->farUpLeft->setZ(farDistance);
+	this->farUpLeft->setZ(-farDistance);
 	this->farUpLeft->setW(1.0f);
 	
 	this->farDownLeft->setX(xMinF);
 	this->farDownLeft->setY(yMinF);
-	this->farDownLeft->setZ(farDistance);
+	this->farDownLeft->setZ(-farDistance);
 	this->farDownLeft->setW(1.0f);
 	
 	this->farUpRight->setX(xMaxF);
 	this->farUpRight->setY(yMaxF);
-	this->farUpRight->setZ(farDistance);
+	this->farUpRight->setZ(-farDistance);
 	this->farUpRight->setW(1.0f);
 	
 	this->farDownRight->setX(xMaxF);
 	this->farDownRight->setY(yMinF);
-	this->farDownRight->setZ(farDistance);
+	this->farDownRight->setZ(-farDistance);
 	this->farDownRight->setW(1.0f);
 	
 
@@ -122,7 +127,10 @@ void STFrustum::setOrthographic(float xMin, float xMax, float yMin, float yMax, 
 {
 	
 	//Set up the projection matrix
-	this->init();
+	if(!initialized)
+	{
+		this->init();
+	}
 	this->projectionMatrix->loadOrthoMatrix(xMin, xMax, yMin, yMax, zMin, zMax);
 	this->projectionMatrix->set(3,3,1.0f);
 	

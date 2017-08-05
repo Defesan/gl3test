@@ -51,8 +51,10 @@ STVec4f* bottomPlane;
 STVec4f* rightPlane;
 STVec4f* leftPlane;
 
+bool initialized = false;
+
 public:
-STFrustum() : STFrustum(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f) {};
+STFrustum() {this->init();};
 STFrustum(float fov, float aspect, float nearDistance, float farDistance) {this->setPerspective(fov, aspect, nearDistance, farDistance);};
 STFrustum(float xMin, float xMax, float yMin, float yMax, float zMin, float zMax) {this->setOrthographic(xMin, xMax, yMin, yMax, zMin, zMax);};
 

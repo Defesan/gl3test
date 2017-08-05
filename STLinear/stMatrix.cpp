@@ -331,6 +331,19 @@ STMatrix44f* STMatrix44f::copyMatrix()
 	return copy;
 }
 
+void STMatrix44f::print()
+{
+	for(int i = 0; i < 4; i++)
+	{
+		for(int j = 0; j < 4; j++)
+		{
+			std::cout << this->get(i,j) << " ";
+		}
+		std::cout << "\n";
+	}
+	std::cout << std::endl;
+}
+
 void STMatrix44f::setColumn(int index, STVec3f* column)
 {
 	for(int i = 0; i < 3; i++)
