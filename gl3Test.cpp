@@ -134,9 +134,9 @@ void runShader()
 {
 	std::vector<STUniform*> uniforms;
 	
-	STVec4f* shaderColor = new STVec4f(1.0f, 0.0f, 0.0f, 1.0f);
-	STUniform* colorUniform = new STUniform("color", 1, shaderColor);
-	uniforms.push_back(colorUniform);
+	//STVec4f* shaderColor = new STVec4f(1.0f, 0.0f, 0.0f, 1.0f);
+	//STUniform* colorUniform = new STUniform("color", 1, shaderColor);
+	//uniforms.push_back(colorUniform);
 	
 	STMatrix44f* mvMatrix = pipeline->getModelViewMatrix();
 	STMatrix44f* pMatrix = pipeline->getProjectionMatrix();
