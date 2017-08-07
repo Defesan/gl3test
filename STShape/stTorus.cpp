@@ -121,9 +121,9 @@ void STTorus::genColors()
 {
 	int numVerts = this->verts.size() / 3;
 
-	GLfloat red = 0.3f;
-	GLfloat green = 0.3f;
-	GLfloat blue = 0.3f;
+	GLfloat red = 0.1f;
+	GLfloat green = 0.0f;
+	GLfloat blue = 0.0f;
 	GLfloat alpha = 1.0f;
 	
 	//Color generation, for the moment, is somewhat arbitrary.

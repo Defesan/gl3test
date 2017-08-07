@@ -59,7 +59,6 @@ STMatrix44f* STFrame::getMatrix(bool rotOnly)
 	
 	//The last element is a 1.
 	frameMatrix->set(3, 3, 1.0f);
-	frameMatrix->print();
 	return frameMatrix;
 }
 	

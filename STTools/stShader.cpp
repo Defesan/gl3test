@@ -60,7 +60,7 @@ STShaderManager::STShaderManager()
 	vertexShader = "uniform mat4 mvMatrix;"
 				   "uniform mat4 pMatrix;"
 				   "varying vec4 fragColor;"	
-				   "attribute vec4 color;"		
+				   "uniform vec4 color;"		
 				   "attribute vec4 vertex;"		
 				   "attribute vec3 normal;"
 				   "void main()"

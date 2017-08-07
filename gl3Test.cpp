@@ -45,8 +45,8 @@ void resize(int w, int h)
 	}
 	
 	glViewport(0,0,w,h); 
-	viewFrustum->setPerspective(35.0f, float(w)/float(h), 1.0f, 100.0f);
-	//viewFrustum->setOrthographic(-10.0f, 10.0f, -10.0f, 10.0f, -10.0f, 10.0f);
+	//viewFrustum->setPerspective(35.0f, float(w)/float(h), 1.0f, 100.0f);
+	viewFrustum->setOrthographic(-10.0f, 10.0f, -10.0f, 10.0f, -10.0f, 10.0f);
 	projectionStack->loadMatrix(viewFrustum->getProjectionMatrix());
 	pipeline->setProjectionStack(projectionStack);
 }
@@ -56,18 +56,18 @@ void setup()
 	glFrontFace(GL_CCW);
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 	
-	torus = new STTorus(0.0f, 0.0f, 0.0f, 6.0f, 1.5f, 16, 16);
+	torus = new STTorus(0.0f, 0.0f, 0.0f, 1.0f, 0.3f, 26, 52);
 	sphere = new STSphere(0.0f, 0.0f, 0.0f, 4.0f, 16, 32);
 	cylinder = new STCylinder(0.0f, 0.0f, 0.0f, 6.0f, 2.0f, 1.0f, 32);
 	//sphere->setVelocity(new STVec3f(0.02f, 0.05f, 0.0f));
-	viewFrame->translateLocal(0.0f, 0.0f, 7.0f);
+	//viewFrame->translateLocal(0.0f, 0.0f, 7.0f);
 	timer = new STTimer();
-	//torus->render();
+	torus->render();
 	//sphere->render();
-	cylinder->render();
+	//cylinder->render();
 }
 
 void bounce()
@@ -115,8 +115,8 @@ void render()
 		modelViewStack->pushMatrix(viewFrame->getMatrix(false));
 			runShader();
 			bounce();
-			cylinder->update();
-			//torus->update();
+			//cylinder->update();
+			torus->update();
 			//sphere->update();
 		modelViewStack->popMatrix();
 		
@@ -134,9 +134,9 @@ void runShader()
 {
 	std::vector<STUniform*> uniforms;
 	
-	//STVec4f* shaderColor = new STVec4f(0.0f, 0.0f, 0.0f, 1.0f);
-	//STUniform* colorUniform = new STUniform("vColor", 1, shaderColor);
-	//uniforms.push_back(colorUniform);
+	STVec4f* shaderColor = new STVec4f(1.0f, 0.0f, 0.0f, 1.0f);
+	STUniform* colorUniform = new STUniform("color", 1, shaderColor);
+	uniforms.push_back(colorUniform);
 	
 	STMatrix44f* mvMatrix = pipeline->getModelViewMatrix();
 	STMatrix44f* pMatrix = pipeline->getProjectionMatrix();
