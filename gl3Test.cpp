@@ -45,8 +45,8 @@ void resize(int w, int h)
 	}
 	
 	glViewport(0,0,w,h); 
-	//viewFrustum->setPerspective(35.0f, float(w)/float(h), 1.0f, 100.0f);
-	viewFrustum->setOrthographic(-10.0f, 10.0f, -10.0f, 10.0f, -10.0f, 10.0f);
+	viewFrustum->setPerspective(35.0f, float(w)/float(h), 1.0f, 100.0f);
+	//viewFrustum->setOrthographic(-10.0f, 10.0f, -10.0f, 10.0f, -10.0f, 10.0f);
 	projectionStack->loadMatrix(viewFrustum->getProjectionMatrix());
 	pipeline->setProjectionStack(projectionStack);
 }
@@ -63,7 +63,7 @@ void setup()
 	sphere = new STSphere(0.0f, 0.0f, 0.0f, 4.0f, 16, 32);
 	cylinder = new STCylinder(0.0f, 0.0f, 0.0f, 6.0f, 2.0f, 1.0f, 32);
 	//sphere->setVelocity(new STVec3f(0.02f, 0.05f, 0.0f));
-	//viewFrame->translateLocal(0.0f, 0.0f, 7.0f);
+	viewFrame->translateLocal(0.0f, 0.0f, 7.0f);
 	timer = new STTimer();
 	torus->render();
 	//sphere->render();
@@ -119,7 +119,6 @@ void render()
 			torus->update();
 			//sphere->update();
 		modelViewStack->popMatrix();
-		
 		glutSwapBuffers();
 		timer->reset();
 	}
@@ -127,7 +126,7 @@ void render()
 	{
 		
 	}
-	glutPostRedisplay();
+	//glutPostRedisplay();
 }
 
 void runShader()
@@ -195,5 +194,5 @@ void keyboardHandler(unsigned char key, int x, int y)
 		default:
 			break;
 	}
-
+	glutPostRedisplay();
 }

@@ -32,7 +32,7 @@ public:
 	
 	STMatrix44f* getMatrix() {return this->matrices[stackPointer];};					//Returns the matrix at the current top of the stack.
 	ST_STACK_ERROR getLastError() {return this->lastError;};							//Returns the value of the last error.
-	int getDepth() {return this->stackDepth;};											//Gets the current maximum stack depth											
+	int getDepth() {return this->stackDepth;};											//Gets the current maximum stack depth									
 };
 
 
