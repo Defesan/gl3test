@@ -15,6 +15,10 @@ private:
 	void genIndices() override;
 	void genColors() override;
 	void genNormals() override;
+	
+	STTriangleBatch* tBatch;
+	
+	void genTriangles();
 
 public:
 	STTorus(GLfloat originX, GLfloat originY, GLfloat originZ, GLfloat r1, GLfloat r2, GLint numSlices, GLint numSections);	//A torus is surprisingly rigidly, yet easily defined.

@@ -2,7 +2,7 @@
 
 STTriangleBatch::STTriangleBatch()
 {
-	this->type = TRIANGLE;
+	this->type = TRIANGLE;		//Should change this -- I really misunderstood what he was doing.
 	this->vertID = 0;
 	this->normID = 0;
 	this->colorID = 0;
@@ -33,6 +33,7 @@ void STTriangleBatch::addTriangle(STTriangle* tri)
 	{
 		std::vector<GLfloat>::iterator iterV = this->vertData.begin();
 		std::vector<GLfloat>::iterator iterN = this->normData.begin();
+		std::vector<GLfloat>::iterator iterC = this->
 		std::vector<GLfloat>::iterator iterT = this->texCoordData[0].begin();
 		
 		bool match = false;

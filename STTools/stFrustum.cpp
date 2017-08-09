@@ -118,7 +118,6 @@ void STFrustum::setPerspective(float fov, float aspect, float nearDistance, floa
 	this->farDownRight->setY(yMinF);
 	this->farDownRight->setZ(-farDistance);
 	this->farDownRight->setW(1.0f);
-	
 
 }
 

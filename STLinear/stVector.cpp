@@ -342,6 +342,7 @@ float STVec4f::planeDistanceFromPoint(STVec3f* point)
 	return distance;
 }
 
+
 /*
 	STVec2d
 	2 element vector with double	

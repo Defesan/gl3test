@@ -28,10 +28,11 @@ public:
 	void addTriangle(STTriangle* tri);
 	void finalize();	//Bind the buffers and finalize the mesh. Maybe I should also have an 'update' function...
 	
-	void bindVertexData();
-	void bindNormalData();
-	void bindIndexData();
-	void bindTexCoordData();
+	//None of these are used.
+	//void bindVertexData();
+	//void bindNormalData();
+	//void bindIndexData();
+	//void bindTexCoordData();
 	
 	void draw() override;
 };

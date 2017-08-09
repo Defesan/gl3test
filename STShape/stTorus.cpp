@@ -2,7 +2,8 @@
 
 STTorus::STTorus(GLfloat originX, GLfloat originY, GLfloat originZ, GLfloat r1, GLfloat r2, GLint numSlices, GLint numSections)
 {
-	this->batch = new STPrimitiveBatch(0);
+	//this->batch = new STPrimitiveBatch(0);
+	this->tBatch = new STTriangleBatch();
 	this->origin = new STVec3f(originX, originY, originZ);
 	this->velocity = new STVec3f();
 	this->acceleration = new STVec3f();
@@ -12,14 +13,20 @@ STTorus::STTorus(GLfloat originX, GLfloat originY, GLfloat originZ, GLfloat r1, 
 	this->numSlices = numSlices;
 	this->numSections = numSections;
 	
-	this->batch->begin();
+	//this->tBatch->begin();   //Might need to add this later.
 	
-	this->genVerts();
-	this->genIndices();
-	this->genColors();
-	this->genNormals();
+	this->genTriangles();
 	
-	this->batch->finalize();
+	this->tBatch->finalize();
+	
+	//this->batch->begin();
+	
+	//this->genVerts();
+	//this->genIndices();
+	//this->genColors();
+	//this->genNormals();
+	
+	//this->batch->finalize();
 
 }
 
@@ -27,6 +34,11 @@ STTorus::~STTorus()
 {
 
 }
+
+//Aaand...all at once.
+
+
+
 //Trigonometry
 void STTorus::genVerts()
 {
@@ -234,7 +246,7 @@ void STTorus::setColorToGLColor()
 
 void STTorus::render()
 {
-	this->batch->draw();
+	this->tBatch->draw();
 }
 
 void STTorus::update()
@@ -257,5 +269,5 @@ void STTorus::translate(GLfloat x, GLfloat y, GLfloat z)
 	this->origin->addY(y);
 	this->origin->addZ(z);
 	
-	this->genVerts();
+	this->genTriangles();
 }
