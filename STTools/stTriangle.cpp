@@ -1,6 +1,6 @@
 #include "stTriangle.h"
 
-STTriangle::STTriangle(std::vector<STVec3f*> verts, std::vector<STVec3f*> norms, std::vector<STVec3f*> colors, std::vector<STVec2f*> texCoords)
+STTriangle::STTriangle(std::vector<STVec3f*> verts, std::vector<STVec3f*> norms, std::vector<STVec4f*> colors, std::vector<STVec2f*> texCoords)
 {
 	this->verts = verts;
 	this->norms = norms;
@@ -8,7 +8,7 @@ STTriangle::STTriangle(std::vector<STVec3f*> verts, std::vector<STVec3f*> norms,
 	this->texCoords = texCoords;
 }
 
-STTriangle::STTriangle(STVec3f* vert1, STVec3f* vert2, STVec3f* vert3, STVec3f* norm1, STVec3f* norm2, STVec3f* norm3, STVec3f* color1, STVec3f* color2, STVec3f* color3, STVec2f* tex1, STVec2f* tex2, STVec2f* tex3)
+STTriangle::STTriangle(STVec3f* vert1, STVec3f* vert2, STVec3f* vert3, STVec3f* norm1, STVec3f* norm2, STVec3f* norm3, STVec4f* color1, STVec4f* color2, STVec4f* color3, STVec2f* tex1, STVec2f* tex2, STVec2f* tex3)
 {
 	this->verts.push_back(vert1);
 	this->verts.push_back(vert2);
@@ -29,7 +29,7 @@ STTriangle::STTriangle(STVec3f* vert1, STVec3f* vert2, STVec3f* vert3, STVec3f* 
 	//Note: the parameters passed to this function should be organized such that vert1 is the point for norm1 and tex1, and so on.
 }
 
-STTriangle::STTriangle(STVec3f* verts[3], STVec3f* norms[3], STVec3f* colors[3], STVec2f* texCoords[3])
+STTriangle::STTriangle(STVec3f* verts[3], STVec3f* norms[3], STVec4f* colors[3], STVec2f* texCoords[3])
 {
 	this->verts.push_back(verts[0]);
 	this->verts.push_back(verts[1]);
@@ -48,7 +48,7 @@ STTriangle::STTriangle(STVec3f* verts[3], STVec3f* norms[3], STVec3f* colors[3],
 	this->texCoords.push_back(texCoords[2]);
 }
 
-bool STTriangle::containsVertex(STVec3f* vertex, STVec3f* normal, STVec3f* color, STVec2f* texCoord)
+bool STTriangle::containsVertex(STVec3f* vertex, STVec3f* normal, STVec4f* color, STVec2f* texCoord)
 {
 	float delta = 0.00001f;
 	for(int i = 0; i < 3; i++)
@@ -82,7 +82,7 @@ STVec3f* STTriangle::getNormal(int index)
 	return this->norms[index];
 }
 
-STVec3f* STTriangle::getColor(int index)
+STVec4f* STTriangle::getColor(int index)
 {
 	if(index > 2 || index < 0)
 	{

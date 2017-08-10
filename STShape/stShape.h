@@ -7,6 +7,7 @@
 
 #include "../STLinear/stVector.h"
 #include "../STTools/stPrimitiveBatch.h"
+#include "../STTools/stTriangleBatch.h"
 
 #include <GL/freeglut.h>
 #include <GL/gl.h>

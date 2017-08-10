@@ -36,7 +36,11 @@ STTorus::~STTorus()
 }
 
 //Aaand...all at once.
+void STTorus::genTriangles()
+{
 
+
+}
 
 
 //Trigonometry
