@@ -75,7 +75,7 @@ void STPrimitiveBatch::finalize()
 		//Bind the vertex array
 		glEnableVertexAttribArray(ST_ATTRIBUTE_VERTEX);
 		glBindBuffer(GL_ARRAY_BUFFER, vertID);
-		glVertexAttribPointer(ST_ATTRIBUTE_VERTEX, 3, GL_FLOAT, GL_FALSE, 0, nullptr);	//Now, I'm still not 100% on why we're initializing the buffer with a null pointer here.
+		glVertexAttribPointer(ST_ATTRIBUTE_VERTEX, 3, GL_FLOAT, GL_FALSE, 0, nullptr);	
 	}
 	if(indexID != 0)
 	{
