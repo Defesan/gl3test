@@ -38,7 +38,42 @@ STTorus::~STTorus()
 //Aaand...all at once.
 void STTorus::genTriangles()
 {
-
+	//Gonna need these
+	GLfloat theta = 0.0f;
+	GLfloat dTheta = (2 * PI) / (GLfloat)this->numSections;	//the number of radians between sections
+	GLfloat thetaPrime = dTheta;	//The next ring
+	
+	GLfloat phi = 0.0f;
+	GLfloat dPhi = (2 * PI) / (GLfloat)this->numSlices;
+	GLfloat phiPrime = dPhi;	//The next vert
+	
+	//Not gonna need indices, but I will need texture coords... How to do that?
+	//Also, generate three verts at a time, so the index generator will be useful.
+	for(int i = 0; i < this->numSections; i++)
+	{
+		STVec3f* verts[3];
+		STVec3f* norms[3];
+		STVec4f* colors[3];
+		STVec2f* texCoords[3];
+		
+		GLfloat x0 = cos(theta);	//Did the added precision of a double actually help? Guess I'll find out!
+		GLfloat y0 = sin(theta);
+		GLfloat x1 = cos(thetaPrime);
+		GLfloat y1 = sin(thetaPrime);
+		
+		for(int j = 0; j < this->numSlices; j++)
+		{
+			GLfloat r = cos(phi);
+			GLfloat rPrime = cos(phiPrime);
+			
+			
+			phi += dPhi;
+			phiPrime += dPhi;
+		}
+		
+		theta += dTheta;
+		thetaPrime += dTheta;
+	}
 
 }
 
