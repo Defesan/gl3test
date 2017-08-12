@@ -38,13 +38,17 @@ STTorus::~STTorus()
 //Aaand...all at once.
 void STTorus::genTriangles()
 {
+	GLfloat invSections = 1.0f / (GLfloat)this->numSections;
+	GLfloat invSlices = 1.0f / (GLfloat)this->numSlices;
+	GLfloat invMinor = 1.0f / this->r2;
+
 	//Gonna need these
 	GLfloat theta = 0.0f;
-	GLfloat dTheta = (2 * PI) / (GLfloat)this->numSections;	//the number of radians between sections
+	GLfloat dTheta = (2 * PI) * invSections;	//the number of radians between sections
 	GLfloat thetaPrime = dTheta;	//The next ring
 	
 	GLfloat phi = 0.0f;
-	GLfloat dPhi = (2 * PI) / (GLfloat)this->numSlices;
+	GLfloat dPhi = (2 * PI) * invSlices;
 	GLfloat phiPrime = dPhi;	//The next vert
 	
 	//Not gonna need indices, but I will need texture coords... How to do that?
@@ -54,7 +58,7 @@ void STTorus::genTriangles()
 		STVec3f* verts[3];
 		STVec3f* norms[3];
 		STVec4f* colors[3];
-		STVec2f* texCoords[3];
+		STVec2f* texCoords[3];	//Not my USUAL way of doing things, but I set up STTriangle for this purpose. That said, I could probably cut out the middleman, here...
 		
 		GLfloat x0 = cos(theta);	//Did the added precision of a double actually help? Guess I'll find out!
 		GLfloat y0 = sin(theta);
@@ -63,9 +67,84 @@ void STTorus::genTriangles()
 		
 		for(int j = 0; j < this->numSlices; j++)
 		{
-			GLfloat r = cos(phi);
-			GLfloat rPrime = cos(phiPrime);
+			GLfloat cosPhi = cos(phi);
+			GLfloat cosPhiPrime = cos(phiPrime);
+			GLfloat r = this->r2 * cosPhi + this->r1;
+			GLfloat rPrime = this->r2 * cosPhiPrime + this->r1;
+			GLfloat z = this->r2 * sin(phi);
+			GLfloat zPrime = this->r2 * sin(phiPrime);
 			
+			//Start with the easiest ones: the texture coordinates.
+			texCoords[0]->setX((GLfloat)i * invSections);
+			texCoords[0]->setY((GLfloat)j * invSlices);
+			
+			//Now normals? Guess I'm using the trig method for now.
+			norms[0]->setX(x0 * r);
+			norms[0]->setY(y0 * r);
+			norms[0]->setZ(z * invMinor);
+			
+			//Now colors. I'm going to want a manual colors reset function in triangleBatch, I just realized.
+			colors[0]->setX(1.0f);
+			colors[0]->setY(0.0f);
+			colors[0]->setZ(0.0f);
+			colors[0]->setW(1.0f);
+			
+			//Now verts
+			verts[0]->setX(this->origin->getX() + x0 * r);	//Hmmm... I see why my torus pointed the other way. I was using the wrong trig function!
+			verts[0]->setY(this->origin->getY() + y0 * r);
+			verts[0]->setZ(this->origin->getZ() + z);
+			
+			//Now let's do it twice more!
+			texCoords[1]->setX((GLfloat)(i + 1) * invSections);
+			texCoords[1]->setY((GLfloat)j * invSlices);
+			
+			norms[1]->setX(x1 * r);
+			norms[1]->setY(y1 * r);
+			norms[1]->setZ(z * invMinor);
+			
+			colors[1]->setX(1.0f);
+			colors[1]->setY(0.0f);
+			colors[1]->setZ(0.0f);
+			colors[1]->setW(1.0f);
+			
+			verts[1]->setX(this->origin->getX() + x1 * r);	
+			verts[1]->setY(this->origin->getY() + y1 * r);
+			verts[1]->setZ(this->origin->getZ() + z);
+			
+			texCoords[2]->setX((GLfloat)i * invSections);
+			texCoords[2]->setY((GLfloat)(j + 1) * invSlices);
+			
+			norms[2]->setX(x0 * rPrime);
+			norms[2]->setY(y0 * rPrime);
+			norms[2]->setZ(zPrime * invMinor);
+			
+			colors[2]->setX(1.0f);
+			colors[2]->setY(0.0f);
+			colors[2]->setZ(0.0f);
+			colors[2]->setW(1.0f);
+			
+			verts[2]->setX(this->origin->getX() + x0 * rPrime);	
+			verts[2]->setY(this->origin->getY() + y0 * rPrime);
+			verts[2]->setZ(this->origin->getZ() + zPrime);
+			
+			STTriangle* t1 = new STTriangle(verts, norms, colors, texCoords);
+			
+			this->tBatch->addTriangle(t1);
+			
+			//now we switch around some things...
+			texCoords[0] = texCoords[1];
+			norms[0] = norms[1];
+			colors[0] = colors[1];
+			verts[0] = verts[1];
+			
+			texCoords[1] = new STVec2f((GLfloat)(i + 1) * invSections, (GLfloat)(j + 1) * invSlices);
+			norms[1] = new STVec3f(x1 * rPrime, x1 * rPrime, zPrime * invMinor);
+			colors[1] = new STVec4f(1.0f, 0.0f, 0.0f, 1.0f);
+			verts[1] = new STVec3f(this->origin->getX() + x1 * rPrime, this->origin->getY() + y1 * rPrime, this->origin->getZ() + zPrime);
+			
+			STTriangle* t2 = new STTriangle(verts, norms, colors, texCoords);
+			
+			this->tBatch->addTriangle(t2);
 			
 			phi += dPhi;
 			phiPrime += dPhi;
