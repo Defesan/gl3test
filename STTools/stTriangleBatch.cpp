@@ -2,6 +2,7 @@
 
 STTriangleBatch::STTriangleBatch()
 {
+
 	this->type = TRIANGLE;		//Should change this -- I really misunderstood what he was doing.
 	this->vertID = 0;
 	this->normID = 0;
@@ -12,8 +13,11 @@ STTriangleBatch::STTriangleBatch()
 	
 	for(int i = 0; i < 4; i++)
 	{
-		this->texIDs[i] = 0;
+		std::vector<GLfloat> texData;
+		this->texCoordData.push_back(texData);
+		this->texIDs.push_back(0);
 	}
+
 }
 
 STTriangleBatch::~STTriangleBatch()
@@ -40,19 +44,20 @@ void STTriangleBatch::addTriangle(STTriangle* tri)
 		int index = 0;
 		int colorIndex = 0;
 		int texIndex = 0;
-		const int delta = 0.0001f;
+		const int delta = 0.000001f;
 
 		for(; iterV < this->vertData.end(); iterV += 3, iterN += 3, iterC += 4, iterT += 2, index += 3, colorIndex += 4, texIndex += 2) //Okay, now THIS for loop is getting ridiculous.
 		{
 			//Alright. This should work...
-			if((tri->getVertex(i)->closeEnough(this->vertData[index], this->vertData[index + 1], this->vertData[index + 2], delta)) &&
+			if((tri->getVertex(i)->closeEnough(this->vertData[index], this->vertData[index + 1], this->vertData[index + 2], delta)))/* &&
 				(tri->getNormal(i)->closeEnough(this->normData[index], this->normData[index + 1], this->normData[index + 2], delta)) &&
 				(tri->getColor(i)->closeEnough(this->colorData[index], this->colorData[index + 1], this->colorData[index + 2], this->colorData[index + 3], delta)) &&
-				(tri->getTexCoord(i)->closeEnough(this->texCoordData[0][texIndex], this->texCoordData[0][texIndex + 1], delta)))
+				(tri->getTexCoord(i)->closeEnough(this->texCoordData[0][texIndex], this->texCoordData[0][texIndex + 1], delta)))*/
 			{
 				GLuint vertIndex = index / 3;	
 				this->indexData.push_back(vertIndex);
 				match = true;
+				std::cout << "Found a match!" << std::endl;
 				break;
 			}
 		}
@@ -81,16 +86,25 @@ void STTriangleBatch::addTriangle(STTriangle* tri)
 			
 			this->texCoordData[0].push_back(texCoord->getX());
 			this->texCoordData[0].push_back(texCoord->getY());
-			
 			this->indexData.push_back((this->vertData.size() / 3) - 1);
 		}
 	}
 }
 
 void STTriangleBatch::finalize()
-{
-	//So...looks like I need the copyData functions, and to use them here.	
-	
+{/*
+	std::cout << "Vertex data: " << std::endl;
+	for(unsigned int i = 0; i < this->vertData.size(); i+=3)
+	{
+		int index = i / 3;
+		std::cout << index << ") " << "X = " << this->vertData[i] << " Y = " << this->vertData[i + 1] << " Z = " << this->vertData[i + 2] << std::endl;
+	}
+	std::cout << "Index data: " << std::endl;
+	for(unsigned int i = 0; i < this->vertData.size(); i += 3)
+	{
+		int index = i / 3;
+		std::cout << index << ") " << "V1 = " << this->indexData[i] << " V2 = " << this->indexData[i + 1] << " V3 = " << this->indexData[i + 2] << std::endl;
+	}*/
 	//First, create an ID and bind the vertex buffer array to it. Still figuring this part out, since I don't think it was in the other one...
 	glGenVertexArrays(1, &vertexBufferArrayID);
 	glBindVertexArray(this->vertexBufferArrayID);
