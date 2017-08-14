@@ -33,26 +33,33 @@ STTriangleBatch::~STTriangleBatch()
 
 void STTriangleBatch::addTriangle(STTriangle* tri)
 {
+	std::cout << "\n\nAdding new triangle. incoming vertices:\nVertex 0: ";
+	tri->getVertex(0)->print();
+	std::cout << "Vertex 1: ";
+	tri->getVertex(1)->print();
+	std::cout << "Vertex 2: ";
+	tri->getVertex(2)->print();
+	std::cout << "\n" << std::endl;
 	for(int i = 0; i < 3; i++)
 	{
 		std::vector<GLfloat>::iterator iterV = this->vertData.begin();
-		std::vector<GLfloat>::iterator iterN = this->normData.begin();
-		std::vector<GLfloat>::iterator iterC = this->colorData.begin();
-		std::vector<GLfloat>::iterator iterT = this->texCoordData[0].begin();
 		
 		bool match = false;
 		int index = 0;
 		int colorIndex = 0;
 		int texIndex = 0;
-		const int delta = 0.000001f;
+		float delta = 0.001f;
 
-		for(; iterV < this->vertData.end(); iterV += 3, iterN += 3, iterC += 4, iterT += 2, index += 3, colorIndex += 4, texIndex += 2) //Okay, now THIS for loop is getting ridiculous.
+		for(; iterV < this->vertData.end(); iterV += 3, index += 3, colorIndex += 4, texIndex += 2) 
 		{
-			//Alright. This should work...
-			if((tri->getVertex(i)->closeEnough(this->vertData[index], this->vertData[index + 1], this->vertData[index + 2], delta)))/* &&
+			std::cout << "\nComparing triangle vertex:";
+			tri->getVertex(i)->print();
+			std::cout << "With vertex elements: X = " << this->vertData[index] << " Y = " << this->vertData[index + 1] << " Z = " << this->vertData[index + 2] << std::endl;
+			
+			if((tri->getVertex(i)->closeEnough(this->vertData[index], this->vertData[index + 1], this->vertData[index + 2], delta)) &&
 				(tri->getNormal(i)->closeEnough(this->normData[index], this->normData[index + 1], this->normData[index + 2], delta)) &&
-				(tri->getColor(i)->closeEnough(this->colorData[index], this->colorData[index + 1], this->colorData[index + 2], this->colorData[index + 3], delta)) &&
-				(tri->getTexCoord(i)->closeEnough(this->texCoordData[0][texIndex], this->texCoordData[0][texIndex + 1], delta)))*/
+				(tri->getColor(i)->closeEnough(this->colorData[colorIndex], this->colorData[colorIndex + 1], this->colorData[colorIndex + 2], this->colorData[colorIndex + 3], delta)) &&
+				(tri->getTexCoord(i)->closeEnough(this->texCoordData[0][texIndex], this->texCoordData[0][texIndex + 1], delta)))
 			{
 				GLuint vertIndex = index / 3;	
 				this->indexData.push_back(vertIndex);
@@ -70,7 +77,9 @@ void STTriangleBatch::addTriangle(STTriangle* tri)
 			STVec3f* norm = tri->getNormal(i);
 			STVec4f* color = tri->getColor(i);
 			STVec2f* texCoord = tri->getTexCoord(i);
-			
+			std::cout << "\n\nAdding vertex with data: ";
+			vert->print();
+			std::cout << std::endl;
 			this->vertData.push_back(vert->getX());
 			this->vertData.push_back(vert->getY());
 			this->vertData.push_back(vert->getZ());

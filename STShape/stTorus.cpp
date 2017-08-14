@@ -141,20 +141,31 @@ void STTorus::genTriangles()
 			
 			STTriangle* t1 = new STTriangle(verts, norms, colors, texCoords);
 			
+			std::cout << "Sending triangle to batch.\nVerts[0] = ";
+			verts[0]->print();
+			std::cout << "Verts[1] = ";
+			verts[1]->print();
+			std::cout << "Verts[2] = ";
+			verts[2]->print();
+			
 			this->tBatch->addTriangle(t1);
 			
 			//now we switch around some things...
-			texCoords[0] = texCoords[1];
-			norms[0] = norms[1];
-			colors[0] = colors[1];
-			verts[0] = verts[1];
 			
 			texCoords[1] = new STVec2f((GLfloat)(i + 1) * invSections, (GLfloat)(j + 1) * invSlices);
 			norms[1] = new STVec3f(x1 * rPrime, x1 * rPrime, zPrime * invMinor);
 			colors[1] = new STVec4f(1.0f, 0.0f, 0.0f, 1.0f);
 			verts[1] = new STVec3f(this->origin->getX() + x1 * rPrime, this->origin->getY() + y1 * rPrime, this->origin->getZ() + zPrime);
 			
+			
 			STTriangle* t2 = new STTriangle(verts, norms, colors, texCoords);
+			
+			std::cout << "Sending triangle to batch.\nVerts[0] = ";
+			verts[0]->print();
+			std::cout << "Verts[1] = ";
+			verts[1]->print();
+			std::cout << "Verts[2] = ";
+			verts[2]->print();
 			
 			this->tBatch->addTriangle(t2);
 			
