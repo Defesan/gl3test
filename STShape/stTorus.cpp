@@ -74,70 +74,23 @@ void STTorus::genTriangles()
 			GLfloat z = this->r2 * sin(phi);
 			GLfloat zPrime = this->r2 * sin(phiPrime);
 			
-			//Start with the easiest ones: the texture coordinates.
+			//Vertex 1
 			texCoords[0] = new STVec2f((GLfloat)i * invSections, (GLfloat)j * invSlices);
-			//texCoords[0]->setX((GLfloat)i * invSections);
-			//texCoords[0]->setY((GLfloat)j * invSlices);
-			
-			//Now normals? Guess I'm using the trig method for now.
 			norms[0] = new STVec3f(x0 * r, y0 * r, z * invMinor);
-			//norms[0]->setX(x0 * r);
-			//norms[0]->setY(y0 * r);
-			//norms[0]->setZ(z * invMinor);
-			
-			//Now colors. I'm going to want a manual colors reset function in triangleBatch, I just realized.
 			colors[0] = new STVec4f(1.0f, 0.0f, 0.0f, 1.0f);
-			//colors[0]->setX(1.0f);
-			//colors[0]->setY(0.0f);
-			//colors[0]->setZ(0.0f);
-			//colors[0]->setW(1.0f);
-			
-			//Now verts
 			verts[0] = new STVec3f(this->origin->getX() + x0 * r, this->origin->getY() + y0 * r, this->origin->getZ() + z);
-			//verts[0]->setX(this->origin->getX() + x0 * r);	//Hmmm... I see why my torus pointed the other way. I was using the wrong trig function!
-			//verts[0]->setY(this->origin->getY() + y0 * r);
-			//verts[0]->setZ(this->origin->getZ() + z);
 			
-			//Now let's do it twice more!
+			//Vertex 2
 			texCoords[1] = new STVec2f((GLfloat)(i + 1) * invSections, (GLfloat)j * invSlices);
-			//texCoords[1]->setX((GLfloat)(i + 1) * invSections);
-			//texCoords[1]->setY((GLfloat)j * invSlices);
-			
 			norms[1] = new STVec3f(x1 * r, y1 * r, z * invMinor);
-			//norms[1]->setX(x1 * r);
-			//norms[1]->setY(y1 * r);
-			//norms[1]->setZ(z * invMinor);
-			
 			colors[1] = new STVec4f(1.0f, 0.0f, 0.0f, 1.0f);
-			//colors[1]->setX(1.0f);
-			//colors[1]->setY(0.0f);
-			//colors[1]->setZ(0.0f);
-			//colors[1]->setW(1.0f);
-			
 			verts[1] = new STVec3f(this->origin->getX() + x1 * r, this->origin->getY() + y1 * r, this->origin->getZ() + z);
-			//verts[1]->setX(this->origin->getX() + x1 * r);	
-			//verts[1]->setY(this->origin->getY() + y1 * r);
-			//verts[1]->setZ(this->origin->getZ() + z);
 			
+			//Vertex 3
 			texCoords[2] = new STVec2f((GLfloat)i * invSections, (GLfloat)(j + 1) * invSlices);
-			//texCoords[2]->setX((GLfloat)i * invSections);
-			//texCoords[2]->setY((GLfloat)(j + 1) * invSlices);
-			
 			norms[2] = new STVec3f(x0 * rPrime, y0 * rPrime, zPrime * invMinor);
-			//norms[2]->setX(x0 * rPrime);
-			//norms[2]->setY(y0 * rPrime);
-			//norms[2]->setZ(zPrime * invMinor);
-			
 			colors[2] = new STVec4f(1.0f, 0.0f, 0.0f, 1.0f);
-			//colors[2]->setX(1.0f);
-			//colors[2]->setY(0.0f);
-			//colors[2]->setZ(0.0f);
-			//colors[2]->setW(1.0f);
-			
 			verts[2] = new STVec3f(this->origin->getX() + x0 * rPrime, this->origin->getY() + y0 * rPrime, this->origin->getZ() + zPrime);
-			//verts[2]->setX(this->origin->getX() + x0 * rPrime);	
-			//verts[2]->setY(this->origin->getY() + y0 * rPrime);
-			//verts[2]->setZ(this->origin->getZ() + zPrime);
 			
 			STTriangle* t1 = new STTriangle(verts, norms, colors, texCoords);
 			
@@ -152,6 +105,12 @@ void STTorus::genTriangles()
 			
 			//now we switch around some things...
 			
+			verts[0] = verts[1];
+			norms[0] = norms[1];
+			colors[0] = colors[1];
+			texCoords[0] = texCoords[1];
+			
+			//Vertex 4
 			texCoords[1] = new STVec2f((GLfloat)(i + 1) * invSections, (GLfloat)(j + 1) * invSlices);
 			norms[1] = new STVec3f(x1 * rPrime, x1 * rPrime, zPrime * invMinor);
 			colors[1] = new STVec4f(1.0f, 0.0f, 0.0f, 1.0f);
