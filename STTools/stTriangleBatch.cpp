@@ -33,13 +33,6 @@ STTriangleBatch::~STTriangleBatch()
 
 void STTriangleBatch::addTriangle(STTriangle* tri)
 {
-	std::cout << "\n\nAdding new triangle. incoming vertices:\nVertex 0: ";
-	tri->getVertex(0)->print();
-	std::cout << "Vertex 1: ";
-	tri->getVertex(1)->print();
-	std::cout << "Vertex 2: ";
-	tri->getVertex(2)->print();
-	std::cout << "\n" << std::endl;
 	for(int i = 0; i < 3; i++)
 	{
 		std::vector<GLfloat>::iterator iterV = this->vertData.begin();
@@ -51,11 +44,7 @@ void STTriangleBatch::addTriangle(STTriangle* tri)
 		float delta = 0.001f;
 
 		for(; iterV < this->vertData.end(); iterV += 3, index += 3, colorIndex += 4, texIndex += 2) 
-		{
-			std::cout << "\nComparing triangle vertex:";
-			tri->getVertex(i)->print();
-			std::cout << "With vertex elements: X = " << this->vertData[index] << " Y = " << this->vertData[index + 1] << " Z = " << this->vertData[index + 2] << std::endl;
-			
+		{			
 			if((tri->getVertex(i)->closeEnough(this->vertData[index], this->vertData[index + 1], this->vertData[index + 2], delta)) &&
 				(tri->getNormal(i)->closeEnough(this->normData[index], this->normData[index + 1], this->normData[index + 2], delta)) &&
 				(tri->getColor(i)->closeEnough(this->colorData[colorIndex], this->colorData[colorIndex + 1], this->colorData[colorIndex + 2], this->colorData[colorIndex + 3], delta)) &&
@@ -64,7 +53,6 @@ void STTriangleBatch::addTriangle(STTriangle* tri)
 				GLuint vertIndex = index / 3;	
 				this->indexData.push_back(vertIndex);
 				match = true;
-				std::cout << "Found a match!" << std::endl;
 				break;
 			}
 		}
@@ -77,9 +65,7 @@ void STTriangleBatch::addTriangle(STTriangle* tri)
 			STVec3f* norm = tri->getNormal(i);
 			STVec4f* color = tri->getColor(i);
 			STVec2f* texCoord = tri->getTexCoord(i);
-			std::cout << "\n\nAdding vertex with data: ";
-			vert->print();
-			std::cout << std::endl;
+			
 			this->vertData.push_back(vert->getX());
 			this->vertData.push_back(vert->getY());
 			this->vertData.push_back(vert->getZ());
@@ -101,19 +87,35 @@ void STTriangleBatch::addTriangle(STTriangle* tri)
 }
 
 void STTriangleBatch::finalize()
-{/*
-	std::cout << "Vertex data: " << std::endl;
-	for(unsigned int i = 0; i < this->vertData.size(); i+=3)
-	{
-		int index = i / 3;
-		std::cout << index << ") " << "X = " << this->vertData[i] << " Y = " << this->vertData[i + 1] << " Z = " << this->vertData[i + 2] << std::endl;
-	}
-	std::cout << "Index data: " << std::endl;
+{
+	//Print vertex data
+	std::cout << "Vertices by vertex index:" << std::endl;
 	for(unsigned int i = 0; i < this->vertData.size(); i += 3)
 	{
 		int index = i / 3;
-		std::cout << index << ") " << "V1 = " << this->indexData[i] << " V2 = " << this->indexData[i + 1] << " V3 = " << this->indexData[i + 2] << std::endl;
-	}*/
+		std::cout << index << ") X = " << this->vertData[i] << " Y = " << this->vertData[i + 1] << " Z = " << this->vertData[i + 2] << std::endl; 
+	}
+	//Print index data
+	std::cout << "Triangles:" << std::endl;
+	for(unsigned int i = 0; i < this->indexData.size(); i += 3)
+	{
+		int index = i / 3;
+		std::cout << index << ") V1 = " << this->indexData[i] << " V2 = " << this->indexData[i + 1] << " V3 = " << this->indexData[i + 2] << std::endl; 
+	}
+	//Print texture data
+	std::cout << "Texture coordinates by vertex index:" << std::endl;
+	for(unsigned int i = 0; i < this->texCoordData[0].size(); i += 2)
+	{
+		int index = i / 2;
+		std::cout << index << ") X = " << this->texCoordData[0][i] << " Y = " << this->texCoordData[0][i + 1] << std::endl; 
+	}
+	//Print normal data
+	std::cout << "Normal vectors by vertex index:" << std::endl;
+	for(unsigned int i = 0; i < this->normData.size(); i += 3)
+	{
+		int index = i / 3;
+		std::cout << index << ") X = " << this->normData[i] << " Y = " << this->normData[i + 1] << " Z = " << this->normData[i + 2] << std::endl; 
+	}
 	//First, create an ID and bind the vertex buffer array to it. Still figuring this part out, since I don't think it was in the other one...
 	glGenVertexArrays(1, &vertexBufferArrayID);
 	glBindVertexArray(this->vertexBufferArrayID);

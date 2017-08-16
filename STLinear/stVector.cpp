@@ -181,14 +181,8 @@ bool STVec3f::closeEnough(float x, float y, float z, float delta)
 	float dY = std::abs(y - this->getY());
 	float dZ = std::abs(z - this->getZ());
 	
-	//if(delta == 0)
-	//{
-	//	delta = 0.001f;
-	//}
-	
 	if((dX < delta) && (dY < delta) && (dZ < delta))
 	{
-		std::cout << "\tSo we should get here, right???" << std::endl;
 		return true;
 	}
 	return false;

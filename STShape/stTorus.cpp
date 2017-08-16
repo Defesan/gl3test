@@ -94,13 +94,6 @@ void STTorus::genTriangles()
 			
 			STTriangle* t1 = new STTriangle(verts, norms, colors, texCoords);
 			
-			std::cout << "Sending triangle to batch.\nVerts[0] = ";
-			verts[0]->print();
-			std::cout << "Verts[1] = ";
-			verts[1]->print();
-			std::cout << "Verts[2] = ";
-			verts[2]->print();
-			
 			this->tBatch->addTriangle(t1);
 			
 			//now we switch around some things...
@@ -118,13 +111,6 @@ void STTorus::genTriangles()
 			
 			
 			STTriangle* t2 = new STTriangle(verts, norms, colors, texCoords);
-			
-			std::cout << "Sending triangle to batch.\nVerts[0] = ";
-			verts[0]->print();
-			std::cout << "Verts[1] = ";
-			verts[1]->print();
-			std::cout << "Verts[2] = ";
-			verts[2]->print();
 			
 			this->tBatch->addTriangle(t2);
 			
