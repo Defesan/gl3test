@@ -76,19 +76,19 @@ void STTorus::genTriangles()
 			
 			//Vertex 1
 			texCoords[0] = new STVec2f((GLfloat)i * invSections, (GLfloat)j * invSlices);
-			norms[0] = new STVec3f(x0 * r, y0 * r, z * invMinor);
+			norms[0] = new STVec3f(x0 * cosPhi, y0 * cosPhi, z * invMinor);
 			colors[0] = new STVec4f(1.0f, 0.0f, 0.0f, 1.0f);
 			verts[0] = new STVec3f(this->origin->getX() + x0 * r, this->origin->getY() + y0 * r, this->origin->getZ() + z);
 			
 			//Vertex 2
 			texCoords[1] = new STVec2f((GLfloat)(i + 1) * invSections, (GLfloat)j * invSlices);
-			norms[1] = new STVec3f(x1 * r, y1 * r, z * invMinor);
+			norms[1] = new STVec3f(x1 * cosPhi, y1 * cosPhi, z * invMinor);
 			colors[1] = new STVec4f(1.0f, 0.0f, 0.0f, 1.0f);
 			verts[1] = new STVec3f(this->origin->getX() + x1 * r, this->origin->getY() + y1 * r, this->origin->getZ() + z);
 			
 			//Vertex 3
 			texCoords[2] = new STVec2f((GLfloat)i * invSections, (GLfloat)(j + 1) * invSlices);
-			norms[2] = new STVec3f(x0 * rPrime, y0 * rPrime, zPrime * invMinor);
+			norms[2] = new STVec3f(x0 * cosPhiPrime, y0 * cosPhiPrime, zPrime * invMinor);
 			colors[2] = new STVec4f(1.0f, 0.0f, 0.0f, 1.0f);
 			verts[2] = new STVec3f(this->origin->getX() + x0 * rPrime, this->origin->getY() + y0 * rPrime, this->origin->getZ() + zPrime);
 			
@@ -105,7 +105,7 @@ void STTorus::genTriangles()
 			
 			//Vertex 4
 			texCoords[1] = new STVec2f((GLfloat)(i + 1) * invSections, (GLfloat)(j + 1) * invSlices);
-			norms[1] = new STVec3f(x1 * rPrime, x1 * rPrime, zPrime * invMinor);
+			norms[1] = new STVec3f(x1 * cosPhiPrime, y1 * cosPhiPrime, zPrime * invMinor);
 			colors[1] = new STVec4f(1.0f, 0.0f, 0.0f, 1.0f);
 			verts[1] = new STVec3f(this->origin->getX() + x1 * rPrime, this->origin->getY() + y1 * rPrime, this->origin->getZ() + zPrime);
 			
