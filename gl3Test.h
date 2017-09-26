@@ -6,8 +6,9 @@
 
 //Working in OpenGL 3, things are... a little different.
 const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
-const int SCREEN_FPS = 60.0f;
+const int SCREEN_HEIGHT = 640;
+const GLfloat SCREEN_FPS = 60.0f;
+const GLfloat FRAME_TIME = 1.0f/SCREEN_FPS;
 const GLfloat PROJECTION_HEIGHT = 100.0f;
 const GLfloat PROJECTION_WIDTH = 100.0f;
 const GLfloat PROJECTION_DEPTH = 100.0f;
@@ -23,14 +24,10 @@ STMatrixStack* modelViewStack;
 STMatrixStack* projectionStack;
 STMatrixPipeline* pipeline;
 STShaderManager* sMan;
-std::vector<STPrimitiveBatch*> geometry;
-STSphere* sphere;
-STTorus* torus;
-STCylinder* cylinder;
 STTimer* timer;
 
+STCircle* circle;
 
-void bounce();
 void resize(int w, int h);
 void setup();
 void render();
